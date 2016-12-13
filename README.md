@@ -1,3 +1,3 @@
 # junruchen.github.io
 
-## HTML&CSS&JS基础学习
+## HTML CSS JS基础学习
