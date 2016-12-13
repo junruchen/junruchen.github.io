@@ -1,0 +1,261 @@
+//--基本颜色
+$base-color = #333;
+//--基础样式
+$base-font-family = "PingFang SC", "微软雅黑";
+
+//--前缀
+prefix(prop, args) {
+  -ms-{prop} args
+  -webkit-{prop} args
+  -moz-{prop} args
+  {prop} args
+}
+
+//--通用函数
+b-box-shadow() {
+  prefix('box-shadow', arguments);
+}
+
+b-border-radius() {
+  prefix('border-radius', arguments);
+}
+
+b-box-sizing() {
+  prefix('box-sizing', arguments);
+}
+
+b-transform() {
+  prefix('transform', arguments);
+}
+
+b-transition() {
+  prefix('transition', arguments);
+}
+
+b-animation() {
+  prefix('animation', arguments);
+}
+
+b-word-hidden() {
+  overflow hidden;
+  text-overflow ellipsis;
+  white-space nowrap;
+}
+
+@keyframes moveDown {
+  from {
+    b-transform(translateY(-50px));
+    opacity 0;
+  }
+  to {
+    b-transform(translateY(0));
+    opacity 1;
+  }
+}
+
+@keyframes moveUp {
+  from {
+    b-transform(translateY(30px));
+    opacity 0;
+  }
+  to {
+    b-transform(translateY(0));
+    opacity 1;
+  }
+}
+
+
+@import "common.css";
+body {
+  overflow hidden;
+}
+
+.container {
+  margin-bottom 0;
+}
+
+.nav {
+  width 100%;
+  height 100%;
+  & a, & input {
+    display inline-block;
+    position fixed;
+    width 20%;
+    height 40px;
+    line-height 40px;
+    text-align center;
+    bottom 0;
+  }
+  & input {
+    z-index 2;
+    opacity 0;
+    &:hover + a {
+      opacity .5;
+      background-color #363c41;
+    }
+    &:checked + a {
+      background-color #363c41;
+      &:before {
+        display: block;
+      }
+    }
+    &:checked {
+      &:hover + a {
+        opacity 1;
+        background-color #363c41;
+      }
+    }
+  }
+  & a {
+    z-index 1;
+    background-color #000;
+    color #fff;
+    b-box-sizing border-box;
+    border-right 1px solid #9c9c9c;
+    &:before {
+      display none;
+      content '';
+      position absolute;
+      width 20px;
+      height 20px;
+      top 0;
+      left 50%;
+      margin-top -10px;
+      margin-left -10px;
+      background-color #363c41;
+      b-transform(rotate(45deg))
+    }
+  }
+  & #nav-1, & #nav-1 + a {
+    left 0;
+  }
+  & #nav-2, & #nav-2 + a {
+    left 20%;
+  }
+  & #nav-3, & #nav-3 + a {
+    left 40%;
+  }
+  & #nav-4, & #nav-4 + a {
+    left 60%;
+  }
+  & #nav-5, & #nav-5 + a {
+    left 80%;
+    border-right none;
+  }
+  .content {
+    width 100%;
+    height 100%;
+    position relative;
+    top 0;
+    left 0;
+    b-transform(translate3d(0, 0, 0));
+    b-transition(all .5s ease-in)
+    & section {
+      width 100%;
+      height 100%;
+      position relative;
+      overflow hidden;
+      text-align center;
+      & .icon {
+        position absolute;
+        width 200px;
+        height: 200px;
+        background-color silver;
+        left 50%;
+        margin-left -100px;
+        top 0;
+        b-transform(translateY(-50%) rotate(45deg));
+      }
+      & [data-icon]:after {
+        content attr(data-icon);
+        width 200px;
+        height 200px;
+        position absolute;
+        left 50%;
+        top 50%;
+        font-size 50px;
+        line-height 200px;
+        text-align center;
+        color black;
+        margin -100px 0 0 -100px;
+        font-family raphaelicons;
+        b-transform(rotate(-45deg) translateY(25%));
+      }
+      & h2 {
+        position absolute;
+        width 100%;
+        top 200px;
+        font-size 40px;
+      }
+      & p {
+        position absolute;
+        width 100%;
+        top 280px;
+        font-size 20px;
+      }
+    }
+    for n in 2 4 {
+      section:nth-child({n}) {
+        background-color silver;
+        & .icon {
+          background-color white;
+        }
+      }
+    }
+  }
+  & #nav-1:checked ~ .content {
+    b-transform(translateY(0));
+    & #content-1 {
+      & h2 {
+        b-animation(moveDown, .6s, ease-in-out .4s);
+      }
+      & p{
+        b-animation(moveUp, .4s, ease-in-out .2s);
+      }
+    }
+  }
+  & #nav-2:checked ~ .content {
+    b-transform(translateY(-100%));
+    & #content-2 {
+      & h2 {
+        b-animation(moveDown, .6s, ease-in-out .4s);
+      }
+      & p{
+        b-animation(moveUp, .4s, ease-in-out .4s);
+      }
+    }
+  }
+  & #nav-3:checked ~ .content {
+    b-transform(translateY(-200%));
+    & #content-3 {
+      & h2 {
+        b-animation(moveDown, .6s, ease-in-out .4s);
+      }
+      & p{
+        b-animation(moveUp, .4s, ease-in-out .4s);
+      }
+    }
+  }
+  & #nav-4:checked ~ .content {
+    b-transform(translateY(-300%));
+    & #content-4 {
+      & h2 {
+        b-animation(moveDown, .6s, ease-in-out .4s);
+      }
+      & p{
+        b-animation(moveUp, .4s, ease-in-out .4s);
+      }
+    }
+  }
+  & #nav-5:checked ~ .content {
+    b-transform(translateY(-400%));
+    & #content-5 {
+      & h2 {
+        b-animation(moveDown, .6s, ease-in-out .4s);
+      }
+      & p{
+        b-animation(moveUp, .4s, ease-in-out .4s);
+      }
+    }
+  }
+}

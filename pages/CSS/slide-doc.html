@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-COMPATIBLE" content="IE-edge,chrome=1"> <!--IE-->
+    <meta name="viewport" content="width=devide-width,initial-scale=1"><!--自适应,不可缩放-->
+    <title>CSS--页面平滑过渡效果</title>
+    <link rel="stylesheet" href="assets/css/slideDoc.css">
+</head>
+<body>
+<div class="container">
+    <div class="nav">
+        <input type="radio" name="nav" id="nav-1" checked><a href="#content-1">导航说明</a>
+        <input type="radio" name="nav" id="nav-2"><a href="#content-2">页面说明</a>
+        <input type="radio" name="nav" id="nav-3"><a href="#content-3">选择器</a>
+        <input type="radio" name="nav" id="nav-4"><a href="#content-4">动画</a>
+        <input type="radio" name="nav" id="nav-5"><a href="#content-5">@font-face</a>
+
+        <div class="content">
+            <section id="content-1">
+                <div class="icon" data-icon="A"></div>
+                <h2>导航</h2>
+                <p>页面导航采用技术:input[type=radio]标签的checked属性控制,利用兄弟选择器来查找相应的a标签以及section标签</p>
+            </section>
+            <section id="content-2">
+                <div class="icon" data-icon="B"></div>
+                <h2>页面说明</h2>
+                <p>对content区域定位,并设置宽高均为100%,使用translateY进行移动,添加动画效果transition(all .5s ease-in)</p>
+            </section>
+            <section id="content-3">
+                <div class="icon" data-icon="C"></div>
+                <h2>选择器</h2>
+                <p>input:checked + a  表示选择input标签后第一个兄弟a标签 <br> input:checked ~ a  表示选择input标签后所有兄弟a标签 <br>:after/before 中的content,内容可以是字符串 '内容',可是是一个地址 url(''), 也可以是定义在标签上的属性 attr(data-icon)</p>
+            </section>
+            <section id="content-4">
+                <div class="icon" data-icon="D"></div>
+                <h2>动画</h2>
+                <p>动画需要事件触发使用transition; <br> 不需要触发animation</p>
+            </section>
+            <section id="content-5">
+                <div class="icon" data-icon="E"></div>
+                <h2>@font-face</h2>
+                <p>引入字体库raphaelicons, 生成小图标</p>
+            </section>
+        </div>
+    </div>
+</div>
+<div class="back"><a href="index.html">back</a></div>
+</body>
+</html>
+

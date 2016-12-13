@@ -1,0 +1,162 @@
+@import "common.css";
+body {
+  background-color: #f3f5f7;
+}
+.nav {
+  width: 1000px;
+  height: 300px;
+  margin: 200px auto;
+  text-align: center;
+}
+.nav li {
+  display: inline-block;
+  margin: 0 40px;
+}
+.nav li a {
+  display: inline-block;
+  font-size: 20px;
+  position: relative;
+}
+.nav li a:hover {
+  color: #6495ed;
+  -ms-transition: all 0.3s;
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  transition: all 0.3s;
+}
+.nav li a span {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  -ms-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  background-color: #fff;
+  left: 50%;
+  margin-left: -40px;
+  bottom: 100%;
+  margin-bottom: 20px;
+  text-align: center;
+  line-height: 80px;
+  opacity: 0;
+}
+.nav li a span:after {
+  content: '';
+  position: absolute;
+  width: 30px;
+  height: 20px;
+  top: 100%;
+  left: 50%;
+  margin-left: -15px;
+  margin-top: -5px;
+  background-image: url("../img/tooltip1.svg");
+  background-repeat: no-repeat;
+  background-size: 30px;
+}
+.nav li .tooltips-1 span {
+  font-size: 12px;
+  -ms-transform: translate3d(0, 10px, 0) rotate3d(1, 1, 1, 45deg);
+  -webkit-transform: translate3d(0, 10px, 0) rotate3d(1, 1, 1, 45deg);
+  -moz-transform: translate3d(0, 10px, 0) rotate3d(1, 1, 1, 45deg);
+  transform: translate3d(0, 10px, 0) rotate3d(1, 1, 1, 45deg);
+  -ms-transform-origin: center bottom;
+  -webkit-transform-origin: center bottom;
+  -moz-transform-origin: center bottom;
+  transform-origin: center bottom;
+}
+.nav li .tooltips-1:hover span {
+  color: #000;
+  font-size: 20px;
+  opacity: 1;
+  -ms-transform: translate3d(0, 0, 0) rotate3d(1, 1, 1, 0);
+  -webkit-transform: translate3d(0, 0, 0) rotate3d(1, 1, 1, 0);
+  -moz-transform: translate3d(0, 0, 0) rotate3d(1, 1, 1, 0);
+  transform: translate3d(0, 0, 0) rotate3d(1, 1, 1, 0);
+  -ms-transition: all 0.3s ease-in-out;
+  -webkit-transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+.nav li .tooltips-2 span {
+  line-height: 90px;
+  -ms-transform: translate3d(0, 10px, 0);
+  -webkit-transform: translate3d(0, 10px, 0);
+  -moz-transform: translate3d(0, 10px, 0);
+  transform: translate3d(0, 10px, 0);
+}
+.nav li .tooltips-2:hover span {
+  color: #000;
+  opacity: 1;
+  line-height: 80px;
+  -ms-transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
+  -moz-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+  -ms-transition: all 0.3s ease-in-out;
+  -webkit-transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+.nav li .tooltips-3 span {
+  -ms-transform: rotateY(90deg);
+  -webkit-transform: rotateY(90deg);
+  -moz-transform: rotateY(90deg);
+  transform: rotateY(90deg);
+  -ms-transform-origin: center bottom;
+  -webkit-transform-origin: center bottom;
+  -moz-transform-origin: center bottom;
+  transform-origin: center bottom;
+}
+.nav li .tooltips-3:hover span {
+  color: #000;
+  opacity: 1;
+  -ms-transform: rotateY(0deg);
+  -webkit-transform: rotateY(0deg);
+  -moz-transform: rotateY(0deg);
+  transform: rotateY(0deg);
+  -ms-transition: all 0.3s;
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  transition: all 0.3s;
+}
+.nav li .tooltips-4 span {
+  -ms-transform: translateY(-10px);
+  -webkit-transform: translateY(-10px);
+  -moz-transform: translateY(-10px);
+  transform: translateY(-10px);
+}
+.nav li .tooltips-4:hover span {
+  color: #000;
+  opacity: 1;
+  -ms-transform: translateY(0);
+  -webkit-transform: translateY(0);
+  -moz-transform: translateY(0);
+  transform: translateY(0);
+  -ms-transition: all 0.3s ease-in-out;
+  -webkit-transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+.nav li .tooltips-5 span {
+  -ms-transform: scale3d(0, 0, 1);
+  -webkit-transform: scale3d(0, 0, 1);
+  -moz-transform: scale3d(0, 0, 1);
+  transform: scale3d(0, 0, 1);
+  -ms-transform-origin: center bottom;
+  -webkit-transform-origin: center bottom;
+  -moz-transform-origin: center bottom;
+  transform-origin: center bottom;
+}
+.nav li .tooltips-5:hover span {
+  color: #000;
+  opacity: 1;
+  -ms-transform: scale3d(1, 1, 1);
+  -webkit-transform: scale3d(1, 1, 1);
+  -moz-transform: scale3d(1, 1, 1);
+  transform: scale3d(1, 1, 1);
+  -ms-transition: all 0.4s ease-in-out;
+  -webkit-transition: all 0.4s ease-in-out;
+  -moz-transition: all 0.4s ease-in-out;
+  transition: all 0.4s ease-in-out;
+}

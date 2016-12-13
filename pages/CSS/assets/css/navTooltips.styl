@@ -1,0 +1,157 @@
+//--基本颜色
+$base-color = #333;
+//--基础样式
+$base-font-family = "PingFang SC", "微软雅黑";
+
+//--前缀
+prefix(prop, args) {
+  -ms-{prop} args
+  -webkit-{prop} args
+  -moz-{prop} args
+  {prop} args
+}
+
+//--通用函数
+b-box-shadow() {
+  prefix('box-shadow', arguments);
+}
+
+b-border-radius() {
+  prefix('border-radius', arguments);
+}
+
+b-box-sizing() {
+  prefix('box-sizing', arguments);
+}
+
+b-transform() {
+  prefix('transform', arguments);
+}
+
+b-transition() {
+  prefix('transition', arguments);
+}
+
+b-transformOrigin() {
+  prefix('transform-origin', arguments);
+}
+
+b-word-hidden() {
+  overflow hidden;
+  text-overflow ellipsis;
+  white-space nowrap;
+}
+
+@import "common.css";
+body {
+  background-color #f3f5f7;
+}
+
+.nav {
+  width 1000px;
+  height 300px;
+  margin 200px auto;
+  text-align center;
+  & li {
+    display inline-block;
+    margin 0 40px;
+    & a {
+      display inline-block;
+      font-size 20px;
+      position relative;
+      &:hover{
+        color cornflowerblue;
+        b-transition(all, .3s);
+      }
+      & span {
+        position absolute;
+        width 80px;
+        height 80px;
+        b-border-radius(50%);
+        background-color white;
+        left 50%;
+        margin-left -40px;
+        bottom 100%;
+        margin-bottom 20px;
+        text-align center;
+        line-height 80px;
+        opacity 0;
+        &:after {
+          content '';
+          position absolute;
+          width 30px;
+          height 20px;
+          top 100%;
+          left 50%;
+          margin-left -15px;
+          margin-top -5px;
+          background-image url("../img/tooltip1.svg");
+          background-repeat no-repeat;
+          background-size 30px;
+        }
+      }
+    }
+    & .tooltips-1{
+      & span{
+        font-size 12px;
+        b-transform(translate3d(0, 10px, 0), rotate3d(1, 1, 1, 45deg)); //b-transform(translateY(10px));
+        b-transformOrigin(center bottom);  //b-transformOrigin(50% 100%);
+      }
+      &:hover span{
+        color black;
+        font-size 20px;
+        opacity 1;
+        b-transform(translate3d(0, 0, 0), rotate3d(1, 1, 1, 0));
+        b-transition(all, .3s, ease-in-out);
+      }
+    }
+    & .tooltips-2{
+      & span{
+        line-height: 90px;
+        b-transform(translate3d(0, 10px, 0));
+      }
+      &:hover span{
+        color black;
+        opacity 1;
+        line-height: 80px;
+        b-transform(translate3d(0, 0, 0));
+        b-transition(all, .3s, ease-in-out);
+      }
+    }
+    & .tooltips-3{
+      & span{
+        b-transform(rotateY(90deg));
+        b-transformOrigin(center bottom);
+      }
+      &:hover span{
+        color black;
+        opacity 1;
+        b-transform(rotateY(0deg));
+        b-transition(all, .3s);
+      }
+    }
+    & .tooltips-4{
+      & span{
+        b-transform(translateY(-10px));
+      }
+      &:hover span{
+        color black;
+        opacity 1;
+        b-transform(translateY(0));
+        b-transition(all, .3s, ease-in-out);
+      }
+    }
+    & .tooltips-5{
+      & span{
+        b-transform(scale3d(0, 0, 1));
+        b-transformOrigin(center bottom);
+      }
+      &:hover span{
+        color black;
+        opacity 1;
+        b-transform(scale3d(1, 1, 1));
+        b-transition(all, .4s, ease-in-out);
+      }
+    }
+  }
+}

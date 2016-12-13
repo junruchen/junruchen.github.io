@@ -1,0 +1,148 @@
+//--基本颜色
+$base-color = #333;
+//--基础样式
+$base-font-family = "PingFang SC", "微软雅黑";
+//--前缀
+prefix(prop, args) {
+  -ms-{prop} args
+  -webkit-{prop} args
+  -moz-{prop} args
+  {prop} args
+}
+
+//--通用函数
+b-box-shadow() {
+  prefix('box-shadow', arguments);
+}
+
+b-border-radius() {
+  prefix('border-radius', arguments);
+}
+
+b-box-sizing() {
+  prefix('box-sizing', arguments);
+}
+
+b-transform() {
+  prefix('transform', arguments);
+}
+
+b-transition() {
+  prefix('transition', arguments);
+}
+
+b-word-hidden() {
+  overflow hidden;
+  text-overflow ellipsis;
+  white-space nowrap;
+}
+
+@font-face {
+  font-family 'raphaelicons';
+  src url('../font/raphaelicons-webfont.ttf') format('truetype'),url('../font/raphaelicons-webfont.woff') format('woff'),  url('../font/raphaelicons-webfont.eot') format('eot'),  url('../font/raphaelicons-webfont.svg') format('svg');
+  font-weight normal;
+  font-style normal;
+}
+
+//--重置
+html, body, h1, h2, h3, h4, h5, h6, hr, p, blockquote, dl, dt, dd, ul, li, pre, fieldset, legend, button, input, textarea, form, th, td {
+  margin 0;
+  padding 0;
+  font-family $base-font-family;
+  color $base-color;
+}
+
+html, body {
+  width 100%;
+  height 100%;
+}
+
+ul, ol {
+  list-style none
+  margin 0
+  padding 0
+}
+
+a {
+  cursor pointer;
+  text-decoration none;
+  color black;
+}
+
+input[placeholder] {
+  padding-left: 12px;
+  padding-right 12px;
+  font-size: 14px;
+  font-weight 100;
+}
+
+input::-moz-placeholder {
+  font-weight 100;
+}
+
+input:-ms-input-placeholder {
+  font-weight 100;
+}
+
+input::-webkit-input-placeholder {
+  font-weight 100;
+}
+
+textarea[placeholder] {
+  padding-left: 16px;
+  padding-top 16px;
+  padding-right 16px;
+  padding-bottom 5px;
+  font-size: 14px;
+  font-weight 100;
+}
+
+textarea::-moz-placeholder {
+  font-weight 100;
+}
+
+textarea:-ms-input-placeholder {
+  font-weight 100;
+}
+
+textarea::-webkit-input-placeholder {
+  font-weight 100;
+}
+
+canvas {
+  display: block;
+  margin-bottom 20px;
+  margin-right 14px;
+}
+
+.clr {
+  width 0;
+  height 0;
+  overflow hidden;
+  clear both;
+  padding 0;
+  margin 0;
+}
+
+.container {
+  width 100%;
+  height 100%;
+  margin 0 auto;
+}
+
+.back{
+  cursor pointer;
+  width 70px;
+  height 70px;
+  b-border-radius(50%);
+  background-color rgba(0,0,0,.6);
+  text-align center;
+  line-height 70px;
+  position fixed;
+  bottom 60px;
+  right 60px;
+  font-size: 15px;
+  & a{
+    color white;
+  }
+}

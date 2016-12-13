@@ -1,0 +1,61 @@
+//--基本颜色
+$base-color = #333;
+//--基础样式
+$base-font-family = "PingFang SC", "微软雅黑";
+
+//--前缀
+prefix(prop, args) {
+  -ms-{prop} args
+  -webkit-{prop} args
+  -moz-{prop} args
+  {prop} args
+}
+
+//--通用函数
+b-box-shadow() {
+  prefix('box-shadow', arguments);
+}
+
+b-border-radius() {
+  prefix('border-radius', arguments);
+}
+
+b-box-sizing() {
+  prefix('box-sizing', arguments);
+}
+
+b-transform() {
+  prefix('transform', arguments);
+}
+
+b-transition() {
+  prefix('transition', arguments);
+}
+
+b-word-hidden() {
+  overflow hidden;
+  text-overflow ellipsis;
+  white-space nowrap;
+}
+
+@import "common.css";
+h3{
+  text-align center;
+  padding 30px 0;
+  width 70%;
+  border-bottom 1px solid #9b9b9b;
+  margin 0 auto;
+}
+
+h5{
+  display inline;
+  opacity .8;
+  font-weight 400;
+}
+
+.menu{
+  width 70%;
+  margin 0 auto;
+  line-height 35px;
+  padding-top 10px;
+}
