@@ -1,23 +1,53 @@
 @import "common.css";
-.container {
+p {
+  text-align: center;
+  margin: 50px;
+  margin-bottom: 30px;
+}
+.content {
+  margin-bottom: 100px;
+}
+.content .box {
   width: 300px;
   height: 400px;
   background-color: #dcdcdc;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  margin-top: -200px;
-  margin-left: -150px;
+  margin: 0 auto;
+  position: relative;
 }
-.container .square {
+.content .box .square {
   width: 50px;
   height: 50px;
   background-color: #fff;
   opacity: 0.9;
-  -ms-animation: move 1s linear 0s 5;
-  -webkit-animation: move 1s linear 0s 5;
-  -moz-animation: move 1s linear 0s 5;
-  animation: move 1s linear 0s 5;
+  -ms-animation: move 1s linear 0s 5 alternate forwards running;
+  -webkit-animation: move 1s linear 0s 5 alternate forwards running;
+  -moz-animation: move 1s linear 0s 5 alternate forwards running;
+  animation: move 1s linear 0s 5 alternate forwards running;
+}
+.content .box-2 {
+  width: 300px;
+  height: 300px;
+  background-color: #dcdcdc;
+  margin: 0 auto;
+  position: relative;
+}
+.content .box-2 .line {
+  -ms-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  position: absolute;
+  margin-top: -10px;
+  top: 0;
+  left: 0;
+  margin-left: -10px;
+  border: 2px solid #000;
+  width: 320px;
+  height: 320px;
+  -ms-animation: move-2 5s linear infinite;
+  -webkit-animation: move-2 5s linear infinite;
+  -moz-animation: move-2 5s linear infinite;
+  animation: move-2 5s linear infinite;
 }
 @-moz-keyframes move {
   0% {
@@ -121,5 +151,61 @@
     -webkit-transform: translate(250px, 350px);
     -moz-transform: translate(250px, 350px);
     transform: translate(250px, 350px);
+  }
+}
+@-moz-keyframes move-2 {
+  0%, 100% {
+    clip: rect(0px, 320px, 2px, 0px);
+  }
+  25% {
+    clip: rect(0px, 320px, 320px, 318px);
+  }
+  50% {
+    clip: rect(318px, 320px, 320px, 0px);
+  }
+  75% {
+    clip: rect(0px, 2px, 320px, 0px);
+  }
+}
+@-webkit-keyframes move-2 {
+  0%, 100% {
+    clip: rect(0px, 320px, 2px, 0px);
+  }
+  25% {
+    clip: rect(0px, 320px, 320px, 318px);
+  }
+  50% {
+    clip: rect(318px, 320px, 320px, 0px);
+  }
+  75% {
+    clip: rect(0px, 2px, 320px, 0px);
+  }
+}
+@-o-keyframes move-2 {
+  0%, 100% {
+    clip: rect(0px, 320px, 2px, 0px);
+  }
+  25% {
+    clip: rect(0px, 320px, 320px, 318px);
+  }
+  50% {
+    clip: rect(318px, 320px, 320px, 0px);
+  }
+  75% {
+    clip: rect(0px, 2px, 320px, 0px);
+  }
+}
+@keyframes move-2 {
+  0%, 100% {
+    clip: rect(0px, 320px, 2px, 0px);
+  }
+  25% {
+    clip: rect(0px, 320px, 320px, 318px);
+  }
+  50% {
+    clip: rect(318px, 320px, 320px, 0px);
+  }
+  75% {
+    clip: rect(0px, 2px, 320px, 0px);
   }
 }
