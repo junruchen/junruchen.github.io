@@ -1,1 +1,1 @@
-# junruchen.github.io
+* [汇总](https://github.com/junruchen/junruchen.github.io/wiki)
