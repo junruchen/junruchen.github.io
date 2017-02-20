@@ -25,22 +25,22 @@
         margin-top: -10px;
         margin-left: -10px;
         border: 2px solid #58a;
-        box-sizing: border-content;
+        box-sizing: border-box;
         animation: move 2s linear infinite;
       }
       
       @keyframes move{
-        0%{
-          clip: rect(0 220px 2px 0); //顶部的边
+        0%, 100%{
+          clip: rect(0 220px 2px 0); /*顶部的边*/
         }
         25%{
-          clip: rect(0 220px 220px 218px); //右侧的边
+          clip: rect(0 220px 220px 218px); /*右侧的边*/
         }
         50%{
-          clip: rect(218px 220px 220px 0); //底部的边
+          clip: rect(218px 220px 220px 0); /*底部的边*/
         }
         75%{
-          clip: rect(0 2px 220px 0); //左侧的边
+          clip: rect(0 2px 220px 0); /*左侧的边*/
         }
       }
     
