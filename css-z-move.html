@@ -6,46 +6,45 @@
     <title>CSS--方块"Z"路线移动</title>
     <style>
     .container{
-    text-align:center;
+      text-align:center;
+      font-size: 18px;
     }
     
     /*定义动画*/
     @keyframes move {
-    0% {
-      transform:translateX(0);
+      0% {
+        transform:translateX(0);
+      }
+      33% {
+        transform:translateX(170px);
+      }
+      66% {
+        transform:translate(0, 170px);
+      }
+      100% {
+        transform:translate(170px, 170px);
+      }
     }
-    33% {
-      transform:translateX(170px);
+    .box{
+      position:relative;
+      margin:0 auto;
+      width:200px;
+      height:200px;
+      background-color:#fb3;
     }
-    66% {
-      transform:translate(0, 170px);
+    .square{
+      position:absolute;
+      width:30px;
+      height:30px;
+      background-color:#58a;
+      animation:move linear 2s 0s 5 alternate forwards
     }
-    100% {
-      transform:translate(170px, 170px);
-    }
-  }
-  .box{
-  position:relative;
-  margin:0 auto;
-  width:200px;
-  height:200px;
-  background-color:#fb3;
-  }
-  .square{
-  position:absolute;
-  width:30px;
-  height:30px;
-  background-color:#58a;
-  animation:move linear 2s 0 5 alternate forwards
-  }
-  
-  
-    
     </style>
 </head>
 <body>
 <div class="container">
-    <p>30X30像素的方块在200X200像素窗口做“Z”字型匀速移动，5s钟循环五次，每次的执行时间为2s，且每一次执行到底部后反方向执行，最后停留在最后一帧</p>
+    <p>30X30像素的方块在200X200像素窗口做“Z”字型匀速移动</p>
+    <p>要求：5s钟循环五次；每次的执行时间为2s；每一次执行到底部后反方向执行；最后停留在最后一帧</p>
     <div class="box">
         <div class="square"></div>
     </div>
