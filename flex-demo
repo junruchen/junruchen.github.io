@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-COMPATIBLE" content="IE-edge,chrome=1"> <!--IE-->
+    <title>css-flex之左二右一布局</title>
+    <style>
+      .container{
+        text-align: center;
+        font-size: 18px;
+      }
+      .box{
+        width: 300px;
+        height: 230px;
+        margin: 0 auto;
+        background-color: #fb3;
+        
+        display: flex;
+        display: -webkit-flex;
+        align-item: center;
+        justiy-content: center;
+      }
+      .box .item{
+        width: 70px;
+        margin: 0 10px;
+      }
+      .box .item1{
+        height: 130px;
+      }
+      .box .item2{
+        height: 200px;
+      }
+      .box .item3{
+        height: 90px;
+      }
+    </style>
+</head>
+<body>
+<div class="container">
+  <div class="box">
+    <div class="item item1"></div>
+    <div class="item item2"></div>
+    <div class="item item3"></div>
+  </div>
+</div>
+</body>
+</html>
