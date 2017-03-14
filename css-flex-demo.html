@@ -18,7 +18,10 @@
         display: flex;
         display: -webkit-flex;
         align-items: center;
-        justify-content: center;
+        justify-content: space-between;
+          
+        padding: 0 10px;
+        box-sizing: border-box;  
       }
       .box .item{
         width: 70px;
@@ -33,11 +36,14 @@
       }
       .box .item3{
         height: 90px;
+        
+        margin-left: auto;  
       }
     </style>
 </head>
 <body>
 <div class="container">
+  <p>利用flex实现左2右1布局, 且除去中间部分，其他间距相等，上下居中</p>  
   <div class="box">
     <div class="item item1"></div>
     <div class="item item2"></div>
