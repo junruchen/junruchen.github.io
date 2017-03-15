@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head lang="zh_CN">
+  <meta charset="UTF-8">
+  <title>饼图</title>
+  <style>
+    body{
+     text-align: center;
+    }
+    .box {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      margin: 0 auto;
+      margin-top: 50px;
+      border-radius: 50%;
+      background: linear-gradient(to right, #58a 50%, #fb3 0);
+    }
+
+    .box:before {
+      content: '';
+      position: absolute;
+      width: 50%;
+      height: 100%;
+      background-color: #58a;
+      right: 0;
+      border-radius: 0 100% 100% 0 / 50%;
+      transform-origin: left center;
+      animation: rotate 6s linear infinite, change 12s step-end infinite;
+    }
+
+    @keyframes rotate{
+      to{
+        transform: rotate(180deg);
+      }
+    }
+    @keyframes change{
+      50%{
+        background-color: #fb3;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="box"></div>
+<p>使用animation实现动态饼图</p>
+
+</body>
+</html>
