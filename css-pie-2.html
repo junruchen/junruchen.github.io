@@ -7,6 +7,22 @@
     body{
      text-align: center;
     }
+
+    input{
+      outline: none;
+      width: 200px;
+      height: 30px;
+      padding-left: 10px;
+    }
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button{
+      -webkit-appearance: none !important;
+      margin: 0;
+    }
+    input[type="number"]{-moz-appearance:textfield;}
+
+
+
     .box {
       position: relative;
       width: 200px;
@@ -15,7 +31,7 @@
       margin-top: 50px;
       border-radius: 50%;
       background: linear-gradient(to right, #58a 50%, #fb3 0);
-      animation-delay: -7.5s;
+      animation-delay: 0s;
     }
 
     .box:before {
@@ -27,7 +43,7 @@
       right: 0;
       border-radius: 0 100% 100% 0 / 50%;
       transform-origin: left center;
-      animation: rotate 6s linear infinite, change 12s step-end infinite;
+      animation: rotate 50s linear infinite, change 100s step-end infinite;
       animation-delay: inherit;
       animation-play-state: paused;
     }
@@ -45,8 +61,26 @@
   </style>
 </head>
 <body>
+<input id="pieNum" type="number" placeholder="请输入0-100之间的数值控制饼图" oninput="change(this.value)"/>
 <div class="box"></div>
 <p>使用animation-delay的负数特性以及animation-play-state可实现任意大小的饼图</p>
+  
+<script type="text/javascript">
+  function change(val){
+    if(isTrueNum(val)){
+      document.querySelector(".box").style.animationDelay = '-'+ val +'s';
+    }else if(!val){
+      document.querySelector(".box").style.animationDelay =  '0s';
+    }else{
+      document.querySelector("#pieNum").value = '';
+      alert('请输入0-100之间的数值');
+    }
+  }
 
+  function isTrueNum(val){
+    val = parseInt(val);
+    return Object.prototype.toString.call(val) === '[object Number]' && val <= 100 && val >=0 && val%1 === 0;
+  }
+</script>
 </body>
 </html>
