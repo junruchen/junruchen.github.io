@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head lang="zh_CN">
+  <meta charset="UTF-8">
+  <title>loading图--渐变色</title>
+  <style>
+    body {
+      text-align: center;
+    }
+
+    input {
+      outline: none;
+      width: 200px;
+      height: 30px;
+      padding-left: 10px;
+    }
+    
+    .box {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      margin: 0 auto;
+      margin-top: 50px;
+      border-radius: 50%;
+    }
+
+    .box .item-left, .box .item-right {
+      position: absolute;
+      width: 50%;
+      height: 100%;
+      top: 0;
+    }
+
+    .box .item-right {
+      border-radius: 0 100% 100% 0/50%;
+      background: linear-gradient(#fff, #666);
+      right: 0;
+    }
+
+    .box .item-left {
+      border-radius: 100% 0 0 100%/50%;
+      background: linear-gradient(#000, #666);
+      left: 0;
+    }
+
+    .box .item-center{
+      position: absolute;
+      width: 190px;
+      height: 190px;
+      border-radius: 50%;
+      background-color: #fff;
+      top: 5px;
+      left: 5px;
+    }
+
+    .box .item-right:before, .box .item-left:before{
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      border-radius: inherit;
+    }
+
+    .box .item-right:before{
+      background-color: #fff;
+      transform-origin: left;
+      animation: rotate 30s linear infinite, changeColor 60s step-end infinite;
+      /*animation-delay: -30s;
+      animation-play-state: paused;*/
+    }
+
+    .box .item-left:before{
+      background-color: #fff;
+      transform-origin: right;
+      animation: rotate 30s 30s linear infinite;
+      /*animation-delay: -20s;
+      animation-play-state: paused;*/
+    }
+
+    @keyframes rotate {
+      to {
+        transform: rotate(180deg);
+      }
+    }
+
+    @keyframes changeColor{
+      50%{
+        background-color: transparent;
+      }
+
+    }
+
+  </style>
+</head>
+<body>
+<div class="box">
+  <div class="item-left"></div>
+  <div class="item-right"></div>
+  <div class="item-center"></div>
+</div>
+</body>
+</html>
