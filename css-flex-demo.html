@@ -10,6 +10,11 @@
       text-align: center;
       font-size: 20px;
     }
+    
+    p{
+      font-size: .8rem;
+    }
+    
     .box{
       width: 20rem;
       height: 11.5rem;
@@ -43,7 +48,8 @@
 </head>
 <body>
 <div class="container">
-  <p>利用flex实现左2右1布局, 且除去中间部分，其他间距相等，上下居中</p>
+  <p>要求：利用flex实现左2右1布局, 且除去中间部分，其他间距相等，上下居中</p>
+  <p>原理：margin-left: auto; 水平（默认）书写模式下，其计算值取决于可用空间</p>
   <div class="box">
     <div class="item item1"></div>
     <div class="item item2"></div>
