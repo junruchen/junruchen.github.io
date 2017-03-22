@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head lang="zh_CN">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-COMPATIBLE" content="IE-edge,chrome=1"><!--IE-->
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+  <title>loading图--渐变色</title>
+  <style>
+    body {
+      text-align: center;
+      font-size： 16px;
+    }
+
+    input {
+      outline: none;
+      width: 200px;
+      height: 30px;
+      padding-left: 10px;
+    }
+    
+    .box {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      margin: 0 auto;
+      margin-top: 50px;
+      border-radius: 50%;
+    }
+
+    .box .item-left, .box .item-right {
+      position: absolute;
+      width: 50%;
+      height: 100%;
+      top: 0;
+    }
+
+    .box .item-right {
+      border-radius: 0 100% 100% 0/50%;
+      background: linear-gradient(#fff, #666);
+      right: 0;
+    }
+
+    .box .item-left {
+      border-radius: 100% 0 0 100%/50%;
+      background: linear-gradient(#000, #666);
+      left: 0;
+    }
+
+    .box .item-center{
+      position: absolute;
+      width: 190px;
+      height: 190px;
+      border-radius: 50%;
+      background-color: #fff;
+      top: 5px;
+      left: 5px; 
+      line-height: 190px;
+    }
+
+    .box .item-right:before, .box .item-left:before{
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      border-radius: inherit;
+    }
+
+    .box .item-right:before{
+      background-color: #fff;
+      transform-origin: left;
+      box-shadow: 3px 0 2px 2px #fff;
+      animation: rotate 30s linear infinite, changeColor 60s step-end infinite;
+      /*animation-delay: -30s;
+      animation-play-state: paused;*/
+    }
+
+    .box .item-left:before{
+      background-color: #fff;
+      transform-origin: right;
+      box-shadow: -3px 0 2px 2px #fff;
+      animation: rotate 30s 30s linear infinite;
+      /*animation-delay: -20s;
+      animation-play-state: paused;*/
+    }
+
+    @keyframes rotate {
+      to {
+        transform: rotate(180deg);
+      }
+    }
+
+    @keyframes changeColor{
+      50%{
+        background-color: transparent;
+      }
+
+    }
+
+  </style>
+</head>
+<body>
+<div class="box">
+  <div class="item-left"></div>
+  <div class="item-right"></div>
+  <div class="item-center">60s</div>
+</div>
+</body>
+</html>
