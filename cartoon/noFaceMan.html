@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head lang="zh_CN">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-COMPATIBLE" content="IE-edge,chrome=1"><!--IE-->
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+  <title>无脸男</title>
+  <style>
+    .container{
+    }
+    .body{
+      position: relative;
+      margin: 0 auto;
+      margin-top: 50px;
+      width: 400px;
+      height: 500px;
+      background-color: #383d26;
+      box-shadow: 0 4px 4px -4px #383d26;
+      border-radius: 160px 240px 80px 60px / 400px 400px 100px 100px;
+    }
+    .body .hand{
+      position: absolute;
+      width: 80px;
+      height: 60px;
+      border: 1px solid #383d26;
+      right: 85%;
+      top: 50%;
+      background-color: #383d26;
+      transform: skew(-50deg);
+      border-radius: 1px 20px;
+
+    }
+    .body .face{
+      position: absolute;
+      width: 150px;
+      height: 200px;
+      left: 65px;
+      top: 55px;
+      background-color: #eeebca;
+      border-radius: 60px 90px 70px 67px / 120px 140px 60px 80px;
+    }
+
+    .body .face .left-eye, .body .face .right-eye{
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      top: 60px;
+      background-color: #383d26;
+      border-radius: 50%;
+    }
+    .body .face .left-eye{
+      left: 20px;
+    }
+    .body .face .right-eye{
+      width: 33px;
+      height: 33px;
+      right: 50px;
+      margin-top: -1.5px;
+    }
+
+    .body .face .left-eye:before, .body .face .left-eye:after, .body .face .right-eye:before, .body .face .right-eye:after{
+      position: absolute;
+      content: '';
+      border: 15px solid transparent;
+      left: 50%;
+      transform: translateX(-50%) scale(1, 1.7);
+    }
+    .body .face .left-eye:before, .body .face .right-eye:before{
+      border-bottom-color: #b16f4c;
+      bottom: 100%;
+      margin-bottom: 5px;
+      transform-origin: bottom;
+    }
+    .body .face .left-eye:after, .body .face .right-eye:after{
+      border-top-color: #b16f4c;
+      top: 100%;
+      margin-top: 5px;
+      transform-origin: top;
+    }
+
+    .body .face .mouse{
+      position: absolute;
+      width: 30px;
+      height:30px;
+      border: 5px solid transparent;
+      border-bottom-color: #383d26;
+      border-radius: 50%;
+      bottom: 30px;
+      left: 50%;
+      margin-left: -35px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="body">
+    <div class="face">
+      <div class="left-eye"></div>
+      <div class="right-eye"></div>
+      <div class="mouse"></div>
+    </div>
+    <div class="hand"></div>
+  </div>
+</div>
+</body>
+</html>
