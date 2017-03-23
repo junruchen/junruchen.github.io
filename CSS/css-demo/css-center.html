@@ -28,11 +28,43 @@
       border: 2px solid #58a;
       box-sizing: border-box;
 
-      clip: rect(0 220px 2px 0);
-      /*animation: move 5s linear infinite;*/
+      animation: move 5s linear infinite;
+      -webkit-animation: move 5s linear infinite;
+      -moz-animation: move 5s linear infinite;
+
     }
 
     @keyframes move{
+      0%, 100%{
+        clip: rect(0 220px 2px 0); /*顶部的边*/
+      }
+      25%{
+        clip: rect(0 220px 220px 218px); /*右侧的边*/
+      }
+      50%{
+        clip: rect(218px 220px 220px 0); /*底部的边*/
+      }
+      75%{
+        clip: rect(0 2px 220px 0); /*左侧的边*/
+      }
+    }
+
+    @-webkit-keyframes move{
+      0%, 100%{
+        clip: rect(0 220px 2px 0); /*顶部的边*/
+      }
+      25%{
+        clip: rect(0 220px 220px 218px); /*右侧的边*/
+      }
+      50%{
+        clip: rect(218px 220px 220px 0); /*底部的边*/
+      }
+      75%{
+        clip: rect(0 2px 220px 0); /*左侧的边*/
+      }
+    }
+
+    @-moz-keyframes move{
       0%, 100%{
         clip: rect(0 220px 2px 0); /*顶部的边*/
       }
