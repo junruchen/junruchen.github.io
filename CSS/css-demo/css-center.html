@@ -1,21 +1,61 @@
 <!DOCTYPE html>
-<html lang="zh-cmn-Hans">
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>clip_CSS参考手册_web前端开发参考手册系列</title>
-  <meta name="author" content="Joy Du(飘零雾雨), dooyoe@gmail.com, www.doyoe.com" />
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-COMPATIBLE" content="IE-edge,chrome=1"> <!--IE-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+  <title>CSS--线段移动</title>
   <style>
-    .test {
-      position: absolute;
-      height: 50px;
-      line-height: 50px;
-      clip: rect(0 auto 35px 10px);
-      background: #eee;
+    .container{
+      text-align: center;
+      font-size: 18px;
     }
+    .box{
+      position: relative;
+      width: 200px;
+      height: 200px;
+      margin: 0 auto;
+      background-color: #fb3;
+    }
+    .box .line-box{
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      top: 0;
+      left: 0;
+      margin-top: -10px;
+      margin-left: -10px;
+      border: 2px solid #58a;
+      box-sizing: border-box;
+
+      clip: rect(0 220px 2px 0);
+      /*animation: move 5s linear infinite;*/
+    }
+
+    @keyframes move{
+      0%, 100%{
+        clip: rect(0 220px 2px 0); /*顶部的边*/
+      }
+      25%{
+        clip: rect(0 220px 220px 218px); /*右侧的边*/
+      }
+      50%{
+        clip: rect(218px 220px 220px 0); /*底部的边*/
+      }
+      75%{
+        clip: rect(0 2px 220px 0); /*左侧的边*/
+      }
+    }
+
   </style>
 </head>
 <body>
-<div class="test">看看被剪切后的效果</div>
+<div class="container">
+  <p>线段围绕正方形盒子运动,线段的长度大于或者等于盒子的宽度</p>
+  <div class="box">
+    <div class="line-box"></div>
+  </div>
+</div>
 </body>
 </html>
-	
+
