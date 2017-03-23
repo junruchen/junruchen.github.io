@@ -37,8 +37,11 @@
     }
 
     @keyframes test{
+      from{
+        clip: rect(0 220px 2px 0); /*顶部的边*/
+      }
       to{
-        border-color: #fb3;
+        clip: rect(0 220px 220px 218px); /*右侧的边*/
       }
     }
 
