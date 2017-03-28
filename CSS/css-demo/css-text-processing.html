@@ -2,12 +2,81 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta http-equiv="X-UA-COMPATIBLE" content="IE-edge,chrome=1"> <!--IE-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
   <title>文本处理</title>
-  <meta name="description" content="">
-  <meta name="keywords" content="">
+  <style>
+    h3, h5{
+      margin: 0 0 5px;
+      padding: 0;
+    }
+
+    span{
+      color: crimson;
+    }
+
+    .container{
+      width: 960px;
+      margin: 0 auto;
+      color: #333;
+      font-size: 18px;
+    }
+
+    .center-item{
+      margin: 5px 0 25px;
+    }
+
+    .box{
+      position: relative;
+      width: 400px;
+      height: 120px;
+      background-color: #fb3;
+    }
+
+  </style>
 </head>
 <body>
+<div class="container"> <h3>水平居中</h3>
+  <div class="center-item">
+    <h5><span>margin: 0 auto;</span></h5>
+    <div class="box">
+      <div class="item"></div>
+    </div>
+  </div>
 
+  <h3>水平垂直居中</h3>
+  <div class="center-item">
+    <h5>元素宽高固定, absolute定位, <span> margin: 0 auto</span> 结合 <span>top/left</span></h5>
+    <div class="box">
+      <div class="item-1"></div>
+    </div>
+  </div>
+
+  <div class="center-item">
+    <h5>元素宽高不固定, absolute定位, <span>transform: translate(-50%, -50%)</span> 结合 <span>top/left</span></h5>
+    <div class="box">
+      <div class="item-2">元素撑开</div>
+    </div>
+  </div>
+
+  <div class="center-item">
+    <h5>元素宽高不固定, flex定位, 父元素水平方向 <span>justify-content: center</span>, 垂直方向 <span>align-items: center</span></h5>
+    <div class="box-1">
+      <div class="item-3">元素撑开</div>
+    </div>
+  </div>
+
+  <div class="center-item">
+    <h5>借助 table-cell 可以设置垂直方向上的排列方式vertical-align特性</h5>
+    <h5>元素宽高不固定, table定位, 必须三级定位, 父元素 <span>display: table</span>, 二层元素 <span>display: table-cell; vertical-align: middle</span>, 子元素 <span>margin: 0 auto</span></h5>
+    <div class="box-2">
+      <div class="item-box">
+        <div class="item-4"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
 </body>
 </html>
+
