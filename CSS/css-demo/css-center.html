@@ -4,98 +4,151 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-COMPATIBLE" content="IE-edge,chrome=1"> <!--IE-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
-  <title>CSS--线段移动</title>
+  <title>居中总结</title>
   <style>
+    h3, h5{
+      margin: 0 0 5px;
+      padding: 0;
+    }
+
+    span{
+      color: crimson;
+    }
+
     .container{
-      text-align: center;
+      width: 960px;
+      margin: 0 auto;
+      color: #333;
       font-size: 18px;
     }
+
+    .center-item{
+      margin: 5px 0 25px;
+    }
+
     .box{
       position: relative;
-      width: 200px;
-      height: 200px;
-      margin: 0 auto;
+      width: 400px;
+      height: 120px;
       background-color: #fb3;
     }
-    .box .line-box{
+
+    .item{
+      width: 50px;
+      height: 50px;
+      background-color: #58a;
+
+      margin: 0 auto;
+    }
+
+    .item-1{
       position: absolute;
-      width: 220px;
-      height: 220px;
-      top: 0;
-      left: 0;
-      margin-top: -10px;
-      margin-left: -10px;
-      border: 2px solid #58a;
-      box-sizing: border-box;
+      width: 50px;
+      height: 50px;
+      background-color: #58a;
 
-      animation: test 5s linear infinite;
-
-      /*animation: move 5s linear infinite;
-      -webkit-animation: move 5s linear infinite;
-      -moz-animation: move 5s linear infinite;*/
-
+      top: 50%;
+      left: 50%;
+      margin: -25px 0 0 -25px;
     }
 
-    @keyframes test{
-      from{
-        clip: rect(0 220px 2px 0); /*顶部的边*/
-      }
-      
+    .item-2{
+      position: absolute;
+      background-color: #58a;
+      color: #fff;
+      padding: 3px;
+
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%)
     }
 
-    @keyframes move{
-      0%, 100%{
-        clip: rect(0 220px 2px 0); /*顶部的边*/
-      }
-      25%{
-        clip: rect(0 220px 220px 218px); /*右侧的边*/
-      }
-      50%{
-        clip: rect(218px 220px 220px 0); /*底部的边*/
-      }
-      75%{
-        clip: rect(0 2px 220px 0); /*左侧的边*/
-      }
+    .box-1{
+      display: flex;
+      width: 400px;
+      height: 120px;
+      background-color: #fb3;
+
+      justify-content: center;
+      align-items: center;
     }
 
-    @-webkit-keyframes move{
-      0%, 100%{
-        clip: rect(0 220px 2px 0); /*顶部的边*/
-      }
-      25%{
-        clip: rect(0 220px 220px 218px); /*右侧的边*/
-      }
-      50%{
-        clip: rect(218px 220px 220px 0); /*底部的边*/
-      }
-      75%{
-        clip: rect(0 2px 220px 0); /*左侧的边*/
-      }
+    .item-3{
+      color: #fff;
+      padding: 3px;
+      background-color: #58a;
     }
 
-    @-moz-keyframes move{
-      0%, 100%{
-        clip: rect(0 220px 2px 0); /*顶部的边*/
-      }
-      25%{
-        clip: rect(0 220px 220px 218px); /*右侧的边*/
-      }
-      50%{
-        clip: rect(218px 220px 220px 0); /*底部的边*/
-      }
-      75%{
-        clip: rect(0 2px 220px 0); /*左侧的边*/
-      }
+    .box-2{
+      display: table;
+      width: 400px;
+      height: 120px;
+      background-color: #fb3;
+    }
+
+    .item-box{
+      display: table-cell;
+      vertical-align: middle;
+    }
+
+    .item-4{
+      margin: 0 auto;
+      width: 50px;
+      height: 50px;
+      color: #fff;
+      padding: 3px;
+      background-color: #58a;
     }
 
   </style>
 </head>
 <body>
 <div class="container">
-  <p>线段围绕正方形盒子运动,线段的长度大于或者等于盒子的宽度</p>
-  <div class="box">
-    <div class="line-box"></div>
+  居中
+  absolute: margin  transform
+  flex
+  table
+
+  <h3>水平居中</h3>
+  <div class="center-item">
+    <h5><span>margin: 0 auto;</span></h5>
+    <div class="box">
+      <div class="item"></div>
+    </div>
   </div>
+
+  <h3>水平垂直居中</h3>
+  <div class="center-item">
+    <h5>元素宽高固定, absolute定位, <span> margin: 0 auto</span> 结合 <span>top/left</span></h5>
+    <div class="box">
+      <div class="item-1"></div>
+    </div>
+  </div>
+
+  <div class="center-item">
+    <h5>元素宽高不固定, absolute定位, <span>transform: translate(-50%, -50%)</span> 结合 <span>top/left</span></h5>
+    <div class="box">
+      <div class="item-2">元素撑开</div>
+    </div>
+  </div>
+
+  <div class="center-item">
+    <h5>元素宽高不固定, flex定位, 父元素水平方向 <span>justify-content: center</span>, 垂直方向 <span>align-items: center</span></h5>
+    <div class="box-1">
+      <div class="item-3">元素撑开</div>
+    </div>
+  </div>
+
+  <div class="center-item">
+    <h5>借助 table-cell 可以设置垂直方向上的排列方式vertical-align特性</h5>
+    <h5>元素宽高不固定, table定位, 必须三级定位, 父元素 <span>display: table</span>, 二层元素 <span>display: table-cell; vertical-align: middle</span>, 子元素 <span>margin: 0 auto</span></h5>
+    <div class="box-2">
+      <div class="item-box">
+        <div class="item-4"></div>
+      </div>
+    </div>
+  </div>
+
 </div>
 </body>
 </html>
