@@ -3,37 +3,38 @@
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-COMPATIBLE" content="IE-edge,chrome=1"> <!--IE-->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
   <title>居中总结</title>
   <style>
-    h3, h5{
+    h3, h5 {
       margin: 0 0 5px;
       padding: 0;
     }
 
-    span{
+    span {
       color: crimson;
     }
 
-    .container{
+    .container {
       width: 960px;
       margin: 0 auto;
       color: #333;
       font-size: 18px;
     }
 
-    .center-item{
+    .center-item {
       margin: 5px 0 25px;
     }
 
-    .box{
+    .box {
       position: relative;
       width: 400px;
       height: 120px;
       background-color: #fb3;
     }
 
-    .item{
+    .item {
       width: 50px;
       height: 50px;
       background-color: #58a;
@@ -41,7 +42,7 @@
       margin: 0 auto;
     }
 
-    .item-1{
+    .item-1 {
       position: absolute;
       width: 50px;
       height: 50px;
@@ -52,7 +53,7 @@
       margin: -25px 0 0 -25px;
     }
 
-    .item-2{
+    .item-2 {
       position: absolute;
       background-color: #58a;
       color: #fff;
@@ -63,7 +64,7 @@
       transform: translate(-50%, -50%)
     }
 
-    .box-1{
+    .box-1 {
       display: flex;
       width: 400px;
       height: 120px;
@@ -73,25 +74,25 @@
       align-items: center;
     }
 
-    .item-3{
+    .item-3 {
       color: #fff;
       padding: 3px;
       background-color: #58a;
     }
 
-    .box-2{
+    .box-2 {
       display: table;
       width: 400px;
       height: 120px;
       background-color: #fb3;
     }
 
-    .item-box{
+    .item-box {
       display: table-cell;
       vertical-align: middle;
     }
 
-    .item-4{
+    .item-4 {
       margin: 0 auto;
       width: 50px;
       height: 50px;
@@ -136,7 +137,8 @@
 
   <div class="center-item">
     <h5>借助 table-cell 可以设置垂直方向上的排列方式vertical-align特性</h5>
-    <h5>元素宽高不固定, table定位, 必须三级定位, 父元素 <span>display: table</span>, 二层元素 <span>display: table-cell; vertical-align: middle</span>, 子元素 <span>margin: 0 auto</span></h5>
+    <h5>元素宽高不固定, table定位, 必须三级定位, 父元素 <span>display: table</span>, 二层元素 <span>display: table-cell; vertical-align: middle</span>,
+      子元素 <span>margin: 0 auto</span></h5>
     <div class="box-2">
       <div class="item-box">
         <div class="item-4"></div>
