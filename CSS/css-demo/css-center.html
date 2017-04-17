@@ -29,8 +29,8 @@
 
     .box {
       position: relative;
-      width: 400px;
-      height: 120px;
+      width: 200px;
+      height: 100px;
       background-color: #fb3;
     }
 
@@ -43,47 +43,50 @@
     }
 
     .item-1 {
-      position: absolute;
       width: 50px;
       height: 50px;
       background-color: #58a;
 
+      position: absolute;
       top: 50%;
       left: 50%;
-      margin: -25px 0 0 -25px;
+      margin-top: -25px;
+      margin-left: -25px;
     }
 
     .item-2 {
-      position: absolute;
       background-color: #58a;
-      color: #fff;
-      padding: 3px;
+      color:white;
+      font-size: 12px;
 
+      position: absolute;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%)
+      transform: translate(-50%, -50%);
     }
 
     .box-1 {
       display: flex;
-      width: 400px;
-      height: 120px;
-      background-color: #fb3;
-
+      display: -webkit-flex;
       justify-content: center;
+      -webkit-justify-content: center;
+      width: 200px;
+      height: 100px;
+      background-color: #fb3;
       align-items: center;
     }
 
     .item-3 {
       color: #fff;
       padding: 3px;
+      font-size: 12px;
       background-color: #58a;
     }
 
     .box-2 {
       display: table;
-      width: 400px;
-      height: 120px;
+      width: 200px;
+      height: 100px;
       background-color: #fb3;
     }
 
@@ -94,10 +97,9 @@
 
     .item-4 {
       margin: 0 auto;
-      width: 50px;
-      height: 50px;
+      width: 100px;
       color: #fff;
-      padding: 3px;
+      font-size: 12px;
       background-color: #58a;
     }
 
@@ -124,7 +126,7 @@
   <div class="center-item">
     <h5>元素宽高不固定, absolute定位, <span>transform: translate(-50%, -50%)</span> 结合 <span>top/left</span></h5>
     <div class="box">
-      <div class="item-2">元素撑开</div>
+      <div class="item-2">宽高由元素撑开</div>
     </div>
   </div>
 
@@ -137,11 +139,11 @@
 
   <div class="center-item">
     <h5>借助 table-cell 可以设置垂直方向上的排列方式vertical-align特性</h5>
-    <h5>元素宽高不固定, table定位, 必须三级定位, 父元素 <span>display: table</span>, 二层元素 <span>display: table-cell; vertical-align: middle</span>,
+    <h5>元素宽度需指定，table定位, 必须三级定位, 父元素 <span>display: table</span>, 二层元素 <span>display: table-cell; vertical-align: middle</span>,
       子元素 <span>margin: 0 auto</span></h5>
     <div class="box-2">
       <div class="item-box">
-        <div class="item-4"></div>
+        <div class="item-4">宽高由元素撑开</div>
       </div>
     </div>
   </div>
