@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>D3 -- scale 比例尺</title>
+</head>
+<body>
+<div class="d3-container">
+  <h3>rangePoints规则:</h3>
+  <img src="./scale1.png" alt="" width="600">
+  <h3>rangeBands规则:</h3>
+  <img src="./scale2.png" alt="" width="600">
+  <p>1</p>
+  <p>2</p>
+  <p>3</p>
+  <p>4</p>
+</div>
+</body>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script>
+  let linear = d3.scaleLinear()
+    .domain([0, 10])
+    .range([0, 100])
+  console.log(linear(5))
+
+  // 不懂
+  // linear.ticks([count]) 设定或获取定义域内具有代表定的数值，主要用来选取坐标轴刻度 或者使用 d3.ticks(), 如：d3.ticks(0, 10, 5)
+  // linear.tickFormat(count,[fomart]) 设置坐标轴数值的表示形式
+
+  /**
+   * 线性比例尺【常用】 （线性 指数 对数的定义域值域都是连续的）
+   * 1、d3.scaleLinear [3.0 d3.scale.linear()] 创建一个线性比例尺
+   * 2、linear.invert(y) 输入y，返回x
+   * 3、linear.domain([numbers]) 设置或获取定义域
+   * 4、linear.range([values]) 设置或获取值域
+   * 5、linear.rangeRound([values]) 设置或获取值域，比例尺输出值会四舍五入成整数
+   * 6、linear.clamp([boolean]) 默认false，超出范围内的值依然可返回一个值[即使这个值可能超出值域]，设置为true时，超出值域范围的值会被收缩到值域范围内[选取值域上下限作为输出返回]
+   * 7、linear.nice([count]) 定义域处理，如[0.500098, 69.999923]会自动转成[0.5, 0.9]
+   * 8、linear.ticks([count]) 设定或获取定义域内具有代表定的数值，主要用来选取坐标轴刻度 或者使用 d3.ticks(), 如：d3.ticks(0, 10, 5)
+   * 9、linear.tickFormat(count,[fomart]) 设置坐标轴数值的表示形式
+   *
+   * 指数比例尺
+   * 11、d3.scalePow() 定义指数比例尺，其他方法与线性一致，增加exponent()方法指定指数
+   * 12、exponent() 指定指数
+   * 13、指数与线性比例尺结合使用，如：let pow = d3.scalePow().exponent(3).domain([0,3]).range([0,90]) pow(1.5)的值为11.25
+   * 定义域以及x均变成三倍，即[0，27]，在求 1.5*3 对应的值，对应值为11.25
+   *
+   * 对数比例尺
+   * 14、d3.scaleLog() 定义对数比例尺，其他方法与线性一致，增加base()方法指定对数
+   * 15、base() 指定对数
+   *
+   * 量子比例尺 【量子 分位 阙值 都是定义域连续，值离散】
+   * 16、d3.scaleQuantize() 定义量子比例尺 其他方法与线性一致
+   *
+   * 分位比例尺
+   * 17、d3.scaleQuantile() 定义分位比例尺 与量子类似
+   * 18、quantiles() 查询分段值
+   *
+   * 阙值比例尺 【临界值】
+   * 19、d3.scaleThreshold() 定义阙值比例尺
+   * 20、invertExtent(y) 通过值域来求定义域
+   *
+   * 序数比例尺 定义域和值域都是离散的
+   * 21、d3.scaleOrdinal() 定义序数比例尺
+   * 22、domain([values]) 设置或获取定义域
+   * 23、range([values]) 设置或获取值域
+   * 24、rangePoints(interval[,padding]) 代替range设置值域，接受连续区间，根据定义域中值的数量分段，分段值作为值域的离散值
+   * interval：区间，padding边界部分留下的空白
+   * 计算公式，两端：step*padding/2 中间为step，值域的第一个值为step*padding/2的值
+   * 25、rangeRoundPoints(interval[,padding]) 与rangePoints一样，但是结果取整
+   * 26、rangeBands(interval[,padding[,outerPadding]]) 与rangePoints一样，但是分段的方法不同
+   * 27、rangeRoundBands(interval[,padding[,outerPadding]]) 与rangeBands一样，但是结果取整
+   * 28、rangeBand() 返回使用rangeBands后每一段的宽度
+   * 29、rangeExtend() 返回值域中最大值和最小值组成的数组
+   *
+   * 颜色比例尺
+   * d3.schemeCategory10()
+   * d3.schemeCategory20()
+   * d3.schemeCategory20b()
+   * d3.schemeCategory20c()
+   * */
+
+</script>
+</html>

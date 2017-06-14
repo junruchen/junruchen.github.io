@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>D3 -- select && data 选择器和数据</title>
+</head>
+<body>
+<div class="d3-container">
+  <p>1</p>
+  <p>2</p>
+  <p>3</p>
+  <p>4</p>
+</div>
+</body>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script>
+  let p = d3.selectAll('p')
+
+  let update = p.data([0, 3, 5])
+  update.text((d, i) => {
+    return 'update:' + d + '...' + i
+  })
+
+  let enter = update.enter()
+  enter.append('p').text((d, i) => {
+    return 'enter:' + d + '...' + i
+  })
+
+  update.exit().remove()
+
+  let testData = [2, 6, 10, 21, 15, 9, 3, 9]
+
+  console.log(d3.scan(testData, d3.ascending))
+
+  /**
+   * 属性操作
+   * 1、普通属性设置[width height class等] attr(name[,value]) 有value表示设置，无表示获取值
+   * 2、类 classed(name[,boolean]) boolean控制类是否开启，无表示获取类开启状态
+   * 3、样式 style(name[,value]) value设置style样式，无表示获取某样式值
+   * 4、自定义属性表单属性 property(name[,value])
+   * 5、文本内容 text([value]) 有value表示设置，无表示获取，不包含标签
+   * 6、html内容 html([value]) 有value表示设置，无表示获取，包含标签
+   * */
+
+  /**
+   * 选择集状态
+   * 1、empty() 判断选择集是否为空，空返回false
+   * 2、node() 返回选择集第一个非空节点，选择集为空，返回null
+   * 3、size() 返回选择集元素个数
+   * */
+
+  /**
+   * 选择集操作【添加 插入 删除】
+   * 1、append(name) 末尾增加指定name的元素，name是节点名称【如:p】
+   * 2、insert(name[,before]) 在选择集中指定的before[css选择器名称]前插入指定name的元素，name是节点名称【如:p】
+   * 3、remove() 删除选择集选中的元素，如：selection.remove()
+   * */
+
+  /**
+   * 数据绑定【增加_data_属性并赋予指定值】
+   * 1、datum(value) 为选择集中所有元素增加_data_属性，且值均为value值，如：selection.datum(7)
+   * 2、data(array[,sortFunction]) 将数组的各项分别绑定在选择集各个元素的_data_属性上，如：selection.data([0,3,5]);sortFunction用来指定绑定顺序
+   * 绑定数据后使用的操作【如.text()】均可使用无名函数，且函数可有两个参数，分别是：d值 和 i索引
+   * */
+
+  /**
+   * 数据绑定后处理
+   * 1、update() 数组长度与选择集长度相等时，update数据
+   * 2、enter() 数组长度大于选择集长度时，需增加选择集中的元素，即enter元素，然后操作
+   * 3、exit() 数组长度小于选择集长度时，需移除多余的选择集中元素，即exit
+   * 4、filter(function) 选择器根据函数进行元素过滤
+   * 5、sort(function) 选择器根据函数进行元素排序
+   * 6、each(function) 可对数据进行处理
+   * 7、call(functionName) 将选择器本身作为参数传递给指定函数
+   * */
+
+  /**
+   * d3提供的数组处理
+   * 1、d3.ascending(a,b) 递增排序，使用：numArr.sort(d3.ascending)
+   * 2、d3.descending(a,b) 递减排序，使用：numArr.sort(d3.descending)
+   *
+   * 3、d3.min(array[,function]) 返回数组最小值，如果指定了function，则先使用调用function，后使用原规则，如：d3.min(numArr, (d)=>{return d*3}), 则会返回原数组最小值乘以三
+   * 4、d3.max(array[,function]) 返回数组最大
+   * 5、d3.extend(array[,function]) 返回数组最小值和最大值
+   * 6、d3.sum(array[,function]) 求和，若数组为空，返回0
+   * 7、d3.mean(array[,function]) 返回数组平均值，若数组为空，返回undefined
+   * 8、d3.median(array[,function]) 返回数组中间的值
+   * 9、d3.quantile(numbers,p) 返回p分位点的值，p范围[0,1],number数组需要递增
+   * 10、d3.variance(array[,function]) 返回方差
+   * 11、d3.deviation(array[,function]) 返回标准差
+   *
+   * 12、d3.bisectLeft(array, idx) 返回idx数组项右左边的位置，一般与splice结合使用
+   * 13、d3.bisect(array, idx) 返回idx数组项数组项右边的位置，一般与splice结合使用
+   * 14、d3.bisectRight(array, idx) 返回idx数组项数组项右边的位置，一般与splice结合使用
+   *
+   * 15、d3.shuffle(array) 返回随机拍列数组
+   * 16、d3.merge(arrays) 返回合并数组
+   * 17、d3.pairs(array) 返回数组领接的数组对的大数组
+   * 18、d3.range([start,]stop[,step]) 返回等差数列
+   * 19、d3.permute(array，idxArr) 返回根据序列号重新排列的数组
+   * 20、d3.zip(arrays) 返回由多个数组重新组成的一个新数组
+   * 21、d3.transpose(matrix) 求转置矩阵
+   *
+   * 22、d3.map([object][,key]) 构造映射，数据源以及指定映射的key
+   * 23、map.has(key) 指定key存在，返回true，不存在返回false
+   * 24、map.get(key) 指定key存在，返回对应value，不存在返回undefined
+   * 25、map.set(key,value) 添加一个新的键值对，若key已经存在，则覆盖
+   * 26、map.remove(key) 指定key存在，删除指定键值对，不存在返回false
+   * 27、map.keys() 返回所有的key组成的数组
+   * 28、map.values() 返回所有的value组成的数组
+   * 29、map.entries() 返回所有的key和value组成的数组
+   * 30、map.forEach((key, value)=>{}) 分别对每一个键值对使用该函数
+   * 31、map.empty() map映射为空返回true，反之false
+   * 32、map.size() 返回映射的大小
+   *
+   * 33、d3.set([array]) 使用数组构建集合，若数组中有重复的项，只添加一个
+   * 34、set.has(value) 指定value存在，返回true，不存在返回false
+   * 35、set.add(value) 集合中没有该元素，则添加，有则不添加
+   * 36、set.remove(value) 有该元素则山删除，无则返回false
+   * 37、set.values() 以数组形式返回所有元素
+   * 38、set.forEach((value)=>{}) 对每一个元素使用该函数
+   * 39、set.empty() 集合为空返回true，反之false
+   * 40、set.size() 返回集合的大小
+   *
+   *
+   * 41、d3.nest() 表示接下来会构建一个新的嵌套结构，其他函数在此函数之后使用
+   * 42、nest.key((d)=>{}) 指定嵌套结构的key
+   * 43、nest.sortKeys(数组的排序方法，如d3.ascending) 在nest.key之后使用，按照健对结构进行排序
+   * 44、nest.sortValues(数组的排序方法，如d3.ascending) 按照值对结构进行排序
+   * 44、nest.rollup((value)=>{}) 对每组节点使用该函数
+   * 44、nest.map(arrat[,mapType]) 以映射的形式输出数组， mapType：d3.map
+   * 44、nest.entries(array) 使用数组构建嵌套结构
+   * */
+
+</script>
+</html>

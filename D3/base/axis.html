@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>D3 -- axis 坐标轴</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    button {
+      width: 100px;
+      line-height: 36px;
+      outline: none;
+      border: 1px solid #58a;
+      background-color: #fff;
+      margin-bottom: 20px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      color: #fff;
+      background-color: #58a;
+      transition: all .2s linear;
+    }
+
+    svg {
+      border: 1px solid;
+    }
+  </style>
+</head>
+<body>
+<div class="d3-container">
+</div>
+</body>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script>
+  let width = 360
+  let height = 360
+  let barData = [100, 145, 70, 39, 127]
+
+  let svg = d3.select('.d3-container')
+    .append('svg')
+    .attr('width', width)
+    .attr('height', height)
+
+  // 比例尺
+  let xscale = d3.scaleLinear()
+    .domain([0, 10])
+    .range([0, 300])
+
+  // 坐标轴
+  let xAxis = d3.axisBottom()
+    .scale(xscale)
+    .ticks(5)
+
+  let yAxis = d3.axisRight()
+    .scale(xscale)
+
+  let gXaxis = svg.append('g')
+    .attr('transform', 'translate(20, 20)')
+  let gYaxis = svg.append('g')
+    .attr('transform', 'translate(20, 20)')
+
+  xAxis(gXaxis)
+  yAxis(gYaxis)
+
+  /**
+   * 坐标轴
+   * 1、d3.svg.axis() 创建一个新坐标轴
+   * 2、axis(selection) 将坐标轴应用到指定选择集上
+   * 3、axis.scale([scale]) 设置或获取坐标轴比例尺
+   * 4、axis.orient([orientation]) 设置或获取坐标轴方向 [top bottom left right]
+   * top: 水平轴 刻度在直线下方 bottom：水平轴 刻度在直线上方
+   * left: 垂直轴 刻度在直线右侧 right: 垂直轴 刻度在直线左侧
+   * 在4.0 可直接使用 d3.axisTop, d3.axisRight, d3.axisBottom, d3.axisLeft， 如：d3.axisBottom(x)
+   * 5、axis.ticks([argument...]) 设置或获取坐标轴的分割数，默认10，如：设为5，则刻度数量为6，刻度间隔为5
+   * 6、axis.tickValues([values]) 设置或获取坐标轴指定刻度
+   * 7、axis.tickSize([inner,outer]) 设置或获取坐标轴内外刻度的长度，默认为6
+   * 8、axis.innerTickSize([size]) 设置或获取坐标轴内刻度的长度【不包含两端】
+   * 9、axis.outerTickSize([size]) 设置或获取坐标轴两端刻度的长度
+   * 10、axis.tickFormat([format]) 设置或获取刻度的格式
+   *
+   * */
+
+
+</script>
+</html>
