@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>D3 -- transition 过渡</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    button {
+      width: 100px;
+      line-height: 36px;
+      outline: none;
+      border: 1px solid #58a;
+      background-color: #fff;
+      margin-bottom: 20px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      color: #fff;
+      background-color: #58a;
+      transition: all .2s linear;
+    }
+
+    svg {
+      border: 1px solid;
+    }
+  </style>
+</head>
+<body>
+<div class="d3-container">
+  <div class="demo"></div>
+</div>
+</body>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script>
+  let svg = d3.select('.demo').append('svg')
+    .attr('width', '400')
+    .attr('height', '400')
+
+  let pie = [
+    {startAngle: 0, endAngle: Math.PI * .2},
+    {startAngle: Math.PI * .2, endAngle: Math.PI * .8},
+    {startAngle: Math.PI * .8, endAngle: Math.PI * 1.2},
+    {startAngle: Math.PI * 1.2, endAngle: Math.PI * 2},
+  ]
+
+  let color = ['#5588AA', '#FFBB33', 'red', 'green']
+
+  let arcPath = d3.arc()
+    .innerRadius(0)
+    .outerRadius(100)
+
+  svg.selectAll('path')
+    .data(pie)
+    .enter()
+    .append('path')
+    .attr('d', (d) => {
+      return arcPath(d)
+    })
+    .attr('stroke', 'none')
+    .attr('fill', (d, i) => {
+      return color[i]
+    })
+    .attr('transform', 'translate(200, 200)')
+
+  svg.selectAll('text')
+    .data(pie)
+    .enter()
+    .append('text')
+    .attr('stroke', 'white')
+    .attr('fill', 'none')
+    .attr('text-anchor', 'middle')
+    .attr('font-size', '14px')
+    .text((d) => {
+      return Math.floor((d.endAngle - d.startAngle) * 180 / Math.PI)
+    })
+    .attr('transform', (d) => {
+      return 'translate(200, 200)' + 'translate(' + arcPath.centroid(d) + ')'
+    })
+
+  /**
+   * 过渡
+   * 1、d3.transition([selection], [name]) 创建一个过渡对象
+   * 2、delay(value) 延迟时间，毫秒
+   * 3、duration(value) 持续时间，毫秒
+   * 4、ease 过渡函数
+   *
+   * 5、attr(name,value) 将name属性过渡到value值 如：.attr('width', 100).transition().attr('width', 300)
+   * 6、attrTween(name,tween) 使用插值函数进行过渡
+   * 7、style(name,value[,priority]) priority可选参数，只有两个值 null | important
+   * 8、styleTween(name,tween)
+   * attr操作x y width height类属性
+   * style操作样式属性 fill等
+   * 9、text(value) 过渡开始时，将文本设置成value
+   * 10、tween(name,factory) 文字过渡
+   * 11、remove() 删除被选择元素，应用场景：淡出
+   *
+   * 过渡对子元素不起作用，子元素单独设置
+   * 子元素：
+   * select()
+   * selectAll()
+   * filter()
+   * each([type,]listener) 监听过渡事件 type:start end interrup[打断]，对应类型事件发生时，调用listener监听函数
+   * call(function) 将过渡对象本身作为参数执行function
+   *
+   * 过渡函数 ease
+   * linear
+   * cubic
+   * elastic
+   * back
+   * bounce
+   * in
+   * out
+   * in-out
+   * out-in
+   *
+   * 动画
+   * setInterval()
+   * setTimeout()
+   * d3.timer()
+   * */
+
+</script>
+</html>

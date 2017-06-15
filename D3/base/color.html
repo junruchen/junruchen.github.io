@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>D3 -- color 颜色</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    button {
+      width: 100px;
+      line-height: 36px;
+      outline: none;
+      border: 1px solid #58a;
+      background-color: #fff;
+      margin-bottom: 20px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      color: #fff;
+      background-color: #58a;
+      transition: all .2s linear;
+    }
+
+    svg {
+      border: 1px solid;
+    }
+  </style>
+</head>
+<body>
+<div class="d3-container">
+</div>
+</body>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script>
+
+  let red = d3.rgb('red')
+  let blue = d3.rgb('blue')
+  let color = d3.interpolate(red, blue)
+  console.log(color(1))
+
+  /**
+   * RGB色彩模式
+   * 通过对红绿蓝[0～255]三个通道相互叠加得到颜色。
+   * HSL色彩模式
+   * 通过对色相[0～360deg]、饱和度[0～1]、明度[0～1]三个通道相互叠加得到颜色
+   * 色相：0/360deg表示红色，120deg表示绿色，240deg表示蓝色
+   * 饱和度数值越大，颜色越鲜艳，灰色越少；明度控制色彩明暗变化，越大越明亮越接近白色，反之接近黑色。
+   *
+   * RGB色彩模式
+   * 1、d3.rgb(r,g,b | color) 可使用agb三个值或color值来创建颜色
+   * 2、brighter([k]) 颜色更明亮，【返回对象】，各个通道值乘以0.7^-k，k省略时值为1，只有当[35～255]范围内有效
+   * 3、darker([k]) 颜色更暗色，【返回对象】，各个通道值乘以0.7^k
+   * 4、hsl() 返回对应 hsl 值 【返回对象】
+   * 5、toString 以字符串形式范围颜色值
+   * 6、d3.interpolate(a,b) 计算两个颜色值之间的差值，如：let color = d3.interpolate('red', 'blue') color(1)
+   *
+   * HSL色彩模式
+   * 1、d3.hsl(h,s,l | color) 可使用hsl三个值或color值来创建颜色
+   * 2、brighter([k]) 颜色更明亮
+   * 3、darker([k]) 颜色更暗色
+   * 4、rgb() 返回对应 rgb 值 【返回对象】
+   * 5、toString() 以字符串形式范围颜色值
+   *6、d3.interpolateHsl(a,b) 计算两个颜色值之间的差值
+   *
+   * */
+
+
+</script>
+</html>

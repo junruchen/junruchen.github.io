@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>D3 -- 区域折线图</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    button {
+      width: 100px;
+      line-height: 36px;
+      outline: none;
+      border: 1px solid #58a;
+      background-color: #fff;
+      margin-bottom: 20px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      color: #fff;
+      background-color: #58a;
+      transition: all .2s linear;
+    }
+
+    svg {
+      border: 1px solid;
+    }
+
+    .line-box {
+      width: 440px;
+      height: 440px;
+    }
+  </style>
+</head>
+<body>
+<div class="d3-container">
+  <button onclick="updateData()">更新数据</button>
+  <button onclick="addData()">增加数据</button>
+  <button onclick="delData()">删除数据</button>
+
+  <div class="line-box">
+    <div class="line-demo"></div>
+  </div>
+</div>
+</body>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script>
+  /**
+   * 分析：折线图 （包含：线、坐标系、文字）
+   * 线：path
+   * 文字：text
+   * 坐标系：线性
+   * */
+
+    // 用户指定
+  let paddingT = 40
+  let paddingB = 80
+  let paddingL = 60
+  let paddingR = 40
+  let color = ['#5588AA', '#FFBB33', 'red', 'green']
+  let lineData = [{
+    country: 'china',
+    gdp: [
+      [2000, 11920], [2001, 13170],
+      [2002, 14550], [2003, 16500],
+      [2004, 19440], [2005, 22870],
+      [2006, 27930], [2007, 35040],
+      [2008, 45470], [2009, 51050],
+      [2010, 59490], [2011, 73140]]
+  }, {
+    country: 'japan',
+    gdp: [
+      [2000, 47310], [2001, 41950],
+      [2002, 39800], [2003, 43020],
+      [2004, 46550], [2005, 45710],
+      [2006, 43560], [2007, 43560],
+      [2008, 48490], [2009, 50350],
+      [2010, 54950], [2011, 59050]]
+  }]
+
+  // 全局变量
+  let width = parseInt(d3.select('.line-box').style('width'))
+  let height = parseInt(d3.select('.line-box').style('height'))
+  let lineWidth = width - paddingL - paddingR
+  let lineHeight = height - paddingT - paddingB
+  let svg = d3.select('.line-demo')
+    .append('svg')
+    .attr('width', width)
+    .attr('height', height)
+  let xScale = d3.scaleLinear()
+  let yScale = d3.scaleLinear()
+
+  // label
+  let labelData = []
+  lineData.forEach((item) => {
+    labelData.push(item.country)
+  })
+
+  let labelG = svg.selectAll('.label')
+    .data(labelData)
+    .enter()
+    .append('g')
+    .attr('class', 'label')
+
+  labelG.append('rect')
+    .attr('width', '23')
+    .attr('height', '13')
+    .attr('fill', (d, i) => {
+      return color[i]
+    })
+    .attr('x', (d, i) => {
+      return paddingL + i * 80
+    })
+    .attr('y', lineHeight + paddingT + 40)
+    .attr('rx', '2')
+
+  labelG.append('text')
+    .attr('x', (d, i) => {
+      return paddingL + i * 80
+    })
+    .attr('y', lineHeight + paddingT + 40)
+    .attr('dx', '28')
+    .attr('dy', '.5rem')
+    .attr('font-size', '12')
+    .attr('text-anthor', 'middle')
+    .text((d) => {
+      return d
+    })
+
+  drawLine()
+
+  function drawLine () {
+    // 找到最大值
+    let maxData = getMax()
+    // 绘制坐标系
+    xScale.domain([getAxis(0), getAxis(1)])
+      .range([0, lineWidth])
+    yScale.domain([0, maxData])
+      .range([lineHeight, 0])
+
+    // 绘制线段
+    let g = svg.selectAll('.line')
+      .data(lineData)
+    line(g)
+
+    // 折线图数据增加
+    let enterG = g.enter().append('g').attr('class', 'line')
+    if (g.enter().size() > 0) {
+      line(enterG)
+    }
+    // 折线图数据减少
+    g.exit().remove()
+  }
+  function line (selection) {
+    // 重置
+    selection.selectAll('path').remove()
+    svg.selectAll('.axis').remove()
+
+    let line = d3.area()
+      .x((d) => {
+        return xScale(d[0])
+      })
+      .y0(() => {
+        return height - paddingB
+      })
+      .y1((d) => {
+        return yScale(d[1]) + paddingT
+      })
+
+    let path = selection.append('path')
+      .attr('d', (d) => {
+        return line(d.gdp)
+      })
+      .attr('stroke', (d, i) => {
+        return color[i]
+      })
+      .attr('fill', (d, i) => {
+        return color[i]
+      })
+      .attr('fill-opacity', '.3')
+      .attr('transform', 'translate(' + paddingL + ')')
+
+    let xAxis = d3.axisBottom()
+      .scale(xScale)
+      .ticks(7)
+    let gXaxis = svg.append('g')
+      .attr('class', 'axis')
+      .attr('transform', 'translate(' + paddingL + ',' + (height - paddingB) + ')')
+    xAxis(gXaxis)
+
+    let yAxis = d3.axisLeft()
+      .scale(yScale)
+    let gYaxis = svg.append('g')
+      .attr('class', 'axis')
+      .attr('transform', 'translate(' + paddingL + ',' + paddingT + ')')
+    yAxis(gYaxis)
+  }
+
+  function getMax () {
+    let maxData = []
+    lineData.forEach((item, idx) => {
+      let itemMax = d3.max(item.gdp, (d) => {
+        return d[1]
+      })
+      maxData.push(itemMax)
+    })
+    return d3.max(maxData)
+  }
+  function getAxis (type) {
+    let data = []
+    lineData[0].gdp.forEach((item) => {
+      data.push(item[0])
+    })
+    return type === 0 ? d3.min(data) : d3.max(data)
+  }
+
+  function updateData () {
+    lineData.forEach((item, idx) => {
+      item.gdp.forEach((iitem) => {
+        iitem[1] = Math.floor(Math.random() * 100000)
+      })
+    })
+    drawLine()
+  }
+  function addData () {
+    lineData.forEach((item, idx) => {
+      let newData = [getAxis(1) + 1, Math.floor(Math.random() * 100000)]
+      item.gdp.push(newData)
+    })
+    drawLine()
+  }
+  function delData () {
+    lineData.forEach((item, idx) => {
+      item.gdp.pop()
+    })
+    drawLine()
+  }
+
+</script>
+</html>

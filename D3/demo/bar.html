@@ -38,6 +38,11 @@
     .axis text {
       font: 10px sans-serif;
     }
+
+    .bar-box {
+      width: 440px;
+      height: 440px;
+    }
   </style>
 </head>
 <body>
@@ -46,108 +51,161 @@
   <button onclick="updateData()">更新数据</button>
   <button onclick="addData()">增加数据</button>
   <button onclick="delData()">删除数据</button>
-  <div class="bar-demo"></div>
+
+  <div class="bar-box">
+    <div class="bar-demo"></div>
+  </div>
 </div>
 </body>
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script>
   /**
    * 分析：柱状图 （包含：矩形、坐标系、文字）
-   * 矩形使用rect
-   * 文字使用text
+   * 矩形：rect
+   * 文字：text
+   * 坐标系：x-序数 y-线性
    * */
 
-  let width = height = 440
-  let barWidth = barHeight = height - 80
+    // 用户指定 边距，数据，样式
+  let paddingT = 10
+  let paddingB = 40
+  let paddingL = 60
+  let paddingR = 40
   let barData = [180, 145, 70, 239, 127]
-  let padding = 40 // 柱状图距离svg盒子的边距
+  let theme = {
+    title: {}, // 标题
+    label: {}, // label提示
+    chart: { // 图表相关 颜色 位置等
+      axis: {},
+      bar: {}
+    }
+  }
 
-  let svg = d3.select('.bar-demo')
-    .append('svg')
-    .attr('width', width)
-    .attr('height', height)
-
+  // 全局变量 盒子宽高，图表宽高，svg 坐标轴比例尺, 间隔比
+  let width = parseInt(d3.select('.bar-box').style('width'))
+  let height = parseInt(d3.select('.bar-box').style('height'))
+  let barWidth = width - paddingL - paddingR
+  let barHeight = height - paddingT - paddingB
+  let stepPadd = 0.2
+  let svg = d3.select('.bar-demo').append('svg').attr('width', width).attr('height', height)
   let xScale = d3.scaleBand()
-
   let yScale = d3.scaleLinear()
 
   drawBar()
 
   function drawBar () {
-    // 绘制坐标系
+    drawAxis() // 绘制坐标系
+    drawRectBar() // 绘制矩形
+    drawText() // 绘制文字
+  }
+
+  function drawAxis () {
     xScale.domain(d3.range(barData.length))
       .rangeRound([0, barWidth])
-      .paddingInner(0.2)
-      .paddingOuter(0.2)
+      .padding(0.2)
+    let xAxis = d3.axisBottom(xScale)
+      .ticks(5)
+    let gXaxis = svg.select('.xAxis')
+      .attr('transform', 'translate(' + paddingL + ',' + (height - paddingB) + ')')
+
+    if (gXaxis.size() === 0) {
+      gXaxis = svg.append('g')
+        .attr('class', 'xAxis')
+        .attr('transform', 'translate(' + paddingL + ',' + (height - paddingB) + ')')
+    }
+    xAxis(gXaxis)
 
     yScale.domain([0, d3.max(barData)])
       .range([barHeight, 0])
-
-    // 绘制矩形
-    let g = svg.selectAll('.bar')
-      .data(barData)
-    rect(g)
-
-    // 柱状图数据增加
-    let enterG = g.enter().append('g').attr('class', 'bar')
-    if (g.enter().size() > 0) {
-      rect(enterG)
+    let yAxis = d3.axisLeft(yScale)
+    let gYaxis = svg.select('.xYxis')
+    if (gYaxis.size() === 0) {
+      gYaxis = svg.append('g')
+        .attr('class', 'xYxis')
+        .attr('transform', 'translate(' + paddingL + ',' + paddingT + ')')
     }
-    console.log(g.enter().size())
-
-    // 柱状图数据减少
-    g.exit().remove()
+    yAxis(gYaxis)
   }
-  function rect (selection) {
-    // 重置
-    selection.selectAll('rect').remove()
-    selection.selectAll('text').remove()
-    svg.selectAll('.axis').remove()
-
-    let rect = selection.append('rect')
-      .attr('width', xScale.step() - xScale.step() * 0.2)
+  function drawRectBar () {
+    // update rect
+    let rectBar = svg.selectAll('.rect').data(barData)
+      .attr('width', xScale.step() - xScale.step() * stepPadd)
       .attr('height', (d) => {
         return barHeight - yScale(d)
       })
       .attr('x', (d, i) => {
-        return padding + xScale(i)
+        return (paddingL + xScale.step() * stepPadd ) + xScale.step() * i
       })
       .attr('y', (d) => {
-        return padding + yScale(d)
+        return paddingT + yScale(d)
       })
-      .style('fill', '#5588aa')
 
-    let text = selection.append('text')
+    // add rect
+    let enterBar = rectBar.enter().append('rect').attr('class', 'rect')
+      .attr('width', xScale.step() - xScale.step() * stepPadd)
+      .attr('height', (d) => {
+        return barHeight - yScale(d)
+      })
+      .attr('x', (d, i) => {
+        return (paddingL + xScale.step() * stepPadd) + xScale.step() * i
+      })
+      .attr('y', (d) => {
+        return paddingT + yScale(d)
+      })
+      .attr('fill', '#5588aa')
+      .style('transform', 'scale(1, 0)')
+      .style('transform-origin', 'center bottom')
+      .transition()
+      .duration(800)
+      .style('transform', 'scale(1, 1)')
+
+    // del rect
+    rectBar.exit().remove()
+  }
+  function drawText () {
+    // update text
+    let textBar = svg.selectAll('.text').data(barData)
       .text((d) => {
         return d
       })
       .attr('x', (d, i) => {
-        return padding + xScale(i)
+        return (paddingL + xScale.step() * stepPadd) + xScale.step() * i
       })
       .attr('y', (d) => {
-        return padding + yScale(d)
+        return paddingT + yScale(d)
       })
-      .attr('dx', (xScale.step() - xScale.step() * 0.2) / 2)
+      .attr('dx', (xScale.step() - xScale.step() * stepPadd) / 2)
       .attr('dy', '1rem')
       .style('stroke', '#fff')
       .style('font-size', '12px')
       .style('font-weight', '300')
       .style('text-anchor', 'middle')
 
-    let xAxis = d3.axisBottom()
-      .scale(xScale)
-    let gXaxis = svg.append('g')
-      .attr('class', 'axis')
-      .attr('transform', 'translate(' + padding + ',' + (height - padding) + ')')
-    xAxis(gXaxis)
+    // add text
+    let enterTextBar = textBar.enter().append('text').attr('class', 'text')
+      .text((d) => {
+        return d
+      })
+      .attr('x', (d, i) => {
+        return (paddingL + xScale.step() * stepPadd) + xScale.step() * i
+      })
+      .attr('y', height - paddingB)
+      .attr('dx', (xScale.step() - xScale.step() * stepPadd) / 2)
+      .attr('dy', '1rem')
+      .style('stroke', '#fff')
+      .style('font-size', '12px')
+      .style('font-weight', '300')
+      .style('text-anchor', 'middle')
+      .style('opacity', '0.5')
+      .transition()
+      .duration(800)
+      .attr('y', (d) => {
+        return paddingT + yScale(d)
+      })
+      .style('opacity', '1')
 
-    let yAxis = d3.axisLeft()
-      .scale(yScale)
-      .ticks(6)
-    let gYaxis = svg.append('g')
-      .attr('class', 'axis')
-      .attr('transform', 'translate(' + padding + ',' + padding + ')')
-    yAxis(gYaxis)
+    // del text
+    textBar.exit().remove()
   }
 
   function sortData () {
@@ -163,7 +221,7 @@
     drawBar()
   }
   function delData () {
-    barData.pop(125)
+    barData.pop()
     drawBar()
   }
 

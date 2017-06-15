@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>D3 -- path／line／弧度等 线段生成器</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    button {
+      width: 100px;
+      line-height: 36px;
+      outline: none;
+      border: 1px solid #58a;
+      background-color: #fff;
+      margin-bottom: 20px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      color: #fff;
+      background-color: #58a;
+      transition: all .2s linear;
+    }
+
+    svg {
+      border: 1px solid;
+    }
+  </style>
+</head>
+<body>
+<div class="d3-container">
+  <div class="demo"></div>
+</div>
+</body>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script>
+  /*let lineData = [[80, 180], [100, 200], [160, 200], [30, 40], [70, 90]]
+
+   let linePath = d3.line()
+   .x((d) => { // x 点坐标
+   return d[1]
+   })
+   .y((d) => { // y 点坐标
+   return d[0] * 2
+   })
+   .curve(d3.curveMonotoneX) // 插值模式
+
+   */
+  let svg = d3.select('.demo').append('svg')
+    .attr('width', '400')
+    .attr('height', '400')
+
+  let pie = [
+    {startAngle: 0, endAngle: Math.PI * .2},
+    {startAngle: Math.PI * .2, endAngle: Math.PI * .8},
+    {startAngle: Math.PI * .8, endAngle: Math.PI * 1.2},
+    {startAngle: Math.PI * 1.2, endAngle: Math.PI * 2},
+  ]
+
+  let color = ['#5588AA', '#FFBB33', 'red', 'green']
+
+  let arcPath = d3.arc()
+    .innerRadius(0)
+    .outerRadius(100)
+
+  svg.selectAll('path')
+    .data(pie)
+    .enter()
+    .append('path')
+    .attr('d', (d) => {
+      return arcPath(d)
+    })
+    .attr('stroke', 'none')
+    .attr('fill', (d, i) => {
+      return color[i]
+    })
+    .attr('transform', 'translate(200, 200)')
+
+  svg.selectAll('text')
+    .data(pie)
+    .enter()
+    .append('text')
+    .attr('stroke', 'white')
+    .attr('fill', 'none')
+    .attr('text-anchor', 'middle')
+    .attr('font-size', '14px')
+    .text((d) => {
+      return Math.floor((d.endAngle - d.startAngle) * 180 / Math.PI)
+    })
+    .attr('transform', (d) => {
+      return 'translate(200, 200)' + 'translate(' + arcPath.centroid(d) + ')'
+    })
+
+  console.log(d3.symbolTypes)
+
+  /**
+   * 路径生成器
+   * 线段生成器，生成线段的点数据，绘制仍使用path标签
+   * 1、d3.line() 创建一个线段生成器
+   * 2、d3.line()(data) 得到绘制path路径的data数据，
+   * 如：
+   * let lineData = [[80,80], [200,200], [100,200]]
+   * let linePath = d3.line() // 或者let linePath = d3.line()(lineData)  使用数据时不需要在转一次
+   * svg.append('path').attr('d', linePath(lineData))
+   * 3、x([x]) 访问器 设置或获取x坐标的访问器，即设置哪个数据作为线段的x坐标
+   * 4、y([y]) 访问器 设置或获取y坐标的访问器，即设置哪个数据作为线段的y坐标
+   * 5、interpolate([interpolate]) 设置或获取线段的插值模式，13种
+   * 6、tension([tension]) 设置或获取张力系数，只有插值为（cardinal、cardinal-open、cardinal-closed）有效
+   * 7、defined([defined]) 设置或获取一个访问器，用来判断线段是否存在
+   *
+   * 插值模式
+   * https://github.com/xswei/d3js_doc/tree/master/ReleaseNotes
+   * d3.curveLinear curveLinearClosed 直线形式
+   * curveStep curveStepAfter curveStepAfter 只有水平和垂直线段组成
+   * curveBasis curveBasisOpen curveBasisClosed 曲线
+   * curveBundle
+   * curveCardinal curveCardinalOpen curveCardinalClosed 曲线
+   * curveMonotoneX 有点曲有点直
+   * */
+
+  /**
+   * 区域生成器 与线段的类似, 访问器有6个：x x0 x1 y y0 y1
+   * 1、d3.area() 创建一个区域生成器
+   *
+   * */
+
+  /**
+   * 弧生成器  访问器有4个：
+   * 1、d3.arc() 创建一弧生成器
+   * 2、innerRadius() 内半径
+   * 3、outerRadius() 外半径
+   * 4、startAngle() 起始角度 单位为弧度，0度：0，180度：Math.PI
+   * 5、endAngle() 终止角度
+   * 6、centroid() 返回某一个弧中心位置的二维坐标【相对圆心而言】 一般用在 设置文字位置一类，见上图例子
+   *
+   * */
+
+  /**
+   * 符号生成器
+   * 1、d3.symbol() 创建一符号生成器
+   * 2、type([type]) 设置或获取符号的类型
+   * 3、size() 设置或获取符号大小，单位是像素的平方，默认为64，即8px
+   * 4、d3.symbolTypes 返回支持符号类型的数组
+   * */
+
+  /**
+   * 弦生成器 访问器有5个 使用两端弧来绘制弦
+   * 1、d3.svg.chord() 创建一弦生成器
+   * 2、source() 起始弧
+   * 3、target() 终止弧
+   * 4、radius 半径
+   * 5、startAngle() 起始角度 单位为弧度，0度：0，180度：Math.PI
+   * 6、endAngle() 终止角度
+   * */
+
+
+</script>
+</html>

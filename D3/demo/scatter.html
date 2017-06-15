@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>D3 -- 散点图</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    button {
+      width: 100px;
+      line-height: 36px;
+      outline: none;
+      border: 1px solid #58a;
+      background-color: #fff;
+      margin-bottom: 20px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      color: #fff;
+      background-color: #58a;
+      transition: all .2s linear;
+    }
+
+    svg {
+      border: 1px solid;
+    }
+
+    .scatter-box {
+      width: 440px;
+      height: 440px;
+    }
+  </style>
+</head>
+<body>
+<div class="d3-container">
+  <button onclick="addData()">增加数据</button>
+  <button onclick="delData()">删除数据</button>
+
+  <div class="scatter-box">
+    <div class="scatter-demo"></div>
+  </div>
+</div>
+</body>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script>
+  /**
+   * 分析：散点图 （包含：圆形、坐标系、文字）
+   * 圆形：circle
+   * 文字：text
+   * 坐标系：线性
+   * */
+
+    // 用户指定
+  let paddingT = 10
+  let paddingB = 40
+  let paddingL = 60
+  let paddingR = 40
+  let scatterData = [[0.5, 0.5], [0.8, 0.7], [0.4, 0.9], [0.1, 0.7], [0.2, 0.3]]
+
+  // 全局变量
+  let width = parseInt(d3.select('.scatter-box').style('width'))
+  let height = parseInt(d3.select('.scatter-box').style('height'))
+  let scatterWidth = width - paddingL - paddingR
+  let scatterHeight = height - paddingT - paddingB
+  let svg = d3.select('.scatter-demo')
+    .append('svg')
+    .attr('width', width)
+    .attr('height', height)
+  let xScale = d3.scaleLinear()
+  let yScale = d3.scaleLinear()
+
+  drawScatter()
+
+  function drawScatter () {
+    // 绘制坐标系
+    xScale.domain([0, 1.2 * d3.max(scatterData, (d) => {
+      return d[0]
+    })])
+      .range([0, scatterWidth])
+
+    yScale.domain([0, d3.max(scatterData, (d) => {
+      return d[1]
+    })])
+      .range([scatterHeight, 0])
+
+    // 绘制圆点
+    let g = svg.selectAll('.scatter')
+      .data(scatterData)
+    circle(g)
+
+    // 圆点数据增加
+    let enterG = g.enter().append('g').attr('class', 'scatter')
+    if (g.enter().size() > 0) {
+      circle(enterG)
+    }
+    // 圆点数据减少
+    g.exit()
+      .remove()
+  }
+  function circle (selection) {
+    // 重置
+    selection.selectAll('circle').remove()
+    svg.selectAll('.axis').remove()
+
+    let circle = selection.append('circle')
+    // .attr('cx', paddingL) // 持续前的原始位置
+    // .attr('cy', height - paddingB) // 持续前的原始位置
+    // .transition() // 定义持续
+    // .duration(1000) // 过渡持续时间
+      .attr('r', 5)
+      .attr('cx', (d) => {
+        return paddingL + xScale(d[0])
+      })
+      .attr('cy', (d) => {
+        return paddingT + yScale(d[1])
+      })
+      .attr('fill', '#5588aa')
+      .on('click', function (d, i) {
+        d3.select(this).attr('fill', 'red')
+      })
+
+    let xAxis = d3.axisBottom()
+      .scale(xScale)
+    let gXaxis = svg.append('g')
+      .attr('class', 'axis')
+      .attr('transform', 'translate(' + paddingL + ',' + (height - paddingB) + ')')
+    xAxis(gXaxis)
+
+    let yAxis = d3.axisLeft()
+      .scale(yScale)
+    let gYaxis = svg.append('g')
+      .attr('class', 'axis')
+      .attr('transform', 'translate(' + paddingL + ',' + paddingT + ')')
+    yAxis(gYaxis)
+  }
+
+  function addData () {
+    scatterData.push([Math.floor(Math.random() * 10) * 0.1, Math.floor(Math.random() * 10) * 0.1])
+    drawScatter()
+  }
+  function delData () {
+    scatterData.pop()
+    drawScatter()
+  }
+
+</script>
+</html>
