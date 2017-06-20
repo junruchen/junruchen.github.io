@@ -117,13 +117,14 @@
   let yScale = d3.scaleLinear()
 
   drawLine()
+  mousemove()
 
   function drawLine () {
     drawLabel() // 绘制label
     drawAxis() // 绘制坐标系
     drawArea() //绘制路径背景
     drawPath() // 绘制路径
-    drawCircle() //绘制圆点
+    drawCircle() // 绘制圆点
   }
 
   function drawLabel () {
@@ -193,6 +194,7 @@
         .attr('stroke-width', 0)
         .attr('fill', 'black')
         .attr('transform', 'translate(' + lineWidth + ', 0)')
+        .attr('dx', '1rem')
     }
 
     let maxData = getMax()
@@ -215,8 +217,6 @@
         .attr('stroke-width', 0)
         .attr('fill', 'black')
         .attr('text-anthor', 'middle')
-        .attr('transform', 'rotate(-90)')
-        .attr('dy', '.6rem')
     }
   }
   function drawPath () {
@@ -240,7 +240,8 @@
       .attr('stroke-dashoffset', function () {
         let lastOffSet = d3.select(this).attr('data-offset')
         d3.select(this).attr('data-offset', this.getTotalLength())
-        return this.getTotalLength() - lastOffSet
+        let newOffSet = this.getTotalLength() - lastOffSet
+        return newOffSet > 0 ? newOffSet : 0
       })
       .transition()
       .duration(500)
@@ -301,15 +302,20 @@
       })
       .attr('fill-opacity', '.3')
       .attr('transform', 'translate(' + paddingL + ')')
+    enterAreaPath.append('rect')
+      .attr('class', 'path-area-mark')
+      .attr('width', lineWidth)
+      .attr('height', lineHeight)
+      .attr('x', paddingL + 1)
+      .attr('y', paddingT)
+      .attr('fill', '#fff')
+      .attr('transform-origin', 'right center')
+      .transition()
+      .duration(1000)
+      .attr('transform', 'scale(0, 1)')
 
     // del
     areaPath.exit().remove()
-
-    let mark = svg.select('.path-area-mark')
-
-    if(mark.size() === 0){
-      svg.append('div').attr('class', 'path-area-mark')
-    }
   }
   function drawCircle () {
     let circleG = svg.selectAll('.line-circle')
@@ -359,29 +365,39 @@
       .style('cursor', 'pointer')
       .on('mouseover', function (d, i) {
         d3.select(this).transition().duration(100).attr('r', 5)
-        let position = d3.mouse(this)
-        drawTip(position, d)
       })
       .on('mouseout', function () {
         d3.select(this).transition().duration(50).attr('r', 3.6)
-        d3.select('.line-tips').transition().duration(100).style('opacity', 0)
       })
     // del
     circle.exit().remove()
   }
-  function drawTip (position, tipData) {
-    let tipL = position[0] + 75
-    let tipT = position[1] + 50
-
-    // 边界处理！！！！
-
+  function mousemove () {
+    let tipsRect = svg.append('rect')
+      .attr('class', 'mousemove-rect')
+      .attr('width', lineWidth)
+      .attr('height', lineWidth)
+      .attr('x', paddingL)
+      .attr('y', paddingT)
+      .attr('fill', 'none')
+      .style('pointer-events', 'all')
+      .on('mouseover', function () {
+        d3.select('.line-tips').transition().duration(300).style('opacity', 1)
+      })
+      .on('mouseout', function () {
+        d3.select('.line-tips').transition().duration(100).style('opacity', 0)
+      })
+      .on('mousemove', function (d, i) {
+        console.log(xScale.invert(d3.mouse(this)[0]))
+        drawTip()
+      })
+  }
+  function drawTip () {
     let tips = d3.select('.line-tips')
-    tips
-      .style('left', tipL + 'px')
-      .style('top', tipT + 'px')
-      .transition()
-      .duration(300)
-      .style('opacity', 1)
+    tips.style('left', '100px')
+      .style('top', '100px')
+
+    let tipData = ['122', '300']
 
     let textP = tips.selectAll('.tip-text').data(tipData)
     textP.text((d, i) => {
