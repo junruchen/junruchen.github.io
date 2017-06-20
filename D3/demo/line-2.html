@@ -8,7 +8,7 @@
       box-sizing: border-box;
     }
 
-    p {
+    p, div {
       padding: 0;
       margin: 0;
     }
@@ -43,13 +43,23 @@
     }
 
     .line-tips {
-      opacity: 0;
+      display: none;
       position: absolute;
       padding: 5px;
       border-radius: 4px;
+      min-width: 100px;
       font-size: 12px;
-      background-color: rgba(0, 0, 0, .5);
+      background-color: rgba(0, 0, 0, .3);
       color: #fff;
+    }
+
+    .tip-content-i {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-right: 5px;
+      vertical-align: middle;
     }
 
   </style>
@@ -85,7 +95,7 @@
   let paddingR = 40
   let color = ['#5588AA', '#FFBB33', 'red', 'green', 'purple', 'black', '#cccccc']
   let lineData = {
-    label: ['china', 'japan'],
+    label: ['中国', '日本'],
     xAxis: {
       title: '日期',
       data: ['2000', '2001', '2002', '2003', '2004', '2005', '2006', '2007', '2008', '2009', '2010', '2011']
@@ -247,7 +257,6 @@
       .duration(500)
       .attr('stroke-dashoffset', 0)
 
-    // add
     enterPath.append('path').attr('class', 'line-path')
       .attr('d', (d) => {
         return line(d)
@@ -355,7 +364,8 @@
         return yScale(d.val)
       })
     // add
-    enterCircle.append('circle')
+    enterCircle
+      .append('circle')
       .attr('cx', (d) => {
         return xScale(d.time)
       })
@@ -364,7 +374,7 @@
       })
       .attr('r', 3.5)
       .style('cursor', 'pointer')
-      .on('mouseover', function (d, i) {
+      .on('mouseover', function () {
         d3.select(this).transition().duration(100).attr('r', 5)
       })
       .on('mouseout', function () {
@@ -383,36 +393,128 @@
       .attr('fill', 'none')
       .style('pointer-events', 'all')
       .on('mouseover', function () {
-        d3.select('.line-tips').transition().duration(300).style('opacity', 1)
+        d3.select('.line-tips').transition().duration(200).style('display', 'block')
+        d3.select('.verline-tips-group').transition().duration(200).style('display', 'block')
       })
       .on('mouseout', function () {
-        d3.select('.line-tips').transition().duration(100).style('opacity', 0)
+        d3.select('.line-tips').transition().duration(100).style('display', 'none')
+        d3.select('.verline-tips-group').transition().duration(200).style('display', 'none')
       })
-      .on('mousemove', function (d, i) {
-        console.log(xScale.invert(d3.mouse(this)[0]))
-        drawTip()
-      })
+      .on('mousemove', drawTip)
   }
   function drawTip () {
-    let tips = d3.select('.line-tips')
-    tips.style('left', '100px')
-      .style('top', '100px')
+    var bisect = d3.bisector(function (d) {
+      return d
+    }).left
 
-    let tipData = ['122', '300']
+    // 获取x轴坐标
+    let x0 = xScale.invert(d3.mouse(this)[0] - paddingL),
+      i = bisect(lineData.xAxis.data, x0),
+      d0 = lineData.xAxis.data[i - 1],
+      d1 = lineData.xAxis.data[i],
+      d = (x0 - d0) > (d1 - x0) ? d1 : d0
 
-    let textP = tips.selectAll('.tip-text').data(tipData)
-    textP.text((d, i) => {
-      return (i === 0 ? '年份:' : 'GDB:') + d
+    // 获取交点 y轴坐标 ------>有问题
+    let points = []
+    lineData.series.forEach((item) => {
+      item.forEach((ditem) => {
+        if (parseInt(ditem.time) === parseInt(d)) {
+          points.push(ditem.val)
+        }
+      })
     })
 
-    let enterTextP = textP.enter()
-    enterTextP.append('p')
-      .attr('class', 'tip-text')
+    // 绘制垂直线以及圆点
+    let tipsLine = d3.selectAll('.verline-tips-group')
+    tipsLine.selectAll('.verline-tips').attr('x1', xScale(d) + paddingL)
+      .attr('x2', xScale(d) + paddingL)
+    if (tipsLine.size() === 0) {
+      svg.append('g')
+        .attr('class', 'verline-tips-group')
+        .append('line')
+        .attr('class', 'verline-tips')
+        .attr('x1', xScale(d))
+        .attr('y1', paddingT)
+        .attr('x2', xScale(d))
+        .attr('y2', height - paddingB)
+        .attr('stroke', '#999')
+        .on('mouseover', function () {
+          d3.select('.line-tips').transition().duration(200).style('display', 'block')
+          d3.select('.verline-tips-group').transition().duration(200).style('display', 'block')
+        })
+        .on('mouseout', function () {
+          d3.select('.line-tips').transition().duration(100).style('display', 'block')
+          d3.select('.verline-tips-group').transition().duration(200).style('display', 'block')
+        })
+    }
+    let tipsLineCircle = tipsLine.selectAll('.verline-tips-circle').data(points)
+    tipsLineCircle
+      .attr('cx', xScale(d) + paddingL)
+      .attr('cy', (d) => {
+        return yScale(d) + paddingT
+      })
+    let enterTipsLineCircle = tipsLineCircle.enter()
+    enterTipsLineCircle.append('circle')
+      .attr('class', 'verline-tips-circle')
+      .attr('r', 5)
+      .attr('cx', xScale(d) + paddingL)
+      .attr('cy', (d) => {
+        return yScale(d) + paddingT
+      })
+      .attr('fill', (d, i) => {
+        return color[i]
+      })
+      .on('mouseover', function () {
+        d3.select('.line-tips').transition().duration(200).style('display', 'block')
+        d3.select('.verline-tips-group').transition().duration(200).style('display', 'block')
+      })
+      .on('mouseout', function () {
+        d3.select('.line-tips').transition().duration(100).style('display', 'block')
+        d3.select('.verline-tips-group').transition().duration(200).style('display', 'block')
+      })
+    tipsLineCircle.exit().remove()
+
+    // tip框填充相应文字数据
+    let tips = d3.select('.line-tips')
+    let tipsTitle = tips.selectAll('.tip-title')
+    tipsTitle.text('年份: ' + d)
+    if (tipsTitle.size() === 0) {
+      tips.append('p')
+        .attr('class', 'tip-title')
+        .text('年份: ' + d)
+    }
+    let tipsPoint = tips.selectAll('.tip-content').data(points)
+    console.log(tipsPoint.size())
+    tipsPoint.select('span')
       .text((d, i) => {
-        return (i === 0 ? '年份:' : 'GDB:') + d
+        return lineData.label[i] + ' GDB: ' + d
       })
 
-    textP.exit().remove()
+    let enterTipsPoint = tipsPoint.enter()
+    let tipsPointDiv = enterTipsPoint
+      .append('div')
+      .attr('class', 'tip-content')
+    tipsPointDiv.append('i')
+      .attr('class', 'tip-content-i')
+      .style('background-color', (d, i) => {
+        return color[i]
+      })
+    tipsPointDiv.append('span')
+      .text((d, i) => {
+        return lineData.label[i] + ' GDB: ' + d
+      })
+    tipsPoint.exit().remove()
+
+    // tip框位置处理 边界处理  parseInt(tips.style('width'))
+    let widthSum = xScale(d) + paddingL + 10 + parseInt(tips.style('width'))
+    let tipsLeft = (xScale(d) + paddingL + 10) + 'px'
+    let tipsTop = (yScale(d3.mean(points)) + paddingT - parseInt(tips.style('height')) / 2) + 'px'
+
+    if (widthSum > width) {
+      tipsLeft = (width - parseInt(tips.style('width')) - paddingR - 10) + 'px'
+    }
+    tips.style('left', tipsLeft)
+      .style('top', tipsTop)
   }
 
   function getMax () {
