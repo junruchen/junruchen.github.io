@@ -2,10 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>D3 -- 区域折线图</title>
+  <title>D3 -- 折线图</title>
   <style>
     * {
       box-sizing: border-box;
+    }
+
+    p {
+      padding: 0;
+      margin: 0;
     }
 
     button {
@@ -32,6 +37,21 @@
       width: 440px;
       height: 440px;
     }
+
+    .line-demo {
+      position: relative;
+    }
+
+    .line-tips {
+      opacity: 0;
+      position: absolute;
+      padding: 5px;
+      border-radius: 4px;
+      font-size: 12px;
+      background-color: rgba(0, 0, 0, .5);
+      color: #fff;
+    }
+
   </style>
 </head>
 <body>
@@ -39,9 +59,13 @@
   <button onclick="updateData()">更新数据</button>
   <button onclick="addData()">增加数据</button>
   <button onclick="delData()">删除数据</button>
+  <button onclick="addLine()">增加折线</button>
+  <button onclick="delline()">删除折线</button>
 
   <div class="line-box">
-    <div class="line-demo"></div>
+    <div class="line-demo">
+      <div class="line-tips"></div>
+    </div>
   </div>
 </div>
 </body>
@@ -59,7 +83,7 @@
   let paddingB = 80
   let paddingL = 60
   let paddingR = 40
-  let color = ['#5588AA', '#FFBB33', 'red', 'green']
+  let color = ['#5588AA', '#FFBB33', 'red', 'green', 'purple', 'black', '#cccccc']
   let lineData = [{
     country: 'china',
     gdp: [
@@ -92,73 +116,140 @@
   let xScale = d3.scaleLinear()
   let yScale = d3.scaleLinear()
 
-  // label
-  let labelData = []
-  lineData.forEach((item) => {
-    labelData.push(item.country)
-  })
-
-  let labelG = svg.selectAll('.label')
-    .data(labelData)
-    .enter()
-    .append('g')
-    .attr('class', 'label')
-
-  labelG.append('rect')
-    .attr('width', '23')
-    .attr('height', '13')
-    .attr('fill', (d, i) => {
-      return color[i]
-    })
-    .attr('x', (d, i) => {
-      return paddingL + i * 80
-    })
-    .attr('y', lineHeight + paddingT + 40)
-    .attr('rx', '2')
-
-  labelG.append('text')
-    .attr('x', (d, i) => {
-      return paddingL + i * 80
-    })
-    .attr('y', lineHeight + paddingT + 40)
-    .attr('dx', '28')
-    .attr('dy', '.5rem')
-    .attr('font-size', '12')
-    .attr('text-anthor', 'middle')
-    .text((d) => {
-      return d
-    })
-
   drawLine()
 
   function drawLine () {
-    // 找到最大值
-    let maxData = getMax()
+    drawLabel() // 绘制label
+    drawAxis() // 绘制坐标系
+    drawArea() //绘制路径背景
+    drawPath() // 绘制路径
+    drawCircle() //绘制圆点
+  }
+
+  function drawLabel () {
+    // label
+    let labelData = []
+    lineData.forEach((item) => {
+      labelData.push(item.country)
+    })
+
+    let labelG = svg.selectAll('.label').data(labelData)
+    let enterLabel = labelG.enter().append('g')
+
+    labelG.selectAll('text')
+      .text((d) => {
+        return d
+      })
+
+    enterLabel
+      .attr('class', 'label')
+      .append('rect')
+      .attr('width', '23')
+      .attr('height', '13')
+      .attr('stroke-width', 0)
+      .attr('fill', (d, i) => {
+        return color[i]
+      })
+      .attr('x', (d, i) => {
+        return paddingL + i * 80
+      })
+      .attr('y', lineHeight + paddingT + 40)
+      .attr('rx', '2')
+    enterLabel.append('text')
+      .attr('x', (d, i) => {
+        return paddingL + i * 80
+      })
+      .attr('y', lineHeight + paddingT + 40)
+      .attr('dx', '28')
+      .attr('dy', '.5rem')
+      .attr('font-size', '12')
+      .attr('text-anthor', 'middle')
+      .attr('stroke-width', 0)
+      .text((d) => {
+        return d
+      })
+
+    // del
+    labelG.exit().remove()
+
+  }
+  function drawAxis () {
     // 绘制坐标系
     xScale.domain([getAxis(0), getAxis(1)])
       .range([0, lineWidth])
+    let xAxis = d3.axisBottom(xScale)
+      .ticks(5)
+    let gXaxis = svg.select('.xAxis')
+      .call(xAxis)
+      .attr('transform', 'translate(' + paddingL + ',' + (height - paddingB) + ')')
+
+    if (gXaxis.size() === 0) {
+      gXaxis = svg.append('g')
+        .call(xAxis)
+        .attr('class', 'xAxis')
+        .attr('transform', 'translate(' + paddingL + ',' + (height - paddingB) + ')')
+        .append('text')
+        .text('日期')
+        .attr('stroke-width', 0)
+        .attr('fill', 'black')
+        .attr('transform', 'translate(' + lineWidth + ', 0)')
+    }
+
+    let maxData = getMax()
     yScale.domain([0, maxData])
       .range([lineHeight, 0])
+    let yAxis = d3.axisLeft()
+      .scale(yScale)
+      .ticks(5)
+    let gYaxis = svg.select('.yAxis')
+      .call(yAxis)
+      .attr('transform', 'translate(' + paddingL + ',' + paddingT + ')')
 
-    // 绘制线段
-    let g = svg.selectAll('.line')
-      .data(lineData)
-    line(g)
-
-    // 折线图数据增加
-    let enterG = g.enter().append('g').attr('class', 'line')
-    if (g.enter().size() > 0) {
-      line(enterG)
+    if (gYaxis.size() === 0) {
+      gYaxis = svg.append('g')
+        .call(yAxis)
+        .attr('class', 'yAxis')
+        .attr('transform', 'translate(' + paddingL + ',' + paddingT + ')')
+        .append('text')
+        .text('GDP')
+        .attr('stroke-width', 0)
+        .attr('fill', 'black')
+        .attr('text-anthor', 'middle')
+        .attr('transform', 'rotate(-90)')
+        .attr('dy', '.6rem')
     }
-    // 折线图数据减少
-    g.exit().remove()
   }
-  function line (selection) {
-    // 重置
-    selection.selectAll('path').remove()
-    svg.selectAll('.axis').remove()
+  function drawPath () {
+    let line = d3.line()
+      .x((d) => {
+        return xScale(d[0])
+      })
+      .y((d) => {
+        return yScale(d[1]) + paddingT
+      })
 
-    let line = d3.area()
+    let path = svg.selectAll('.line-path').data(lineData)
+    let enterPath = path.enter()
+    // update
+    path.attr('d', (d) => {
+      return line(d.gdp)
+    })
+    // add
+    enterPath.append('path').attr('class', 'line-path')
+      .attr('d', (d) => {
+        return line(d.gdp)
+      })
+      .attr('stroke', (d, i) => {
+        return color[i]
+      })
+      .attr('fill', 'none')
+      .attr('transform', 'translate(' + paddingL + ')')
+
+    // del
+    path.exit().remove()
+  }
+  function drawArea () {
+    let areaLine = d3.area()
       .x((d) => {
         return xScale(d[0])
       })
@@ -169,33 +260,112 @@
         return yScale(d[1]) + paddingT
       })
 
-    let path = selection.append('path')
+    let areaPath = svg.selectAll('.line-areapath').data(lineData)
+    let enterAreaPath = areaPath.enter()
+    // update
+    areaPath.attr('d', (d) => {
+      return areaLine(d.gdp)
+    })
+    // add
+    enterAreaPath.append('path').attr('class', 'line-areapath')
       .attr('d', (d) => {
-        return line(d.gdp)
+        return areaLine(d.gdp)
       })
-      .attr('stroke', (d, i) => {
-        return color[i]
-      })
+      .attr('stroke', 'none')
       .attr('fill', (d, i) => {
         return color[i]
       })
       .attr('fill-opacity', '.3')
       .attr('transform', 'translate(' + paddingL + ')')
 
-    let xAxis = d3.axisBottom()
-      .scale(xScale)
-      .ticks(7)
-    let gXaxis = svg.append('g')
-      .attr('class', 'axis')
-      .attr('transform', 'translate(' + paddingL + ',' + (height - paddingB) + ')')
-    xAxis(gXaxis)
+    // del
+    areaPath.exit().remove()
+  }
+  function drawCircle () {
+    let circleG = svg.selectAll('.line-circle')
+      .data(lineData)
+    let enterCircleG = circleG.enter()
 
-    let yAxis = d3.axisLeft()
-      .scale(yScale)
-    let gYaxis = svg.append('g')
-      .attr('class', 'axis')
-      .attr('transform', 'translate(' + paddingL + ',' + paddingT + ')')
-    yAxis(gYaxis)
+    // add
+    enterCircleG.append('g')
+      .attr('class', 'line-circle')
+      .attr('id', (d, i) => {
+        return 'line-circle' + i
+      })
+      .attr('transform', 'translate(' + paddingL + ', ' + paddingT + ')')
+      .attr('fill', (d, i) => {
+        return color[i]
+      })
+    // del
+    circleG.exit().remove()
+
+    lineData.forEach((item, idx) => {
+      let parentG = svg.selectAll('#line-circle' + idx)
+      circle(item.gdp, parentG)
+    })
+  }
+  function circle (data, circleG) {
+    let circle = circleG.selectAll('circle')
+      .data(data)
+    let enterCircle = circle.enter()
+
+    // update
+    circle
+      .attr('cx', (d) => {
+        return xScale(d[0])
+      })
+      .attr('cy', (d) => {
+        return yScale(d[1])
+      })
+    // add
+    enterCircle.append('circle')
+      .attr('cx', (d) => {
+        return xScale(d[0])
+      })
+      .attr('cy', (d) => {
+        return yScale(d[1])
+      })
+      .attr('r', 3.5)
+      .style('cursor', 'pointer')
+      .on('mouseover', function (d, i) {
+        d3.select(this).transition().duration(100).attr('r', 5)
+        let position = d3.mouse(this)
+        drawTip(position, d)
+      })
+      .on('mouseout', function () {
+        d3.select(this).transition().duration(50).attr('r', 3.6)
+        d3.select('.line-tips').transition().duration(100).style('opacity', 0)
+      })
+    // del
+    circle.exit().remove()
+  }
+  function drawTip (position, tipData) {
+    let tipL = position[0] + 75
+    let tipT = position[1] + 50
+
+    // 边界处理！！！！
+
+    let tips = d3.select('.line-tips')
+    tips
+      .style('left', tipL + 'px')
+      .style('top', tipT + 'px')
+      .transition()
+      .duration(300)
+      .style('opacity', 1)
+
+    let textP = tips.selectAll('.tip-text').data(tipData)
+    textP.text((d, i) => {
+      return (i === 0 ? '年份:' : 'GDB:') + d
+    })
+
+    let enterTextP = textP.enter()
+    enterTextP.append('p')
+      .attr('class', 'tip-text')
+      .text((d, i) => {
+        return (i === 0 ? '年份:' : 'GDB:') + d
+      })
+
+    textP.exit().remove()
   }
 
   function getMax () {
@@ -226,15 +396,32 @@
   }
   function addData () {
     lineData.forEach((item, idx) => {
-      let newData = [getAxis(1) + 1, Math.floor(Math.random() * 100000)]
+      let year = idx === 0 ? getAxis(1) + 1 : getAxis(1)
+      let newData = [year, Math.floor(Math.random() * 100000)]
       item.gdp.push(newData)
     })
+    drawLine()
+  }
+  function addLine () {
+    let newLine = {
+      country: 'test' + lineData.length,
+      gdp: []
+    }
+    lineData[0].gdp.forEach((item, idx) => {
+      let data = [item[0], Math.floor(Math.random() * 100000)]
+      newLine.gdp.push(data)
+    })
+    lineData.push(newLine)
     drawLine()
   }
   function delData () {
     lineData.forEach((item, idx) => {
       item.gdp.pop()
     })
+    drawLine()
+  }
+  function delline () {
+    lineData.pop()
     drawLine()
   }
 
