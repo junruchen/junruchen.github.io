@@ -35,7 +35,7 @@
 
     .line-box {
       width: 440px;
-      height: 440px;
+      height: 340px;
     }
 
     .line-demo {
@@ -48,8 +48,9 @@
       padding: 5px;
       border-radius: 4px;
       min-width: 100px;
+      max-width: 200px;
       font-size: 12px;
-      background-color: rgba(0, 0, 0, .3);
+      background-color: rgba(0, 0, 0, .4);
       color: #fff;
     }
 
@@ -94,27 +95,169 @@
   let paddingL = 60
   let paddingR = 40
   let color = ['#5588AA', '#FFBB33', 'red', 'green', 'purple', 'black', '#cccccc']
+
   let lineData = {
-    label: ['中国', '日本'],
-    xAxis: {
-      title: '日期',
-      data: ['2000', '2001', '2002', '2003', '2004', '2005', '2006', '2007', '2008', '2009', '2010', '2011']
+    'title': 'LOAD',
+    'legend': ['LOAD'],
+    'yAxis': {
+      'title': 'GDP'
     },
-    yAxis: {
-      title: 'GDP'
+    'xAxis': {
+      'title': '日期',
+      'data': ['2017-06-22 17:01:16', '2017-06-22 17:01:36', '2017-06-22 17:01:56', '2017-06-22 17:02:16', '2017-06-22 17:02:36', '2017-06-22 17:02:56', '2017-06-22 17:03:16', '2017-06-22 17:03:36', '2017-06-22 17:03:56', '2017-06-22 17:04:16', '2017-06-22 17:04:36', '2017-06-22 17:04:56', '2017-06-22 17:05:16', '2017-06-22 17:05:36', '2017-06-22 17:05:56', '2017-06-22 17:06:16', '2017-06-22 17:06:36', '2017-06-22 17:06:56', '2017-06-22 17:07:16', '2017-06-22 17:07:36', '2017-06-22 17:07:56', '2017-06-22 17:08:16', '2017-06-22 17:08:36', '2017-06-22 17:08:56', '2017-06-22 17:09:16', '2017-06-22 17:09:36', '2017-06-22 17:09:56', '2017-06-22 17:10:16', '2017-06-22 17:10:36', '2017-06-22 17:10:56', '2017-06-22 17:11:16', '2017-06-22 17:11:36', '2017-06-22 17:11:56', '2017-06-22 17:12:16', '2017-06-22 17:12:36', '2017-06-22 17:12:56', '2017-06-22 17:13:16', '2017-06-22 17:13:36', '2017-06-22 17:13:56', '2017-06-22 17:14:16', '2017-06-22 17:14:36', '2017-06-22 17:14:56', '2017-06-22 17:15:16', '2017-06-22 17:15:36', '2017-06-22 17:15:56', '2017-06-22 17:16:16', '2017-06-22 17:16:36', '2017-06-22 17:16:56', '2017-06-22 17:17:16', '2017-06-22 17:17:36']
     },
-    series: [
-      [
-        {val: '11920', time: '2000'}, {val: '13170', time: '2001'}, {val: '14550', time: '2002'},
-        {val: '16500', time: '2003'}, {val: '19440', time: '2004'}, {val: '22870', time: '2005'},
-        {val: '27930', time: '2006'}, {val: '35040', time: '2007'}, {val: '45470', time: '2008'},
-        {val: '51050', time: '2009'}, {val: '59490', time: '2010'}, {val: '73140', time: '2011'}
+    'series': [
+      [{'data': 3356, 'time': '2017-06-22 17:01:16'}, {
+        'data': 3338,
+        'time': '2017-06-22 17:01:36'
+      }, {'data': 9646, 'time': '2017-06-22 17:01:56'}, {
+        'data': 3379,
+        'time': '2017-06-22 17:02:16'
+      }, {'data': 7872, 'time': '2017-06-22 17:02:36'}, {
+        'data': 6584,
+        'time': '2017-06-22 17:02:56'
+      }, {'data': 6985, 'time': '2017-06-22 17:03:16'}, {
+        'data': 2661,
+        'time': '2017-06-22 17:03:36'
+      }, {'data': 6921, 'time': '2017-06-22 17:03:56'}, {
+        'data': 7087,
+        'time': '2017-06-22 17:04:16'
+      }, {'data': 4514, 'time': '2017-06-22 17:04:36'}, {
+        'data': 9251,
+        'time': '2017-06-22 17:04:56'
+      }, {'data': 5592, 'time': '2017-06-22 17:05:16'}, {
+        'data': 5846,
+        'time': '2017-06-22 17:05:36'
+      }, {'data': 5508, 'time': '2017-06-22 17:05:56'}, {
+        'data': 7787,
+        'time': '2017-06-22 17:06:16'
+      }, {'data': 3246, 'time': '2017-06-22 17:06:36'}, {
+        'data': 8543,
+        'time': '2017-06-22 17:06:56'
+      }, {'data': 8258, 'time': '2017-06-22 17:07:16'}, {
+        'data': 9142,
+        'time': '2017-06-22 17:07:36'
+      }, {'data': 6821, 'time': '2017-06-22 17:07:56'}, {
+        'data': 2585,
+        'time': '2017-06-22 17:08:16'
+      }, {'data': 35, 'time': '2017-06-22 17:08:36'}, {
+        'data': 1300,
+        'time': '2017-06-22 17:08:56'
+      }, {'data': 4649, 'time': '2017-06-22 17:09:16'}, {
+        'data': 2115,
+        'time': '2017-06-22 17:09:36'
+      }, {'data': 701, 'time': '2017-06-22 17:09:56'}, {
+        'data': 9965,
+        'time': '2017-06-22 17:10:16'
+      }, {'data': 4072, 'time': '2017-06-22 17:10:36'}, {
+        'data': 1592,
+        'time': '2017-06-22 17:10:56'
+      }, {'data': 2367, 'time': '2017-06-22 17:11:16'}, {
+        'data': 175,
+        'time': '2017-06-22 17:11:36'
+      }, {'data': 7757, 'time': '2017-06-22 17:11:56'}, {
+        'data': 3794,
+        'time': '2017-06-22 17:12:16'
+      }, {'data': 1629, 'time': '2017-06-22 17:12:36'}, {
+        'data': 4911,
+        'time': '2017-06-22 17:12:56'
+      }, {'data': 4976, 'time': '2017-06-22 17:13:16'}, {
+        'data': 245,
+        'time': '2017-06-22 17:13:36'
+      }, {'data': 3648, 'time': '2017-06-22 17:13:56'}, {
+        'data': 6198,
+        'time': '2017-06-22 17:14:16'
+      }, {'data': 1248, 'time': '2017-06-22 17:14:36'}, {
+        'data': 7314,
+        'time': '2017-06-22 17:14:56'
+      }, {'data': 1592, 'time': '2017-06-22 17:15:16'}, {
+        'data': 1253,
+        'time': '2017-06-22 17:15:36'
+      }, {'data': 747, 'time': '2017-06-22 17:15:56'}, {
+        'data': 6343,
+        'time': '2017-06-22 17:16:16'
+      }, {'data': 6370, 'time': '2017-06-22 17:16:36'}, {
+        'data': 3966,
+        'time': '2017-06-22T17:16:56.253123'
+      }, {
+        'data': 6075, 'time': '2017-06-22 17:17:16'
+      }, {'data': 2753, 'time': '2017-06-22 17:17:36'}
       ],
-      [
-        {val: '47310', time: '2000'}, {val: '41950', time: '2001'}, {val: '39800', time: '2002'},
-        {val: '43020', time: '2003'}, {val: '46550', time: '2004'}, {val: '45710', time: '2005'},
-        {val: '43560', time: '2006'}, {val: '43560', time: '2007'}, {val: '48490', time: '2008'},
-        {val: '50350', time: '2009'}, {val: '54950', time: '2010'}, {val: '59050', time: '2011'}
+      [{'data': 3256, 'time': '2017-06-22 17:01:16'}, {
+        'data': 1338,
+        'time': '2017-06-22 17:01:36'
+      }, {'data': 4646, 'time': '2017-06-22 17:01:56'}, {
+        'data': 6379,
+        'time': '2017-06-22 17:02:16'
+      }, {'data': 2872, 'time': '2017-06-22 17:02:36'}, {
+        'data': 9584,
+        'time': '2017-06-22 17:02:56'
+      }, {'data': 6385, 'time': '2017-06-22 17:03:16'}, {
+        'data': 1661,
+        'time': '2017-06-22 17:03:36'
+      }, {'data': 2921, 'time': '2017-06-22 17:03:56'}, {
+        'data': 3087,
+        'time': '2017-06-22 17:04:16'
+      }, {'data': 9514, 'time': '2017-06-22 17:04:36'}, {
+        'data': 2251,
+        'time': '2017-06-22 17:04:56'
+      }, {'data': 9592, 'time': '2017-06-22 17:05:16'}, {
+        'data': 1846,
+        'time': '2017-06-22 17:05:36'
+      }, {'data': 9508, 'time': '2017-06-22 17:05:56'}, {
+        'data': 2787,
+        'time': '2017-06-22 17:06:16'
+      }, {'data': 7246, 'time': '2017-06-22 17:06:36'}, {
+        'data': 2543,
+        'time': '2017-06-22 17:06:56'
+      }, {'data': 4258, 'time': '2017-06-22 17:07:16'}, {
+        'data': 5142,
+        'time': '2017-06-22 17:07:36'
+      }, {'data': 6821, 'time': '2017-06-22 17:07:56'}, {
+        'data': 1585,
+        'time': '2017-06-22 17:08:16'
+      }, {'data': 435, 'time': '2017-06-22 17:08:36'}, {
+        'data': 6300,
+        'time': '2017-06-22 17:08:56'
+      }, {'data': 649, 'time': '2017-06-22 17:09:16'}, {
+        'data': 3115,
+        'time': '2017-06-22 17:09:36'
+      }, {'data': 701, 'time': '2017-06-22 17:09:56'}, {
+        'data': 4965,
+        'time': '2017-06-22 17:10:16'
+      }, {'data': 4072, 'time': '2017-06-22 17:10:36'}, {
+        'data': 5592,
+        'time': '2017-06-22 17:10:56'
+      }, {'data': 5367, 'time': '2017-06-22 17:11:16'}, {
+        'data': 2875,
+        'time': '2017-06-22 17:11:36'
+      }, {'data': 1757, 'time': '2017-06-22 17:11:56'}, {
+        'data': 9794,
+        'time': '2017-06-22 17:12:16'
+      }, {'data': 2629, 'time': '2017-06-22 17:12:36'}, {
+        'data': 6911,
+        'time': '2017-06-22 17:12:56'
+      }, {'data': 3976, 'time': '2017-06-22 17:13:16'}, {
+        'data': 2245,
+        'time': '2017-06-22 17:13:36'
+      }, {'data': 9648, 'time': '2017-06-22 17:13:56'}, {
+        'data': 2198,
+        'time': '2017-06-22 17:14:16'
+      }, {'data': 7248, 'time': '2017-06-22 17:14:36'}, {
+        'data': 7014,
+        'time': '2017-06-22 17:14:56'
+      }, {'data': 1992, 'time': '2017-06-22 17:15:16'}, {
+        'data': 5253,
+        'time': '2017-06-22 17:15:36'
+      }, {'data': 2747, 'time': '2017-06-22 17:15:56'}, {
+        'data': 3343,
+        'time': '2017-06-22 17:16:16'
+      }, {'data': 4370, 'time': '2017-06-22 17:16:36'}, {
+        'data': 5966,
+        'time': '2017-06-22T17:16:56.253123'
+      }, {
+        'data': 4075, 'time': '2017-06-22 17:17:16'
+      }, {'data': 8753, 'time': '2017-06-22 17:17:36'}
       ]
     ]
   }
@@ -128,14 +271,14 @@
     .append('svg')
     .attr('width', width)
     .attr('height', height)
-  let xScale = d3.scaleLinear()
+  let xScale = d3.scaleTime()
   let yScale = d3.scaleLinear()
 
   drawLine()
   mousemove() // 控制tip
 
   function drawLine () {
-    drawLabel() // 绘制label
+    drawLabel() // 绘制legend
     drawAxis() // 绘制坐标系
     drawArea() //绘制路径背景 -----> 动画有问题
     drawPath() // 绘制路径
@@ -143,17 +286,17 @@
   }
 
   function drawLabel () {
-    // label
-    let labelG = svg.selectAll('.label').data(lineData.label)
-    let enterLabel = labelG.enter().append('g')
+    // legend
+    let legendG = svg.selectAll('.legend').data(lineData.legend)
+    let enterLabel = legendG.enter().append('g')
 
-    labelG.selectAll('text')
+    legendG.selectAll('text')
       .text((d) => {
         return d
       })
 
     enterLabel
-      .attr('class', 'label')
+      .attr('class', 'legend')
       .append('rect')
       .attr('width', '23')
       .attr('height', '13')
@@ -181,15 +324,19 @@
       })
 
     // del
-    labelG.exit().remove()
+    legendG.exit().remove()
 
   }
   function drawAxis () {
     // 绘制坐标系
-    xScale.domain([d3.min(lineData.xAxis.data), d3.max(lineData.xAxis.data)])
+
+    xScale.domain([new Date(d3.min(lineData.xAxis.data)), new Date(d3.max(lineData.xAxis.data))])
       .range([0, lineWidth])
+
     let xAxis = d3.axisBottom(xScale)
       .ticks(5)
+      .tickFormat(d3.timeFormat('%Y-%m-%d %H:%M:%S'))
+
     let gXaxis = svg.select('.xAxis')
       .call(xAxis)
       .attr('transform', 'translate(' + paddingL + ',' + (height - paddingB) + ')')
@@ -232,10 +379,10 @@
   function drawPath () {
     let line = d3.line()
       .x((d) => {
-        return xScale(d.time)
+        return xScale(new Date(d.time))
       })
       .y((d) => {
-        return yScale(d.val) + paddingT
+        return yScale(d.data) + paddingT
       })
     let path = svg.selectAll('.line-path').data(lineData.series)
     let enterPath = path.enter()
@@ -283,13 +430,13 @@
   function drawArea () {
     let areaLine = d3.area()
       .x((d) => {
-        return xScale(d.time)
+        return xScale(new Date(d.time))
       })
       .y0(() => {
         return height - paddingB
       })
       .y1((d) => {
-        return yScale(d.val) + paddingT
+        return yScale(d.data) + paddingT
       })
 
     let areaPath = svg.selectAll('.line-areapath').data(lineData.series)
@@ -312,17 +459,17 @@
       })
       .attr('fill-opacity', '.3')
       .attr('transform', 'translate(' + paddingL + ')')
-    enterAreaPath.append('rect')
-      .attr('class', 'path-area-mark')
-      .attr('width', lineWidth)
-      .attr('height', lineHeight)
-      .attr('x', paddingL + 1)
-      .attr('y', paddingT)
-      .attr('fill', '#fff')
-      .attr('transform-origin', 'right center')
-      .transition()
-      .duration(1000)
-      .attr('transform', 'scale(0, 1)')
+    /*enterAreaPath.append('rect')
+     .attr('class', 'path-area-mark')
+     .attr('width', lineWidth)
+     .attr('height', lineHeight)
+     .attr('x', paddingL + 1)
+     .attr('y', paddingT)
+     .attr('fill', '#fff')
+     .attr('transform-origin', 'right center')
+     .transition()
+     .duration(1000)
+     .attr('transform', 'scale(0, 1)')*/
 
     // del
     areaPath.exit().remove()
@@ -358,19 +505,19 @@
     // update
     circle
       .attr('cx', (d) => {
-        return xScale(d.time)
+        return xScale(new Date(d.time))
       })
       .attr('cy', (d) => {
-        return yScale(d.val)
+        return yScale(d.data)
       })
     // add
     enterCircle
       .append('circle')
       .attr('cx', (d) => {
-        return xScale(d.time)
+        return xScale(new Date(d.time))
       })
       .attr('cy', (d) => {
-        return yScale(d.val)
+        return yScale(d.data)
       })
       .attr('r', 3.5)
       .style('cursor', 'pointer')
@@ -380,6 +527,10 @@
       .on('mouseout', function () {
         d3.select(this).transition().duration(50).attr('r', 3.6)
       })
+      .attr('fill-opacity', 0)
+      .transition()
+      .duration(1000)
+      .attr('fill-opacity', 1)
     // del
     circle.exit().remove()
   }
@@ -404,7 +555,7 @@
   }
   function drawTip () {
     var bisect = d3.bisector(function (d) {
-      return d
+      return new Date(d)
     }).left
 
     // 获取x轴坐标
@@ -412,14 +563,14 @@
       i = bisect(lineData.xAxis.data, x0),
       d0 = lineData.xAxis.data[i - 1],
       d1 = lineData.xAxis.data[i],
-      d = (x0 - d0) > (d1 - x0) ? d1 : d0
+      d = new Date((x0 - d0) > (d1 - x0) ? d1 : d0)
 
-    // 获取交点 y轴坐标 ------>有问题
+    // 获取交点 y轴坐标
     let points = []
     lineData.series.forEach((item) => {
       item.forEach((ditem) => {
-        if (parseInt(ditem.time) === parseInt(d)) {
-          points.push(ditem.val)
+        if (Date.parse(ditem.time) === Date.parse(d)) {
+          points.push(ditem.data)
         }
       })
     })
@@ -475,19 +626,19 @@
     tipsLineCircle.exit().remove()
 
     // tip框填充相应文字数据
+    let timeFormat = d3.timeFormat('%Y-%m-%d %H:%M:%S')
     let tips = d3.select('.line-tips')
     let tipsTitle = tips.selectAll('.tip-title')
-    tipsTitle.text('年份: ' + d)
+    tipsTitle.text('时间: ' + timeFormat(d))
     if (tipsTitle.size() === 0) {
       tips.append('p')
         .attr('class', 'tip-title')
-        .text('年份: ' + d)
+        .text('时间: ' + timeFormat(d))
     }
     let tipsPoint = tips.selectAll('.tip-content').data(points)
-    console.log(tipsPoint.size())
     tipsPoint.select('span')
       .text((d, i) => {
-        return lineData.label[i] + ' GDB: ' + d
+        return lineData.legend[i] + ' 数据: ' + d
       })
 
     let enterTipsPoint = tipsPoint.enter()
@@ -501,71 +652,84 @@
       })
     tipsPointDiv.append('span')
       .text((d, i) => {
-        return lineData.label[i] + ' GDB: ' + d
+        return lineData.legend[i] + ' 数据: ' + d
       })
     tipsPoint.exit().remove()
 
-    // tip框位置处理 边界处理  parseInt(tips.style('width'))
-    let widthSum = xScale(d) + paddingL + 10 + parseInt(tips.style('width'))
-    let tipsLeft = (xScale(d) + paddingL + 10) + 'px'
-    let tipsTop = (yScale(d3.mean(points)) + paddingT - parseInt(tips.style('height')) / 2) + 'px'
-
-    if (widthSum > width) {
-      tipsLeft = (width - parseInt(tips.style('width')) - paddingR - 10) + 'px'
+    // tip框位置处理 边界处理
+    let svgCenterW = width / 2, svgCenterH = height / 2, tipsL, tipsT
+    if (d3.mouse(this)[0] > svgCenterW) {
+      tipsL = d3.mouse(this)[0] - parseInt(tips.style('width')) - 20 + 'px'
+    } else {
+      tipsL = d3.mouse(this)[0] + 20 + 'px'
     }
-    tips.style('left', tipsLeft)
-      .style('top', tipsTop)
+    if (d3.mouse(this)[1] > svgCenterH) {
+      tipsT = d3.mouse(this)[1] - parseInt(tips.style('height')) - 20 + 'px'
+    } else {
+      tipsT = d3.mouse(this)[1] + 20 + 'px'
+    }
+    tips.style('left', tipsL)
+      .style('top', tipsT)
   }
 
   function getMax () {
     let maxData = []
     lineData.series.forEach((item, idx) => {
       let itemMax = d3.max(item, (d) => {
-        return d.val
+        return d.data
       })
       maxData.push(itemMax)
     })
     return d3.max(maxData)
   }
 
-  /*function updateData () {
-   lineData.forEach((item, idx) => {
-   item.gdp.forEach((iitem) => {
-   iitem[1] = Math.floor(Math.random() * 100000)
-   })
-   })
-   drawLine()
-   }
-   function addData () {
-   lineData.forEach((item, idx) => {
-   let year = idx === 0 ? getAxis(1) + 1 : getAxis(1)
-   let newData = [year, Math.floor(Math.random() * 100000)]
-   item.gdp.push(newData)
-   })
-   drawLine()
-   }
-   function addLine () {
-   let newLine = {
-   country: 'test' + lineData.length,
-   gdp: []
-   }
-   lineData[0].gdp.forEach((item, idx) => {
-   let data = [item[0], Math.floor(Math.random() * 100000)]
-   newLine.gdp.push(data)
-   })
-   lineData.push(newLine)
-   drawLine()
-   }
-   function delData () {
-   lineData.forEach((item, idx) => {
-   item.gdp.pop()
-   })
-   drawLine()
-   }
-   function delline () {
-   lineData.pop()
-   drawLine()
-   }*/
+  function updateData () {
+    lineData.series.forEach((item, idx) => {
+      item.forEach((iitem) => {
+        iitem.data = Math.floor(Math.random() * 100000)
+      })
+    })
+    drawLine()
+  }
+  function addData () {
+    lineData.series.forEach((item, idx) => {
+      let newData = {
+        time: parseInt(d3.max(lineData.xAxis.data)) + 1,
+        data: Math.floor(Math.random() * 100000)
+      }
+      item.push(newData)
+    })
+    lineData.xAxis.data.push(parseInt(d3.max(lineData.xAxis.data)) + 1)
+    drawLine()
+  }
+  function addLine () {
+    let newLine = {
+      country: 'test' + lineData.series.length,
+      data: []
+    }
+    lineData.series[0].forEach((item, idx) => {
+      let data = {
+        time: item.time,
+        data: Math.floor(Math.random() * 100000)
+      }
+      newLine.data.push(data)
+    })
+    lineData.legend.push(newLine.country)
+    lineData.series.push(newLine.data)
+    drawLine()
+  }
+  function delData () {
+    lineData.xAxis.data.pop()
+    lineData.series.forEach((item, idx) => {
+      item.pop()
+    })
+    drawLine()
+  }
+  function delline () {
+    lineData.legend.pop()
+    lineData.series.pop()
+    drawLine()
+  }
 
 </script>
 </html>

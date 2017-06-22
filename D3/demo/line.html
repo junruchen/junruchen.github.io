@@ -95,7 +95,7 @@
   let paddingR = 40
   let color = ['#5588AA', '#FFBB33', 'red', 'green', 'purple', 'black', '#cccccc']
   let lineData = {
-    label: ['中国', '日本'],
+    legend: ['中国', '日本'],
     xAxis: {
       title: '日期',
       data: ['2000', '2001', '2002', '2003', '2004', '2005', '2006', '2007', '2008', '2009', '2010', '2011']
@@ -135,7 +135,7 @@
   mousemove() // 控制tip
 
   function drawLine () {
-    drawLabel() // 绘制label
+    drawLabel() // 绘制legend
     drawAxis() // 绘制坐标系
     drawArea() //绘制路径背景 -----> 动画有问题
     drawPath() // 绘制路径
@@ -143,17 +143,17 @@
   }
 
   function drawLabel () {
-    // label
-    let labelG = svg.selectAll('.label').data(lineData.label)
-    let enterLabel = labelG.enter().append('g')
+    // legend
+    let legendG = svg.selectAll('.legend').data(lineData.legend)
+    let enterLabel = legendG.enter().append('g')
 
-    labelG.selectAll('text')
+    legendG.selectAll('text')
       .text((d) => {
         return d
       })
 
     enterLabel
-      .attr('class', 'label')
+      .attr('class', 'legend')
       .append('rect')
       .attr('width', '23')
       .attr('height', '13')
@@ -181,7 +181,7 @@
       })
 
     // del
-    labelG.exit().remove()
+    legendG.exit().remove()
 
   }
   function drawAxis () {
@@ -312,17 +312,17 @@
       })
       .attr('fill-opacity', '.3')
       .attr('transform', 'translate(' + paddingL + ')')
-    enterAreaPath.append('rect')
-      .attr('class', 'path-area-mark')
-      .attr('width', lineWidth)
-      .attr('height', lineHeight)
-      .attr('x', paddingL + 1)
-      .attr('y', paddingT)
-      .attr('fill', '#fff')
-      .attr('transform-origin', 'right center')
-      .transition()
-      .duration(1000)
-      .attr('transform', 'scale(0, 1)')
+    /*enterAreaPath.append('rect')
+     .attr('class', 'path-area-mark')
+     .attr('width', lineWidth)
+     .attr('height', lineHeight)
+     .attr('x', paddingL + 1)
+     .attr('y', paddingT)
+     .attr('fill', '#fff')
+     .attr('transform-origin', 'right center')
+     .transition()
+     .duration(1000)
+     .attr('transform', 'scale(0, 1)')*/
 
     // del
     areaPath.exit().remove()
@@ -380,6 +380,10 @@
       .on('mouseout', function () {
         d3.select(this).transition().duration(50).attr('r', 3.6)
       })
+      .attr('fill-opacity', 0)
+      .transition()
+      .duration(1000)
+      .attr('fill-opacity', 1)
     // del
     circle.exit().remove()
   }
@@ -414,7 +418,7 @@
       d1 = lineData.xAxis.data[i],
       d = (x0 - d0) > (d1 - x0) ? d1 : d0
 
-    // 获取交点 y轴坐标 ------>有问题
+    // 获取交点 y轴坐标
     let points = []
     lineData.series.forEach((item) => {
       item.forEach((ditem) => {
@@ -486,7 +490,7 @@
     let tipsPoint = tips.selectAll('.tip-content').data(points)
     tipsPoint.select('span')
       .text((d, i) => {
-        return lineData.label[i] + ' GDB: ' + d
+        return lineData.legend[i] + ' GDB: ' + d
       })
 
     let enterTipsPoint = tipsPoint.enter()
@@ -500,20 +504,24 @@
       })
     tipsPointDiv.append('span')
       .text((d, i) => {
-        return lineData.label[i] + ' GDB: ' + d
+        return lineData.legend[i] + ' GDB: ' + d
       })
     tipsPoint.exit().remove()
 
-    // tip框位置处理 边界处理  parseInt(tips.style('width'))
-    let widthSum = xScale(d) + paddingL + 10 + parseInt(tips.style('width'))
-    let tipsLeft = (xScale(d) + paddingL + 10) + 'px'
-    let tipsTop = (yScale(d3.mean(points)) + paddingT - parseInt(tips.style('height')) / 2) + 'px'
-
-    if (widthSum > width) {
-      tipsLeft = (width - parseInt(tips.style('width')) - paddingR - 10) + 'px'
+    // tip框位置处理 边界处理
+    let svgCenterW = width / 2, svgCenterH = height / 2, tipsL, tipsT
+    if (d3.mouse(this)[0] > svgCenterW) {
+      tipsL = d3.mouse(this)[0] - parseInt(tips.style('width')) - 20 + 'px'
+    } else {
+      tipsL = d3.mouse(this)[0] + 20 + 'px'
     }
-    tips.style('left', tipsLeft)
-      .style('top', tipsTop)
+    if (d3.mouse(this)[1] > svgCenterH) {
+      tipsT = d3.mouse(this)[1] - parseInt(tips.style('height')) - 20 + 'px'
+    } else {
+      tipsT = d3.mouse(this)[1] + 20 + 'px'
+    }
+    tips.style('left', tipsL)
+      .style('top', tipsT)
   }
 
   function getMax () {
@@ -558,7 +566,7 @@
       }
       newLine.data.push(data)
     })
-    lineData.label.push(newLine.country)
+    lineData.legend.push(newLine.country)
     lineData.series.push(newLine.data)
     drawLine()
   }
@@ -570,7 +578,7 @@
     drawLine()
   }
   function delline () {
-    lineData.label.pop()
+    lineData.legend.pop()
     lineData.series.pop()
     drawLine()
   }
