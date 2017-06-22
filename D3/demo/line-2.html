@@ -18,7 +18,7 @@
     }
 
     .line-box {
-      width: 440px;
+      width: 100%;
       height: 340px;
     }
 
@@ -252,7 +252,8 @@
   let xScale = d3.scaleTime()
   let yScale = d3.scaleLinear()
 
-  drawLine()
+  media() // 自适应处理
+  drawLine() // 画图
   mousemove() // 控制tip
 
   function drawLine () {
@@ -437,17 +438,17 @@
       })
       .attr('fill-opacity', '.3')
       .attr('transform', 'translate(' + paddingL + ')')
-    /*enterAreaPath.append('rect')
-     .attr('class', 'path-area-mark')
-     .attr('width', lineWidth)
-     .attr('height', lineHeight)
-     .attr('x', paddingL + 1)
-     .attr('y', paddingT)
-     .attr('fill', '#fff')
-     .attr('transform-origin', 'right center')
-     .transition()
-     .duration(1000)
-     .attr('transform', 'scale(0, 1)')*/
+    enterAreaPath.append('rect')
+      .attr('class', 'path-area-mark')
+      .attr('width', lineWidth)
+      .attr('height', lineHeight)
+      .attr('x', paddingL + 1)
+      .attr('y', paddingT)
+      .attr('fill', '#fff')
+      .attr('transform-origin', 'right center')
+      .transition()
+      .duration(1000)
+      .attr('transform', 'scale(0, 1)')
 
     // del
     areaPath.exit().remove()
@@ -512,6 +513,7 @@
     // del
     circle.exit().remove()
   }
+
   function mousemove () {
     let tipsRect = svg.append('rect')
       .attr('class', 'mousemove-rect')
@@ -650,6 +652,16 @@
       .style('top', tipsT)
   }
 
+  function media () {
+    window.onresize = function () {
+      width = document.body.clientWidth
+      lineWidth = width - paddingL - paddingR
+      svg.attr('width', width)
+      drawLine()
+    }
+  }
+
+  // 方法
   function getMax () {
     let maxData = []
     lineData.series.forEach((item, idx) => {
