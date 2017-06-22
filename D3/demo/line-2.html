@@ -13,22 +13,6 @@
       margin: 0;
     }
 
-    button {
-      width: 100px;
-      line-height: 36px;
-      outline: none;
-      border: 1px solid #58a;
-      background-color: #fff;
-      margin-bottom: 20px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      color: #fff;
-      background-color: #58a;
-      transition: all .2s linear;
-    }
-
     svg {
       border: 1px solid;
     }
@@ -67,12 +51,6 @@
 </head>
 <body>
 <div class="d3-container">
-  <button onclick="updateData()">更新数据</button>
-  <button onclick="addData()">增加数据</button>
-  <button onclick="delData()">删除数据</button>
-  <button onclick="addLine()">增加折线</button>
-  <button onclick="delline()">删除折线</button>
-
   <div class="line-box">
     <div class="line-demo">
       <div class="line-tips"></div>
@@ -681,54 +659,6 @@
       maxData.push(itemMax)
     })
     return d3.max(maxData)
-  }
-
-  function updateData () {
-    lineData.series.forEach((item, idx) => {
-      item.forEach((iitem) => {
-        iitem.data = Math.floor(Math.random() * 100000)
-      })
-    })
-    drawLine()
-  }
-  function addData () {
-    lineData.series.forEach((item, idx) => {
-      let newData = {
-        time: parseInt(d3.max(lineData.xAxis.data)) + 1,
-        data: Math.floor(Math.random() * 100000)
-      }
-      item.push(newData)
-    })
-    lineData.xAxis.data.push(parseInt(d3.max(lineData.xAxis.data)) + 1)
-    drawLine()
-  }
-  function addLine () {
-    let newLine = {
-      country: 'test' + lineData.series.length,
-      data: []
-    }
-    lineData.series[0].forEach((item, idx) => {
-      let data = {
-        time: item.time,
-        data: Math.floor(Math.random() * 100000)
-      }
-      newLine.data.push(data)
-    })
-    lineData.legend.push(newLine.country)
-    lineData.series.push(newLine.data)
-    drawLine()
-  }
-  function delData () {
-    lineData.xAxis.data.pop()
-    lineData.series.forEach((item, idx) => {
-      item.pop()
-    })
-    drawLine()
-  }
-  function delline () {
-    lineData.legend.pop()
-    lineData.series.pop()
-    drawLine()
   }
 
 </script>
