@@ -799,13 +799,14 @@
           })
         let rectWidth = d3.select('.zoom-rect').attr('width')
         if (i === 0) {
-          console.log(rectWidth - d3.mouse(this)[0] + paddingL)
+          let width = lineWidth - (d3.mouse(this)[0] - paddingL)
           d3.select('.zoom-rect')
-            .attr('width', rectWidth - d3.mouse(this)[0] + paddingL)
-            .attr('x', d3.mouse(this)[0])
+            .attr('width', width >= lineWidth ? lineWidth : width)
+            .attr('x', d3.mouse(this)[0] <= paddingL ? paddingL : d3.mouse(this)[0])
         } else {
+          let width = d3.mouse(this)[0] - paddingL
           d3.select('.zoom-rect')
-            .attr('width', d3.mouse(this)[0] - paddingL)
+            .attr('width', width >= lineWidth ? lineWidth : width)
         }
       })
     let rectData = [
