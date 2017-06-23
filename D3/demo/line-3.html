@@ -385,12 +385,20 @@
         .call(xAxis)
         .attr('class', 'xAxis')
         .attr('transform', 'translate(' + paddingL + ',' + (height - paddingB) + ')')
-        .append('text')
+      xAxisG.append('text')
         .text(lineData.xAxis.title)
         .attr('stroke-width', 0)
         .attr('fill', 'black')
         .attr('transform', 'translate(' + lineWidth + ', 0)')
         .attr('dx', '1rem')
+      // 隐藏多余的内容，主要用在zoom时，防止x轴文字出边界
+      xAxisG.append('defs')
+        .append('clipPath')
+        .attr('id', 'clip-xAxisG')
+        .append('rect')
+        .attr('width', lineWidth)
+        .attr('height', 20)
+      xAxisG.attr('clip-path', 'url(#clip-xAxisG)')
     }
 
     // y轴坐标系设置
@@ -424,9 +432,9 @@
         .attr('id', 'clip')
         .append('rect')
         .attr('width', lineWidth)
-        .attr('height', lineHeight)
+        .attr('height', lineHeight + 5)
         .attr('x', paddingL)
-        .attr('y', paddingT)
+        .attr('y', paddingT - 5)
       chartG.attr('clip-path', 'url(#clip)')
       chartG.append('g')
         .attr('class', 'area-group')
