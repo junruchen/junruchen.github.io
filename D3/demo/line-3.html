@@ -276,8 +276,15 @@
   let chartG, xAxisG, yAxisG, legendsG, tipsG, zoomG
 
   // 时间比例尺, 线性比例尺, 坐标轴
-  let xScale = d3.scaleTime(),
-    yScale = d3.scaleLinear(),
+  let xScale = d3.scaleTime()
+      .domain([new Date(d3.min(lineData.xAxis.data)), new Date(d3.max(lineData.xAxis.data))])
+      .range([0, lineWidth]),
+    zoomScale = d3.scaleTime()
+      .domain([new Date(d3.min(lineData.xAxis.data)), new Date(d3.max(lineData.xAxis.data))])
+      .range([0, lineWidth]),
+    yScale = d3.scaleLinear()
+      .domain([0, getMax()])
+      .range([lineHeight, 0]),
     xAxis,
     yAxis
 
@@ -365,10 +372,6 @@
     legendItemG.exit().remove()
   }
   function drawAxis () {
-    // x轴时间比例尺 值域定义域设置
-    xScale.domain([new Date(d3.min(lineData.xAxis.data)), new Date(d3.max(lineData.xAxis.data))])
-      .range([0, lineWidth])
-
     // x轴坐标系设置
     xAxis = d3.axisBottom(xScale)
       .ticks(5)
@@ -390,10 +393,6 @@
         .attr('dx', '1rem')
     }
 
-    // y轴线性比例尺 值域定义域设置
-    let maxData = getMax()
-    yScale.domain([0, maxData])
-      .range([lineHeight, 0])
     // y轴坐标系设置
     yAxis = d3.axisLeft()
       .scale(yScale)
@@ -429,7 +428,6 @@
         .attr('x', paddingL)
         .attr('y', paddingT)
       chartG.attr('clip-path', 'url(#clip)')
-
       chartG.append('g')
         .attr('class', 'area-group')
       chartG.append('g')
@@ -787,27 +785,30 @@
     // 两端滑块
     let drag = d3.drag()
       .on('drag', function (d, i) {
-        d3.select(this).select('.rect-box')
-          .attr('x', () => {
-            let x = d3.mouse(this)[0]
-            if (parseInt(d3.mouse(this)[0]) <= parseInt(paddingL)) {
-              x = paddingL
-            } else if (parseInt(d3.mouse(this)[0]) >= parseInt(width - paddingR)) {
-              x = width - paddingR - 10
-            }
-            return x
-          })
-        let rectWidth = d3.select('.zoom-rect').attr('width')
-        if (i === 0) {
-          let width = lineWidth - (d3.mouse(this)[0] - paddingL)
-          d3.select('.zoom-rect')
-            .attr('width', width >= lineWidth ? lineWidth : width)
-            .attr('x', d3.mouse(this)[0] <= paddingL ? paddingL : d3.mouse(this)[0])
-        } else {
-          let width = d3.mouse(this)[0] - paddingL
-          d3.select('.zoom-rect')
-            .attr('width', width >= lineWidth ? lineWidth : width)
+        // 滑块位置控制
+        let x = d3.mouse(this)[0]
+        if (parseInt(d3.mouse(this)[0]) <= parseInt(paddingL)) {
+          x = paddingL
+        } else if (parseInt(d3.mouse(this)[0]) >= parseInt(width - paddingR)) {
+          x = width - paddingR - 10
         }
+        d3.select(this).select('.rect-box')
+          .attr('x', x)
+          .attr('data-x', x)
+
+        // 控制条宽度以及位置更改
+        let xA = parseInt(d3.select('.rect-box0').attr('data-x'))
+        let xB = parseInt(d3.select('.rect-box1').attr('data-x'))
+        d3.select('.zoom-rect')
+          .attr('width', (xB - xA + 10) > 0 ? (xB - xA + 10) : xA - xB)
+          .attr('x', (xB - xA + 10) > 0 ? xA : xB + 10)
+
+        // 计算x轴 新的日期定义域【】值域【0，width】
+        let x0 = zoomScale.invert(xA - paddingL)
+        let x1 = zoomScale.invert(xB + 10 - paddingL)
+        xScale.domain([x0, x1])
+        drawAxis()
+        drawLine()
       })
     let rectData = [
       {
@@ -831,7 +832,9 @@
       .style('cursor', 'pointer')
       .call(drag)
       .append('rect')
-      .attr('class', 'rect-box')
+      .attr('class', (d, i) => {
+        return 'rect-box rect-box' + i
+      })
       .attr('width', (d) => {
         return d.width
       })
@@ -843,6 +846,9 @@
       })
       .attr('y', (d) => {
         return d.y
+      })
+      .attr('data-x', (d) => {
+        return d.x
       })
       .attr('stroke', 'none')
       .attr('fill', color[0])
