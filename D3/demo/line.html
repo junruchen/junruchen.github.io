@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>D3 -- 折线图</title>
+  <title>D3 -- line</title>
   <style>
     * {
       box-sizing: border-box;
@@ -13,108 +13,251 @@
       margin: 0;
     }
 
-    button {
-      width: 100px;
-      line-height: 36px;
-      outline: none;
-      border: 1px solid #58a;
-      background-color: #fff;
-      margin-bottom: 20px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      color: #fff;
-      background-color: #58a;
-      transition: all .2s linear;
-    }
-
     svg {
       border: 1px solid;
     }
 
     .line-box {
-      width: 440px;
-      height: 440px;
+      width: 100%;
+      height: 340px;
     }
 
-    .line-demo {
+    .line-chart-d3 {
       position: relative;
     }
 
-    .line-tips {
-      display: none;
+    .chart-title {
       position: absolute;
+      font-size: 20px;
+      color: #333;
+    }
+
+    .legends-group, .tips-content {
+      position: absolute;
+      font-size: 12px;
+    }
+
+    .tips-content {
+      display: none;
       padding: 5px;
       border-radius: 4px;
       min-width: 100px;
-      font-size: 12px;
-      background-color: rgba(0, 0, 0, .3);
+      max-width: 200px;
+      background-color: rgba(0, 0, 0, .4);
       color: #fff;
     }
 
-    .tip-content-i {
+    .legends-group .legend-item {
       display: inline-block;
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      margin-right: 5px;
+      color: #333;
+      padding-left: 10px;
+    }
+
+    .legends-group .legend-item .legend-i, .tips-content .tip-item .tip-i {
+      display: inline-block;
       vertical-align: middle;
+      height: 13px;
+      margin-right: 5px;
+    }
+
+    .legends-group .legend-item .legend-i {
+      opacity: 1;
+      width: 23px;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    .tips-content .tip-item .tip-i {
+      width: 13px;
+      border-radius: 50%;
     }
 
   </style>
 </head>
 <body>
 <div class="d3-container">
-  <button onclick="updateData()">更新数据</button>
-  <button onclick="addData()">增加数据</button>
-  <button onclick="delData()">删除数据</button>
-  <button onclick="addLine()">增加折线</button>
-  <button onclick="delline()">删除折线</button>
-
   <div class="line-box">
-    <div class="line-demo">
-      <div class="line-tips"></div>
+
+    <div class="line-chart-d3">
+      <div class="chart-title"></div>
+      <div class="legends-group"></div>
+      <div class="tips-content"></div>
     </div>
+
   </div>
 </div>
 </body>
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script>
-  /**
-   * 分析：折线图 （包含：线、坐标系、文字）
-   * 线：path
-   * 文字：text
-   * 坐标系：线性
-   * */
-
-    // 用户指定
-  let paddingT = 40
-  let paddingB = 80
+  // 用户指定
+  let paddingT = 60
+  let paddingB = 40
   let paddingL = 60
   let paddingR = 40
   let color = ['#5588AA', '#FFBB33', 'red', 'green', 'purple', 'black', '#cccccc']
+
   let lineData = {
-    legend: ['中国', '日本'],
-    xAxis: {
-      title: '日期',
-      data: ['2000', '2001', '2002', '2003', '2004', '2005', '2006', '2007', '2008', '2009', '2010', '2011']
+    'title': 'QPS',
+    'legend': ['QPS READ', 'QPS WRITE'],
+    'yAxis': {
+      'title': 'GDP'
     },
-    yAxis: {
-      title: 'GDP'
+    'xAxis': {
+      'title': '日期',
+      'data': ['2017-06-22 17:01:16', '2017-06-22 17:01:36', '2017-06-22 17:01:56', '2017-06-22 17:02:16', '2017-06-22 17:02:36', '2017-06-22 17:02:56', '2017-06-22 17:03:16', '2017-06-22 17:03:36', '2017-06-22 17:03:56', '2017-06-22 17:04:16', '2017-06-22 17:04:36', '2017-06-22 17:04:56', '2017-06-22 17:05:16', '2017-06-22 17:05:36', '2017-06-22 17:05:56', '2017-06-22 17:06:16', '2017-06-22 17:06:36', '2017-06-22 17:06:56', '2017-06-22 17:07:16', '2017-06-22 17:07:36', '2017-06-22 17:07:56', '2017-06-22 17:08:16', '2017-06-22 17:08:36', '2017-06-22 17:08:56', '2017-06-22 17:09:16', '2017-06-22 17:09:36', '2017-06-22 17:09:56', '2017-06-22 17:10:16', '2017-06-22 17:10:36', '2017-06-22 17:10:56', '2017-06-22 17:11:16', '2017-06-22 17:11:36', '2017-06-22 17:11:56', '2017-06-22 17:12:16', '2017-06-22 17:12:36', '2017-06-22 17:12:56', '2017-06-22 17:13:16', '2017-06-22 17:13:36', '2017-06-22 17:13:56', '2017-06-22 17:14:16', '2017-06-22 17:14:36', '2017-06-22 17:14:56', '2017-06-22 17:15:16', '2017-06-22 17:15:36', '2017-06-22 17:15:56', '2017-06-22 17:16:16', '2017-06-22 17:16:36', '2017-06-22 17:16:56', '2017-06-22 17:17:16', '2017-06-22 17:17:36']
     },
-    series: [
-      [
-        {val: '11920', time: '2000'}, {val: '13170', time: '2001'}, {val: '14550', time: '2002'},
-        {val: '16500', time: '2003'}, {val: '19440', time: '2004'}, {val: '22870', time: '2005'},
-        {val: '27930', time: '2006'}, {val: '35040', time: '2007'}, {val: '45470', time: '2008'},
-        {val: '51050', time: '2009'}, {val: '59490', time: '2010'}, {val: '73140', time: '2011'}
+    'series': [
+      [{'data': 3356, 'time': '2017-06-22 17:01:16'}, {
+        'data': 3338,
+        'time': '2017-06-22 17:01:36'
+      }, {'data': 9646, 'time': '2017-06-22 17:01:56'}, {
+        'data': 3379,
+        'time': '2017-06-22 17:02:16'
+      }, {'data': 7872, 'time': '2017-06-22 17:02:36'}, {
+        'data': 6584,
+        'time': '2017-06-22 17:02:56'
+      }, {'data': 6985, 'time': '2017-06-22 17:03:16'}, {
+        'data': 2661,
+        'time': '2017-06-22 17:03:36'
+      }, {'data': 6921, 'time': '2017-06-22 17:03:56'}, {
+        'data': 7087,
+        'time': '2017-06-22 17:04:16'
+      }, {'data': 4514, 'time': '2017-06-22 17:04:36'}, {
+        'data': 9251,
+        'time': '2017-06-22 17:04:56'
+      }, {'data': 5592, 'time': '2017-06-22 17:05:16'}, {
+        'data': 5846,
+        'time': '2017-06-22 17:05:36'
+      }, {'data': 5508, 'time': '2017-06-22 17:05:56'}, {
+        'data': 7787,
+        'time': '2017-06-22 17:06:16'
+      }, {'data': 3246, 'time': '2017-06-22 17:06:36'}, {
+        'data': 8543,
+        'time': '2017-06-22 17:06:56'
+      }, {'data': 8258, 'time': '2017-06-22 17:07:16'}, {
+        'data': 9142,
+        'time': '2017-06-22 17:07:36'
+      }, {'data': 6821, 'time': '2017-06-22 17:07:56'}, {
+        'data': 2585,
+        'time': '2017-06-22 17:08:16'
+      }, {'data': 35, 'time': '2017-06-22 17:08:36'}, {
+        'data': 1300,
+        'time': '2017-06-22 17:08:56'
+      }, {'data': 4649, 'time': '2017-06-22 17:09:16'}, {
+        'data': 2115,
+        'time': '2017-06-22 17:09:36'
+      }, {'data': 701, 'time': '2017-06-22 17:09:56'}, {
+        'data': 9965,
+        'time': '2017-06-22 17:10:16'
+      }, {'data': 4072, 'time': '2017-06-22 17:10:36'}, {
+        'data': 1592,
+        'time': '2017-06-22 17:10:56'
+      }, {'data': 2367, 'time': '2017-06-22 17:11:16'}, {
+        'data': 175,
+        'time': '2017-06-22 17:11:36'
+      }, {'data': 7757, 'time': '2017-06-22 17:11:56'}, {
+        'data': 3794,
+        'time': '2017-06-22 17:12:16'
+      }, {'data': 1629, 'time': '2017-06-22 17:12:36'}, {
+        'data': 4911,
+        'time': '2017-06-22 17:12:56'
+      }, {'data': 4976, 'time': '2017-06-22 17:13:16'}, {
+        'data': 245,
+        'time': '2017-06-22 17:13:36'
+      }, {'data': 3648, 'time': '2017-06-22 17:13:56'}, {
+        'data': 6198,
+        'time': '2017-06-22 17:14:16'
+      }, {'data': 1248, 'time': '2017-06-22 17:14:36'}, {
+        'data': 7314,
+        'time': '2017-06-22 17:14:56'
+      }, {'data': 1592, 'time': '2017-06-22 17:15:16'}, {
+        'data': 1253,
+        'time': '2017-06-22 17:15:36'
+      }, {'data': 747, 'time': '2017-06-22 17:15:56'}, {
+        'data': 6343,
+        'time': '2017-06-22 17:16:16'
+      }, {'data': 6370, 'time': '2017-06-22 17:16:36'}, {
+        'data': 3966,
+        'time': '2017-06-22T17:16:56.253123'
+      }, {
+        'data': 6075, 'time': '2017-06-22 17:17:16'
+      }, {'data': 2753, 'time': '2017-06-22 17:17:36'}
       ],
-      [
-        {val: '47310', time: '2000'}, {val: '41950', time: '2001'}, {val: '39800', time: '2002'},
-        {val: '43020', time: '2003'}, {val: '46550', time: '2004'}, {val: '45710', time: '2005'},
-        {val: '43560', time: '2006'}, {val: '43560', time: '2007'}, {val: '48490', time: '2008'},
-        {val: '50350', time: '2009'}, {val: '54950', time: '2010'}, {val: '59050', time: '2011'}
+      [{'data': 3256, 'time': '2017-06-22 17:01:16'}, {
+        'data': 1338,
+        'time': '2017-06-22 17:01:36'
+      }, {'data': 4646, 'time': '2017-06-22 17:01:56'}, {
+        'data': 6379,
+        'time': '2017-06-22 17:02:16'
+      }, {'data': 2872, 'time': '2017-06-22 17:02:36'}, {
+        'data': 9584,
+        'time': '2017-06-22 17:02:56'
+      }, {'data': 6385, 'time': '2017-06-22 17:03:16'}, {
+        'data': 1661,
+        'time': '2017-06-22 17:03:36'
+      }, {'data': 2921, 'time': '2017-06-22 17:03:56'}, {
+        'data': 3087,
+        'time': '2017-06-22 17:04:16'
+      }, {'data': 9514, 'time': '2017-06-22 17:04:36'}, {
+        'data': 2251,
+        'time': '2017-06-22 17:04:56'
+      }, {'data': 9592, 'time': '2017-06-22 17:05:16'}, {
+        'data': 1846,
+        'time': '2017-06-22 17:05:36'
+      }, {'data': 9508, 'time': '2017-06-22 17:05:56'}, {
+        'data': 2787,
+        'time': '2017-06-22 17:06:16'
+      }, {'data': 7246, 'time': '2017-06-22 17:06:36'}, {
+        'data': 2543,
+        'time': '2017-06-22 17:06:56'
+      }, {'data': 4258, 'time': '2017-06-22 17:07:16'}, {
+        'data': 5142,
+        'time': '2017-06-22 17:07:36'
+      }, {'data': 6821, 'time': '2017-06-22 17:07:56'}, {
+        'data': 1585,
+        'time': '2017-06-22 17:08:16'
+      }, {'data': 435, 'time': '2017-06-22 17:08:36'}, {
+        'data': 6300,
+        'time': '2017-06-22 17:08:56'
+      }, {'data': 649, 'time': '2017-06-22 17:09:16'}, {
+        'data': 3115,
+        'time': '2017-06-22 17:09:36'
+      }, {'data': 701, 'time': '2017-06-22 17:09:56'}, {
+        'data': 4965,
+        'time': '2017-06-22 17:10:16'
+      }, {'data': 4072, 'time': '2017-06-22 17:10:36'}, {
+        'data': 5592,
+        'time': '2017-06-22 17:10:56'
+      }, {'data': 5367, 'time': '2017-06-22 17:11:16'}, {
+        'data': 2875,
+        'time': '2017-06-22 17:11:36'
+      }, {'data': 1757, 'time': '2017-06-22 17:11:56'}, {
+        'data': 9794,
+        'time': '2017-06-22 17:12:16'
+      }, {'data': 2629, 'time': '2017-06-22 17:12:36'}, {
+        'data': 6911,
+        'time': '2017-06-22 17:12:56'
+      }, {'data': 3976, 'time': '2017-06-22 17:13:16'}, {
+        'data': 2245,
+        'time': '2017-06-22 17:13:36'
+      }, {'data': 9648, 'time': '2017-06-22 17:13:56'}, {
+        'data': 2198,
+        'time': '2017-06-22 17:14:16'
+      }, {'data': 7248, 'time': '2017-06-22 17:14:36'}, {
+        'data': 7014,
+        'time': '2017-06-22 17:14:56'
+      }, {'data': 1992, 'time': '2017-06-22 17:15:16'}, {
+        'data': 5253,
+        'time': '2017-06-22 17:15:36'
+      }, {'data': 2747, 'time': '2017-06-22 17:15:56'}, {
+        'data': 3343,
+        'time': '2017-06-22 17:16:16'
+      }, {'data': 4370, 'time': '2017-06-22 17:16:36'}, {
+        'data': 5966,
+        'time': '2017-06-22T17:16:56.253123'
+      }, {
+        'data': 4075, 'time': '2017-06-22 17:17:16'
+      }, {'data': 8753, 'time': '2017-06-22 17:17:36'}
       ]
     ]
   }
@@ -124,78 +267,118 @@
   let height = parseInt(d3.select('.line-box').style('height'))
   let lineWidth = width - paddingL - paddingR
   let lineHeight = height - paddingT - paddingB
-  let svg = d3.select('.line-demo')
+  let svg = d3.select('.line-chart-d3')
     .append('svg')
     .attr('width', width)
     .attr('height', height)
-  let xScale = d3.scaleLinear()
-  let yScale = d3.scaleLinear()
 
-  drawLine()
-  mousemove() // 控制tip
+  // 定义图表组, 坐标系组, legend组, tip组
+  let chartG, xAxisG, yAxisG, legendsG, tipsG
 
-  function drawLine () {
-    drawLabel() // 绘制legend
+  // 时间比例尺, 线性比例尺, 坐标轴
+  let xScale = d3.scaleTime(),
+    yScale = d3.scaleLinear(),
+    xAxis,
+    yAxis
+
+  media() // 自适应处理
+  drawD3Chart() // 画图
+  drawTips() // tips控制
+  chartZoom() // 选区控制
+
+  function drawD3Chart () {
+    drawTitle() // 绘制title
+    drawLegend() // 绘制legend
     drawAxis() // 绘制坐标系
-    drawArea() //绘制路径背景 -----> 动画有问题
-    drawPath() // 绘制路径
-    drawCircle() // 绘制圆点
+    drawLine() // 绘制折线
+    // svgZoom() // 缩放
   }
 
-  function drawLabel () {
-    // legend
-    let legendG = svg.selectAll('.legend').data(lineData.legend)
-    let enterLabel = legendG.enter().append('g')
-
-    legendG.selectAll('text')
-      .text((d) => {
-        return d
+  function drawTitle () {
+    d3.select('.chart-title')
+      .text(lineData.title)
+      .style('top', () => {
+        let top = (paddingT - parseInt(d3.select('.chart-title').style('height'))) / 2
+        return top + 'px'
       })
+      .style('left', paddingL + 'px')
+  }
+  function drawLegend () {
+    legendsG = d3.select('.legends-group')
+    let legendItemG = legendsG.selectAll('.legend-item').data(lineData.legend)
+    let enterLegendItem = legendItemG.enter()
 
-    enterLabel
-      .attr('class', 'legend')
-      .append('rect')
-      .attr('width', '23')
-      .attr('height', '13')
-      .attr('stroke-width', 0)
-      .attr('fill', (d, i) => {
+    // update
+    legendItemG
+      .selectAll('.legend-i')
+      .style('background-color', (d, i) => {
         return color[i]
       })
-      .attr('x', (d, i) => {
-        return paddingL + i * 80
-      })
-      .attr('y', lineHeight + paddingT + 40)
-      .attr('rx', '2')
-    enterLabel.append('text')
-      .attr('x', (d, i) => {
-        return paddingL + i * 80
-      })
-      .attr('y', lineHeight + paddingT + 40)
-      .attr('dx', '28')
-      .attr('dy', '.5rem')
-      .attr('font-size', '12')
-      .attr('text-anthor', 'middle')
-      .attr('stroke-width', 0)
+    legendItemG
+      .selectAll('legend-text')
       .text((d) => {
         return d
       })
+    // add
+    let legendDiv = enterLegendItem.append('div')
+      .attr('class', (d, i) => {
+        return 'legend-item legend-item' + i
+      })
+    legendDiv.append('i')
+      .attr('class', 'legend-i')
+      .style('background-color', (d, i) => {
+        return color[i]
+      })
+      .on('click', function (d, i) {
+        let opacity = parseInt(d3.select(this).style('opacity'))
+        d3.select(this).style('opacity', (opacity === 1) ? 0.5 : 1)
+
+        d3.select('.chart-group').select('.area-group')
+          .select('.line-area-item' + i)
+          .transition()
+          .duration(200)
+          .attr('opacity', (opacity === 1) ? 0 : 1)
+        d3.select('.chart-group').select('.path-group')
+          .select('.line-path-item' + i)
+          .transition()
+          .duration(200)
+          .attr('stroke-opacity', (opacity === 1) ? 0 : 1)
+        d3.select('.chart-group').select('.circle-group')
+          .select('.line-ciecle-item' + i)
+          .transition()
+          .duration(200)
+          .attr('opacity', (opacity === 1) ? 0 : 1)
+      })
+    legendDiv.append('span')
+      .attr('class', 'legend-text')
+      .text((d) => {
+        return d
+      })
+    legendsG
+      .style('top', () => {
+        let top = (paddingT - parseInt(d3.select('.legend-item').style('height'))) / 2
+        return top + 'px'
+      })
+      .style('right', paddingR + 'px')
 
     // del
-    legendG.exit().remove()
-
+    legendItemG.exit().remove()
   }
   function drawAxis () {
-    // 绘制坐标系
-    xScale.domain([d3.min(lineData.xAxis.data), d3.max(lineData.xAxis.data)])
+    // x轴时间比例尺 值域定义域设置
+    xScale.domain([new Date(d3.min(lineData.xAxis.data)), new Date(d3.max(lineData.xAxis.data))])
       .range([0, lineWidth])
-    let xAxis = d3.axisBottom(xScale)
+
+    // x轴坐标系设置
+    xAxis = d3.axisBottom(xScale)
       .ticks(5)
-    let gXaxis = svg.select('.xAxis')
+      .tickFormat(d3.timeFormat('%Y-%m-%d %H:%M:%S'))
+    // 绘制x轴
+    xAxisG = svg.select('.xAxis')
       .call(xAxis)
       .attr('transform', 'translate(' + paddingL + ',' + (height - paddingB) + ')')
-
-    if (gXaxis.size() === 0) {
-      gXaxis = svg.append('g')
+    if (xAxisG.size() === 0) {
+      xAxisG = svg.append('g')
         .call(xAxis)
         .attr('class', 'xAxis')
         .attr('transform', 'translate(' + paddingL + ',' + (height - paddingB) + ')')
@@ -207,18 +390,20 @@
         .attr('dx', '1rem')
     }
 
+    // y轴线性比例尺 值域定义域设置
     let maxData = getMax()
     yScale.domain([0, maxData])
       .range([lineHeight, 0])
-    let yAxis = d3.axisLeft()
+    // y轴坐标系设置
+    yAxis = d3.axisLeft()
       .scale(yScale)
       .ticks(5)
-    let gYaxis = svg.select('.yAxis')
+    // 绘制y轴
+    yAxisG = svg.select('.yAxis')
       .call(yAxis)
       .attr('transform', 'translate(' + paddingL + ',' + paddingT + ')')
-
-    if (gYaxis.size() === 0) {
-      gYaxis = svg.append('g')
+    if (yAxisG.size() === 0) {
+      yAxisG = svg.append('g')
         .call(yAxis)
         .attr('class', 'yAxis')
         .attr('transform', 'translate(' + paddingL + ',' + paddingT + ')')
@@ -229,15 +414,82 @@
         .attr('text-anthor', 'middle')
     }
   }
+  function drawLine () {
+    chartG = svg.selectAll('.chart-group')
+    if (chartG.size() === 0) {
+      chartG = svg.append('g')
+        .attr('class', 'chart-group')
+      chartG.append('g')
+        .attr('class', 'area-group')
+      chartG.append('g')
+        .attr('class', 'path-group')
+      chartG.append('g')
+        .attr('class', 'circle-group')
+    }
+    drawArea() // 绘制路径背景 -----> 动画有问题
+    drawPath() // 绘制路径
+    drawCircle() // 绘制圆点
+  }
+  function drawArea () {
+    let areaG = chartG.selectAll('.area-group')
+    // 区域生成器，设置x y y0的取值
+    let areaLine = d3.area()
+      .x((d) => {
+        return xScale(new Date(d.time))
+      })
+      .y0(() => {
+        return height - paddingB
+      })
+      .y1((d) => {
+        return yScale(d.data) + paddingT
+      })
+
+    let areaPath = areaG.selectAll('.line-area-item').data(lineData.series)
+    let enterAreaPath = areaPath.enter()
+    // update
+    areaPath.attr('d', (d) => {
+      return areaLine(d)
+    })
+    // add
+    enterAreaPath.append('path')
+      .attr('class', (d, i) => {
+        return 'line-area-item line-area-item' + i
+      })
+      .attr('d', (d) => {
+        return areaLine(d)
+      })
+      .attr('stroke', 'none')
+      .attr('fill', (d, i) => {
+        return color[i]
+      })
+      .attr('fill-opacity', '.3')
+      .attr('transform', 'translate(' + paddingL + ')')
+    /*enterAreaPath.append('rect')
+     .attr('class', 'path-area-mark')
+     .attr('width', lineWidth)
+     .attr('height', lineHeight)
+     .attr('x', paddingL + 1)
+     .attr('y', paddingT)
+     .attr('fill', '#fff')
+     .attr('transform-origin', 'right center')
+     .transition()
+     .duration(1000)
+     .attr('transform', 'scale(0, 1)')*/
+    // del
+    areaPath.exit().remove()
+  }
   function drawPath () {
+    let pathG = chartG.selectAll('.path-group')
+    // 线段生成器，设置x y的取值
     let line = d3.line()
       .x((d) => {
-        return xScale(d.time)
+        return xScale(new Date(d.time))
       })
       .y((d) => {
-        return yScale(d.val) + paddingT
+        return yScale(d.data) + paddingT
       })
-    let path = svg.selectAll('.line-path').data(lineData.series)
+
+    let path = pathG.selectAll('.line-path-item').data(lineData.series)
     let enterPath = path.enter()
     // update
     path
@@ -257,7 +509,9 @@
       .duration(500)
       .attr('stroke-dashoffset', 0)
 
-    enterPath.append('path').attr('class', 'line-path')
+    enterPath.append('path').attr('class', (d, i) => {
+      return 'line-path-item line-path-item' + i
+    })
       .attr('d', (d) => {
         return line(d)
       })
@@ -280,135 +534,81 @@
     // del
     path.exit().remove()
   }
-  function drawArea () {
-    let areaLine = d3.area()
-      .x((d) => {
-        return xScale(d.time)
-      })
-      .y0(() => {
-        return height - paddingB
-      })
-      .y1((d) => {
-        return yScale(d.val) + paddingT
-      })
-
-    let areaPath = svg.selectAll('.line-areapath').data(lineData.series)
-    let enterAreaPath = areaPath.enter()
-
-    // update
-    areaPath
-      .attr('d', (d) => {
-        return areaLine(d)
-      })
-
-    // add
-    enterAreaPath.append('path').attr('class', 'line-areapath')
-      .attr('d', (d) => {
-        return areaLine(d)
-      })
-      .attr('stroke', 'none')
-      .attr('fill', (d, i) => {
-        return color[i]
-      })
-      .attr('fill-opacity', '.3')
-      .attr('transform', 'translate(' + paddingL + ')')
-    /*enterAreaPath.append('rect')
-     .attr('class', 'path-area-mark')
-     .attr('width', lineWidth)
-     .attr('height', lineHeight)
-     .attr('x', paddingL + 1)
-     .attr('y', paddingT)
-     .attr('fill', '#fff')
-     .attr('transform-origin', 'right center')
-     .transition()
-     .duration(1000)
-     .attr('transform', 'scale(0, 1)')*/
-
-    // del
-    areaPath.exit().remove()
-  }
   function drawCircle () {
-    let circleG = svg.selectAll('.line-circle')
+    let circleG = chartG.selectAll('.circle-group')
+
+    let circleItemG = circleG.selectAll('.line-ciecle-item')
       .data(lineData.series)
-    let enterCircleG = circleG.enter()
+    let enterCircleItemG = circleItemG.enter()
 
     // add
-    enterCircleG.append('g')
-      .attr('class', 'line-circle')
-      .attr('id', (d, i) => {
-        return 'line-circle' + i
+    enterCircleItemG.append('g')
+      .attr('class', (d, i) => {
+        return 'line-ciecle-item line-ciecle-item' + i
       })
       .attr('transform', 'translate(' + paddingL + ', ' + paddingT + ')')
       .attr('fill', (d, i) => {
         return color[i]
       })
     // del
-    circleG.exit().remove()
+    circleItemG.exit().remove()
 
     lineData.series.forEach((item, idx) => {
-      let parentG = svg.selectAll('#line-circle' + idx)
-      circle(item, parentG)
+      let parentG = svg.selectAll('.line-ciecle-item' + idx)
+      let circle = parentG.selectAll('circle')
+        .data(item)
+      let enterCircle = circle.enter()
+      // update
+      circle.attr('cx', (d) => {
+        return xScale(new Date(d.time))
+      })
+        .attr('cy', (d) => {
+          return yScale(d.data)
+        })
+      // add
+      enterCircle.append('circle')
+        .attr('cx', (d) => {
+          return xScale(new Date(d.time))
+        })
+        .attr('cy', (d) => {
+          return yScale(d.data)
+        })
+        .attr('r', 3.5)
+        .style('cursor', 'pointer')
+        .attr('fill-opacity', 0)
+        .transition()
+        .duration(1000)
+        .attr('fill-opacity', 1)
+      // del
+      circle.exit().remove()
     })
   }
-  function circle (data, circleG) {
-    let circle = circleG.selectAll('circle')
-      .data(data)
-    let enterCircle = circle.enter()
 
-    // update
-    circle
-      .attr('cx', (d) => {
-        return xScale(d.time)
-      })
-      .attr('cy', (d) => {
-        return yScale(d.val)
-      })
-    // add
-    enterCircle
-      .append('circle')
-      .attr('cx', (d) => {
-        return xScale(d.time)
-      })
-      .attr('cy', (d) => {
-        return yScale(d.val)
-      })
-      .attr('r', 3.5)
-      .style('cursor', 'pointer')
-      .on('mouseover', function () {
-        d3.select(this).transition().duration(100).attr('r', 5)
-      })
-      .on('mouseout', function () {
-        d3.select(this).transition().duration(50).attr('r', 3.6)
-      })
-      .attr('fill-opacity', 0)
-      .transition()
-      .duration(1000)
-      .attr('fill-opacity', 1)
-    // del
-    circle.exit().remove()
-  }
-  function mousemove () {
-    let tipsRect = svg.append('rect')
+  function drawTips () {
+    tipsG = svg.append('g')
+      .attr('class', 'tips-group')
+    tipsG.append('rect')
       .attr('class', 'mousemove-rect')
       .attr('width', lineWidth)
-      .attr('height', lineWidth)
+      .attr('height', lineHeight)
       .attr('x', paddingL)
       .attr('y', paddingT)
       .attr('fill', 'none')
       .style('pointer-events', 'all')
       .on('mouseover', function () {
-        d3.select('.line-tips').transition().duration(200).style('display', 'block')
-        d3.select('.verline-tips-group').transition().duration(200).style('display', 'block')
+        d3.select('.tips-content').transition().duration(200).style('display', 'block')
+        d3.select('.tips-line-groups').transition().duration(200).style('display', 'block')
       })
       .on('mouseout', function () {
-        d3.select('.line-tips').transition().duration(100).style('display', 'none')
-        d3.select('.verline-tips-group').transition().duration(200).style('display', 'none')
+        d3.select('.tips-content').transition().duration(200).style('display', 'none')
+        d3.select('.tips-line-groups').transition().duration(200).style('display', 'none')
       })
-      .on('mousemove', drawTip)
+      .on('mousemove', showTip)
   }
-  function drawTip () {
+  function showTip () {
+    // 获取当前index
     var bisect = d3.bisector(function (d) {
-      return d
+      return new Date(d)
     }).left
 
     // 获取x轴坐标
@@ -416,50 +616,47 @@
       i = bisect(lineData.xAxis.data, x0),
       d0 = lineData.xAxis.data[i - 1],
       d1 = lineData.xAxis.data[i],
-      d = (x0 - d0) > (d1 - x0) ? d1 : d0
+      d = new Date((x0 - d0) > (d1 - x0) ? d1 : d0)
 
     // 获取交点 y轴坐标
     let points = []
-    lineData.series.forEach((item) => {
+    lineData.series.forEach((item, idx) => {
       item.forEach((ditem) => {
-        if (parseInt(ditem.time) === parseInt(d)) {
-          points.push(ditem.val)
+        if (Date.parse(ditem.time) === Date.parse(d)) {
+          points.push(ditem.data)
         }
       })
     })
 
     // 绘制垂直线以及圆点
-    let tipsLine = d3.selectAll('.verline-tips-group')
-    tipsLine.selectAll('.verline-tips').attr('x1', xScale(d) + paddingL)
+    let tipsLineG = tipsG.selectAll('.tips-line-groups')
+    tipsLineG.selectAll('.tips-line').attr('x1', xScale(d) + paddingL)
       .attr('x2', xScale(d) + paddingL)
-    if (tipsLine.size() === 0) {
-      svg.append('g')
-        .attr('class', 'verline-tips-group')
+    if (tipsLineG.size() === 0) {
+      tipsG.append('g')
+        .attr('class', 'tips-line-groups')
         .append('line')
-        .attr('class', 'verline-tips')
+        .attr('class', 'tips-line')
         .attr('x1', xScale(d))
         .attr('y1', paddingT)
         .attr('x2', xScale(d))
         .attr('y2', height - paddingB)
         .attr('stroke', '#999')
-        .on('mouseover', function () {
-          d3.select('.line-tips').transition().duration(200).style('display', 'block')
-          d3.select('.verline-tips-group').transition().duration(200).style('display', 'block')
-        })
-        .on('mouseout', function () {
-          d3.select('.line-tips').transition().duration(100).style('display', 'block')
-          d3.select('.verline-tips-group').transition().duration(200).style('display', 'block')
-        })
     }
-    let tipsLineCircle = tipsLine.selectAll('.verline-tips-circle').data(points)
+    let tipsLineCircle = tipsLineG.selectAll('.tips-circle').data(points)
     tipsLineCircle
       .attr('cx', xScale(d) + paddingL)
       .attr('cy', (d) => {
         return yScale(d) + paddingT
       })
+      .attr('opacity', (d, i) => {
+        let opacity = d3.selectAll('.legend-item' + i).selectAll('.legend-i').style('opacity')
+        opacity = (parseInt(opacity) === 1) ? 1 : 0
+        return opacity
+      })
     let enterTipsLineCircle = tipsLineCircle.enter()
     enterTipsLineCircle.append('circle')
-      .attr('class', 'verline-tips-circle')
+      .attr('class', 'tips-circle')
       .attr('r', 5)
       .attr('cx', xScale(d) + paddingL)
       .attr('cy', (d) => {
@@ -468,119 +665,111 @@
       .attr('fill', (d, i) => {
         return color[i]
       })
-      .on('mouseover', function () {
-        d3.select('.line-tips').transition().duration(200).style('display', 'block')
-        d3.select('.verline-tips-group').transition().duration(200).style('display', 'block')
-      })
-      .on('mouseout', function () {
-        d3.select('.line-tips').transition().duration(100).style('display', 'block')
-        d3.select('.verline-tips-group').transition().duration(200).style('display', 'block')
+      .attr('opacity', (d, i) => {
+        let opacity = d3.selectAll('.legend-item' + i).selectAll('.legend-i').style('opacity')
+        opacity = (parseInt(opacity) === 1) ? 1 : 0
+        return opacity
       })
     tipsLineCircle.exit().remove()
 
     // tip框填充相应文字数据
-    let tips = d3.select('.line-tips')
-    let tipsTitle = tips.selectAll('.tip-title')
-    tipsTitle.text('年份: ' + d)
+    let timeFormat = d3.timeFormat('%Y-%m-%d %H:%M:%S')
+    let tipsContent = d3.selectAll('.tips-content')
+    let tipsTitle = tipsContent.selectAll('.tips-title')
+    tipsTitle.text('时间: ' + timeFormat(d))
     if (tipsTitle.size() === 0) {
-      tips.append('p')
-        .attr('class', 'tip-title')
-        .text('年份: ' + d)
+      tipsContent.append('p')
+        .attr('class', 'tips-title')
+        .text('时间: ' + timeFormat(d))
     }
-    let tipsPoint = tips.selectAll('.tip-content').data(points)
-    tipsPoint.select('span')
-      .text((d, i) => {
-        return lineData.legend[i] + ' GDB: ' + d
-      })
-
-    let enterTipsPoint = tipsPoint.enter()
-    let tipsPointDiv = enterTipsPoint
-      .append('div')
-      .attr('class', 'tip-content')
-    tipsPointDiv.append('i')
-      .attr('class', 'tip-content-i')
+    let tipItem = tipsContent.selectAll('.tip-item').data(points)
+    // update
+    tipItem.style('display', (d, i) => {
+      let opacity = d3.selectAll('.legend-item' + i).selectAll('.legend-i').style('opacity')
+      opacity = (parseInt(opacity) === 1) ? 'inline-block' : 'none'
+      return opacity
+    })
+    tipItem.select('i')
       .style('background-color', (d, i) => {
         return color[i]
       })
-    tipsPointDiv.append('span')
+    tipItem.select('span')
       .text((d, i) => {
-        return lineData.legend[i] + ' GDB: ' + d
+        return lineData.legend[i] + ' : ' + d
       })
-    tipsPoint.exit().remove()
+    // add
+    let enterTipItem = tipItem.enter()
+    let tipItemDiv = enterTipItem
+      .append('div')
+      .attr('class', 'tip-item')
+      .style('display', (d, i) => {
+        let opacity = d3.selectAll('.legend-item' + i).selectAll('.legend-i').style('opacity')
+        opacity = (parseInt(opacity) === 1) ? 'inline-block' : 'none'
+        return opacity
+      })
+    tipItemDiv.append('i')
+      .attr('class', 'tip-i')
+      .style('background-color', (d, i) => {
+        return color[i]
+      })
+    tipItemDiv.append('span')
+      .attr('class', 'tip-text')
+      .text((d, i) => {
+        return lineData.legend[i] + ' : ' + d
+      })
+    // del
+    tipItem.exit().remove()
 
     // tip框位置处理 边界处理
     let svgCenterW = width / 2, svgCenterH = height / 2, tipsL, tipsT
     if (d3.mouse(this)[0] > svgCenterW) {
-      tipsL = d3.mouse(this)[0] - parseInt(tips.style('width')) - 20 + 'px'
+      tipsL = d3.mouse(this)[0] - parseInt(tipsContent.style('width')) - 20 + 'px'
     } else {
       tipsL = d3.mouse(this)[0] + 20 + 'px'
     }
     if (d3.mouse(this)[1] > svgCenterH) {
-      tipsT = d3.mouse(this)[1] - parseInt(tips.style('height')) - 20 + 'px'
+      tipsT = d3.mouse(this)[1] - parseInt(tipsContent.style('height')) - 20 + 'px'
     } else {
       tipsT = d3.mouse(this)[1] + 20 + 'px'
     }
-    tips.style('left', tipsL)
+    tipsContent.style('left', tipsL)
       .style('top', tipsT)
   }
 
+  function media () {
+    window.onresize = function () {
+      let docWidth = document.body.clientWidth
+      if (docWidth !== width) {
+        width = document.body.clientWidth
+        lineWidth = width - paddingL - paddingR
+        svg.attr('width', width)
+        drawLine()
+      }
+    }
+  }
+
+  function chartZoom () {
+    let zoom = d3.zoom()
+      .scaleExtent([1, 40])
+      .translateExtent([[-100, -100], [width + 90, height + 100]])
+      .on('zoom', function () {
+        chartG.attr('transform', d3.event.transform)
+        xAxisG.call(xAxis.scale(d3.event.transform.rescaleX(xScale)))
+        yAxisG.call(yAxis.scale(d3.event.transform.rescaleY(yScale)))
+      })
+    svg.call(zoom)
+  }
+
+  // 方法
   function getMax () {
     let maxData = []
     lineData.series.forEach((item, idx) => {
       let itemMax = d3.max(item, (d) => {
-        return d.val
+        return d.data
       })
       maxData.push(itemMax)
     })
     return d3.max(maxData)
-  }
-
-  function updateData () {
-    lineData.series.forEach((item, idx) => {
-      item.forEach((iitem) => {
-        iitem.val = Math.floor(Math.random() * 100000)
-      })
-    })
-    drawLine()
-  }
-  function addData () {
-    lineData.series.forEach((item, idx) => {
-      let newData = {
-        time: parseInt(d3.max(lineData.xAxis.data)) + 1,
-        val: Math.floor(Math.random() * 100000)
-      }
-      item.push(newData)
-    })
-    lineData.xAxis.data.push(parseInt(d3.max(lineData.xAxis.data)) + 1)
-    drawLine()
-  }
-  function addLine () {
-    let newLine = {
-      country: 'test' + lineData.series.length,
-      data: []
-    }
-    lineData.series[0].forEach((item, idx) => {
-      let data = {
-        time: item.time,
-        val: Math.floor(Math.random() * 100000)
-      }
-      newLine.data.push(data)
-    })
-    lineData.legend.push(newLine.country)
-    lineData.series.push(newLine.data)
-    drawLine()
-  }
-  function delData () {
-    lineData.xAxis.data.pop()
-    lineData.series.forEach((item, idx) => {
-      item.pop()
-    })
-    drawLine()
-  }
-  function delline () {
-    lineData.legend.pop()
-    lineData.series.pop()
-    drawLine()
   }
 
 </script>

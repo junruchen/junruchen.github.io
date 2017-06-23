@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>D3 -- 折线图</title>
+  <title>D3 -- line</title>
   <style>
     * {
       box-sizing: border-box;
@@ -22,29 +22,54 @@
       height: 340px;
     }
 
-    .line-demo {
+    .line-chart-d3 {
       position: relative;
     }
 
-    .line-tips {
-      display: none;
+    .chart-title {
       position: absolute;
+      font-size: 20px;
+      color: #333;
+    }
+
+    .legends-group, .tips-content {
+      position: absolute;
+      font-size: 12px;
+    }
+
+    .tips-content {
+      display: none;
       padding: 5px;
       border-radius: 4px;
       min-width: 100px;
       max-width: 200px;
-      font-size: 12px;
       background-color: rgba(0, 0, 0, .4);
       color: #fff;
     }
 
-    .tip-content-i {
+    .legends-group .legend-item {
       display: inline-block;
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      margin-right: 5px;
+      color: #333;
+      padding-left: 10px;
+    }
+
+    .legends-group .legend-item .legend-i, .tips-content .tip-item .tip-i {
+      display: inline-block;
       vertical-align: middle;
+      height: 13px;
+      margin-right: 5px;
+    }
+
+    .legends-group .legend-item .legend-i {
+      opacity: 1;
+      width: 23px;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    .tips-content .tip-item .tip-i {
+      width: 13px;
+      border-radius: 50%;
     }
 
   </style>
@@ -52,31 +77,28 @@
 <body>
 <div class="d3-container">
   <div class="line-box">
-    <div class="line-demo">
-      <div class="line-tips"></div>
+
+    <div class="line-chart-d3">
+      <div class="chart-title"></div>
+      <div class="legends-group"></div>
+      <div class="tips-content"></div>
     </div>
+
   </div>
 </div>
 </body>
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script>
-  /**
-   * 分析：折线图 （包含：线、坐标系、文字）
-   * 线：path
-   * 文字：text
-   * 坐标系：线性
-   * */
-
-    // 用户指定
-  let paddingT = 40
-  let paddingB = 80
+  // 用户指定
+  let paddingT = 60
+  let paddingB = 60
   let paddingL = 60
   let paddingR = 40
   let color = ['#5588AA', '#FFBB33', 'red', 'green', 'purple', 'black', '#cccccc']
 
   let lineData = {
-    'title': 'LOAD',
-    'legend': ['LOAD'],
+    'title': 'QPS',
+    'legend': ['QPS READ', 'QPS WRITE'],
     'yAxis': {
       'title': 'GDP'
     },
@@ -245,83 +267,118 @@
   let height = parseInt(d3.select('.line-box').style('height'))
   let lineWidth = width - paddingL - paddingR
   let lineHeight = height - paddingT - paddingB
-  let svg = d3.select('.line-demo')
+  let svg = d3.select('.line-chart-d3')
     .append('svg')
     .attr('width', width)
     .attr('height', height)
-  let xScale = d3.scaleTime()
-  let yScale = d3.scaleLinear()
+
+  // 定义图表组, 坐标系组, legend组, tip组
+  let chartG, xAxisG, yAxisG, legendsG, tipsG, zoomG
+
+  // 时间比例尺, 线性比例尺, 坐标轴
+  let xScale = d3.scaleTime(),
+    yScale = d3.scaleLinear(),
+    xAxis,
+    yAxis
 
   media() // 自适应处理
-  drawLine() // 画图
-  mousemove() // 控制tip
+  drawD3Chart() // 画图
+  drawTips() // tips控制
+  chartZoom() // 选区控制
 
-  function drawLine () {
-    drawLabel() // 绘制legend
+  function drawD3Chart () {
+    drawTitle() // 绘制title
+    drawLegend() // 绘制legend
     drawAxis() // 绘制坐标系
-    drawArea() //绘制路径背景 -----> 动画有问题
-    drawPath() // 绘制路径
-    drawCircle() // 绘制圆点
+    drawLine() // 绘制折线
+    // svgZoom() // 缩放
   }
 
-  function drawLabel () {
-    // legend
-    let legendG = svg.selectAll('.legend').data(lineData.legend)
-    let enterLabel = legendG.enter().append('g')
-
-    legendG.selectAll('text')
-      .text((d) => {
-        return d
+  function drawTitle () {
+    d3.select('.chart-title')
+      .text(lineData.title)
+      .style('top', () => {
+        let top = (paddingT - parseInt(d3.select('.chart-title').style('height'))) / 2
+        return top + 'px'
       })
+      .style('left', paddingL + 'px')
+  }
+  function drawLegend () {
+    legendsG = d3.select('.legends-group')
+    let legendItemG = legendsG.selectAll('.legend-item').data(lineData.legend)
+    let enterLegendItem = legendItemG.enter()
 
-    enterLabel
-      .attr('class', 'legend')
-      .append('rect')
-      .attr('width', '23')
-      .attr('height', '13')
-      .attr('stroke-width', 0)
-      .attr('fill', (d, i) => {
+    // update
+    legendItemG
+      .selectAll('.legend-i')
+      .style('background-color', (d, i) => {
         return color[i]
       })
-      .attr('x', (d, i) => {
-        return paddingL + i * 80
-      })
-      .attr('y', lineHeight + paddingT + 40)
-      .attr('rx', '2')
-    enterLabel.append('text')
-      .attr('x', (d, i) => {
-        return paddingL + i * 80
-      })
-      .attr('y', lineHeight + paddingT + 40)
-      .attr('dx', '28')
-      .attr('dy', '.5rem')
-      .attr('font-size', '12')
-      .attr('text-anthor', 'middle')
-      .attr('stroke-width', 0)
+    legendItemG
+      .selectAll('legend-text')
       .text((d) => {
         return d
       })
+    // add
+    let legendDiv = enterLegendItem.append('div')
+      .attr('class', (d, i) => {
+        return 'legend-item legend-item' + i
+      })
+    legendDiv.append('i')
+      .attr('class', 'legend-i')
+      .style('background-color', (d, i) => {
+        return color[i]
+      })
+      .on('click', function (d, i) {
+        let opacity = parseInt(d3.select(this).style('opacity'))
+        d3.select(this).style('opacity', (opacity === 1) ? 0.5 : 1)
+
+        d3.select('.chart-group').select('.area-group')
+          .select('.line-area-item' + i)
+          .transition()
+          .duration(200)
+          .attr('opacity', (opacity === 1) ? 0 : 1)
+        d3.select('.chart-group').select('.path-group')
+          .select('.line-path-item' + i)
+          .transition()
+          .duration(200)
+          .attr('stroke-opacity', (opacity === 1) ? 0 : 1)
+        d3.select('.chart-group').select('.circle-group')
+          .select('.line-ciecle-item' + i)
+          .transition()
+          .duration(200)
+          .attr('opacity', (opacity === 1) ? 0 : 1)
+      })
+    legendDiv.append('span')
+      .attr('class', 'legend-text')
+      .text((d) => {
+        return d
+      })
+    legendsG
+      .style('top', () => {
+        let top = (paddingT - parseInt(d3.select('.legend-item').style('height'))) / 2
+        return top + 'px'
+      })
+      .style('right', paddingR + 'px')
 
     // del
-    legendG.exit().remove()
-
+    legendItemG.exit().remove()
   }
   function drawAxis () {
-    // 绘制坐标系
-
+    // x轴时间比例尺 值域定义域设置
     xScale.domain([new Date(d3.min(lineData.xAxis.data)), new Date(d3.max(lineData.xAxis.data))])
       .range([0, lineWidth])
 
-    let xAxis = d3.axisBottom(xScale)
+    // x轴坐标系设置
+    xAxis = d3.axisBottom(xScale)
       .ticks(5)
       .tickFormat(d3.timeFormat('%Y-%m-%d %H:%M:%S'))
-
-    let gXaxis = svg.select('.xAxis')
+    // 绘制x轴
+    xAxisG = svg.select('.xAxis')
       .call(xAxis)
       .attr('transform', 'translate(' + paddingL + ',' + (height - paddingB) + ')')
-
-    if (gXaxis.size() === 0) {
-      gXaxis = svg.append('g')
+    if (xAxisG.empty()) {
+      xAxisG = svg.append('g')
         .call(xAxis)
         .attr('class', 'xAxis')
         .attr('transform', 'translate(' + paddingL + ',' + (height - paddingB) + ')')
@@ -333,18 +390,20 @@
         .attr('dx', '1rem')
     }
 
+    // y轴线性比例尺 值域定义域设置
     let maxData = getMax()
     yScale.domain([0, maxData])
       .range([lineHeight, 0])
-    let yAxis = d3.axisLeft()
+    // y轴坐标系设置
+    yAxis = d3.axisLeft()
       .scale(yScale)
       .ticks(5)
-    let gYaxis = svg.select('.yAxis')
+    // 绘制y轴
+    yAxisG = svg.select('.yAxis')
       .call(yAxis)
       .attr('transform', 'translate(' + paddingL + ',' + paddingT + ')')
-
-    if (gYaxis.size() === 0) {
-      gYaxis = svg.append('g')
+    if (yAxisG.empty()) {
+      yAxisG = svg.append('g')
         .call(yAxis)
         .attr('class', 'yAxis')
         .attr('transform', 'translate(' + paddingL + ',' + paddingT + ')')
@@ -355,7 +414,84 @@
         .attr('text-anthor', 'middle')
     }
   }
+  function drawLine () {
+    chartG = svg.selectAll('.chart-group')
+    if (chartG.empty()) {
+      chartG = svg.append('g')
+        .attr('class', 'chart-group')
+      // 隐藏多余的内容
+      chartG.append('defs')
+        .append('clipPath')
+        .attr('id', 'clip')
+        .append('rect')
+        .attr('width', lineWidth)
+        .attr('height', lineHeight)
+        .attr('x', paddingL)
+        .attr('y', paddingT)
+      chartG.attr('clip-path', 'url(#clip)')
+
+      chartG.append('g')
+        .attr('class', 'area-group')
+      chartG.append('g')
+        .attr('class', 'path-group')
+      chartG.append('g')
+        .attr('class', 'circle-group')
+    }
+    drawArea() // 绘制路径背景 -----> 动画有问题
+    drawPath() // 绘制路径
+    drawCircle() // 绘制圆点
+  }
+  function drawArea () {
+    let areaG = chartG.selectAll('.area-group')
+    // 区域生成器，设置x y y0的取值
+    let areaLine = d3.area()
+      .x((d) => {
+        return xScale(new Date(d.time))
+      })
+      .y0(() => {
+        return height - paddingB
+      })
+      .y1((d) => {
+        return yScale(d.data) + paddingT
+      })
+
+    let areaPath = areaG.selectAll('.line-area-item').data(lineData.series)
+    let enterAreaPath = areaPath.enter()
+    // update
+    areaPath.attr('d', (d) => {
+      return areaLine(d)
+    })
+    // add
+    enterAreaPath.append('path')
+      .attr('class', (d, i) => {
+        return 'line-area-item line-area-item' + i
+      })
+      .attr('d', (d) => {
+        return areaLine(d)
+      })
+      .attr('stroke', 'none')
+      .attr('fill', (d, i) => {
+        return color[i]
+      })
+      .attr('fill-opacity', '.3')
+      .attr('transform', 'translate(' + paddingL + ')')
+    /*enterAreaPath.append('rect')
+     .attr('class', 'path-area-mark')
+     .attr('width', lineWidth)
+     .attr('height', lineHeight)
+     .attr('x', paddingL + 1)
+     .attr('y', paddingT)
+     .attr('fill', '#fff')
+     .attr('transform-origin', 'right center')
+     .transition()
+     .duration(1000)
+     .attr('transform', 'scale(0, 1)')*/
+    // del
+    areaPath.exit().remove()
+  }
   function drawPath () {
+    let pathG = chartG.selectAll('.path-group')
+    // 线段生成器，设置x y的取值
     let line = d3.line()
       .x((d) => {
         return xScale(new Date(d.time))
@@ -363,7 +499,8 @@
       .y((d) => {
         return yScale(d.data) + paddingT
       })
-    let path = svg.selectAll('.line-path').data(lineData.series)
+
+    let path = pathG.selectAll('.line-path-item').data(lineData.series)
     let enterPath = path.enter()
     // update
     path
@@ -383,7 +520,9 @@
       .duration(500)
       .attr('stroke-dashoffset', 0)
 
-    enterPath.append('path').attr('class', 'line-path')
+    enterPath.append('path').attr('class', (d, i) => {
+      return 'line-path-item line-path-item' + i
+    })
       .attr('d', (d) => {
         return line(d)
       })
@@ -406,134 +545,79 @@
     // del
     path.exit().remove()
   }
-  function drawArea () {
-    let areaLine = d3.area()
-      .x((d) => {
-        return xScale(new Date(d.time))
-      })
-      .y0(() => {
-        return height - paddingB
-      })
-      .y1((d) => {
-        return yScale(d.data) + paddingT
-      })
-
-    let areaPath = svg.selectAll('.line-areapath').data(lineData.series)
-    let enterAreaPath = areaPath.enter()
-
-    // update
-    areaPath
-      .attr('d', (d) => {
-        return areaLine(d)
-      })
-
-    // add
-    enterAreaPath.append('path').attr('class', 'line-areapath')
-      .attr('d', (d) => {
-        return areaLine(d)
-      })
-      .attr('stroke', 'none')
-      .attr('fill', (d, i) => {
-        return color[i]
-      })
-      .attr('fill-opacity', '.3')
-      .attr('transform', 'translate(' + paddingL + ')')
-    enterAreaPath.append('rect')
-      .attr('class', 'path-area-mark')
-      .attr('width', lineWidth)
-      .attr('height', lineHeight)
-      .attr('x', paddingL + 1)
-      .attr('y', paddingT)
-      .attr('fill', '#fff')
-      .attr('transform-origin', 'right center')
-      .transition()
-      .duration(1000)
-      .attr('transform', 'scale(0, 1)')
-
-    // del
-    areaPath.exit().remove()
-  }
   function drawCircle () {
-    let circleG = svg.selectAll('.line-circle')
+    let circleG = chartG.selectAll('.circle-group')
+
+    let circleItemG = circleG.selectAll('.line-ciecle-item')
       .data(lineData.series)
-    let enterCircleG = circleG.enter()
+    let enterCircleItemG = circleItemG.enter()
 
     // add
-    enterCircleG.append('g')
-      .attr('class', 'line-circle')
-      .attr('id', (d, i) => {
-        return 'line-circle' + i
+    enterCircleItemG.append('g')
+      .attr('class', (d, i) => {
+        return 'line-ciecle-item line-ciecle-item' + i
       })
       .attr('transform', 'translate(' + paddingL + ', ' + paddingT + ')')
       .attr('fill', (d, i) => {
         return color[i]
       })
     // del
-    circleG.exit().remove()
+    circleItemG.exit().remove()
 
     lineData.series.forEach((item, idx) => {
-      let parentG = svg.selectAll('#line-circle' + idx)
-      circle(item, parentG)
+      let parentG = svg.selectAll('.line-ciecle-item' + idx)
+      let circle = parentG.selectAll('circle')
+        .data(item)
+      let enterCircle = circle.enter()
+      // update
+      circle.attr('cx', (d) => {
+        return xScale(new Date(d.time))
+      })
+        .attr('cy', (d) => {
+          return yScale(d.data)
+        })
+      // add
+      enterCircle.append('circle')
+        .attr('cx', (d) => {
+          return xScale(new Date(d.time))
+        })
+        .attr('cy', (d) => {
+          return yScale(d.data)
+        })
+        .attr('r', 3.5)
+        .style('cursor', 'pointer')
+        .attr('fill-opacity', 0)
+        .transition()
+        .duration(1000)
+        .attr('fill-opacity', 1)
+      // del
+      circle.exit().remove()
     })
   }
-  function circle (data, circleG) {
-    let circle = circleG.selectAll('circle')
-      .data(data)
-    let enterCircle = circle.enter()
 
-    // update
-    circle
-      .attr('cx', (d) => {
-        return xScale(new Date(d.time))
-      })
-      .attr('cy', (d) => {
-        return yScale(d.data)
-      })
-    // add
-    enterCircle
-      .append('circle')
-      .attr('cx', (d) => {
-        return xScale(new Date(d.time))
-      })
-      .attr('cy', (d) => {
-        return yScale(d.data)
-      })
-      .attr('r', 3.5)
-      .style('cursor', 'pointer')
-      .on('mouseover', function () {
-        d3.select(this).transition().duration(100).attr('r', 5)
-      })
-      .on('mouseout', function () {
-        d3.select(this).transition().duration(50).attr('r', 3.6)
-      })
-      .attr('fill-opacity', 0)
-      .transition()
-      .duration(1000)
-      .attr('fill-opacity', 1)
-    // del
-    circle.exit().remove()
-  }
-
-  function mousemove () {
-    let tipsRect = svg.append('rect')
+  function drawTips () {
+    tipsG = svg.append('g')
+      .attr('class', 'tips-group')
+    tipsG.append('rect')
       .attr('class', 'mousemove-rect')
       .attr('width', lineWidth)
-      .attr('height', lineWidth)
+      .attr('height', lineHeight)
       .attr('x', paddingL)
       .attr('y', paddingT)
       .attr('fill', 'none')
       .style('pointer-events', 'all')
       .on('mouseover', function () {
-        d3.select('.line-tips').transition().duration(200).style('display', 'block')
-        d3.select('.verline-tips-group').transition().duration(200).style('display', 'block')
+        d3.select('.tips-content').transition().duration(200).style('display', 'block')
+        d3.select('.tips-line-groups').transition().duration(200).style('display', 'block')
       })
       .on('mouseout', function () {
-        d3.select('.line-tips').transition().duration(100).style('display', 'none')
-        d3.select('.verline-tips-group').transition().duration(200).style('display', 'none')
+        d3.select('.tips-content').transition().duration(200).style('display', 'none')
+        d3.select('.tips-line-groups').transition().duration(200).style('display', 'none')
       })
-      .on('mousemove', drawTip)
+      .on('mousemove', showTip)
   }
-  function drawTip () {
+  function showTip () {
+    // 获取当前index
     var bisect = d3.bisector(function (d) {
       return new Date(d)
     }).left
@@ -547,7 +631,7 @@
 
     // 获取交点 y轴坐标
     let points = []
-    lineData.series.forEach((item) => {
+    lineData.series.forEach((item, idx) => {
       item.forEach((ditem) => {
         if (Date.parse(ditem.time) === Date.parse(d)) {
           points.push(ditem.data)
@@ -556,37 +640,34 @@
     })
 
     // 绘制垂直线以及圆点
-    let tipsLine = d3.selectAll('.verline-tips-group')
-    tipsLine.selectAll('.verline-tips').attr('x1', xScale(d) + paddingL)
+    let tipsLineG = tipsG.selectAll('.tips-line-groups')
+    tipsLineG.selectAll('.tips-line').attr('x1', xScale(d) + paddingL)
       .attr('x2', xScale(d) + paddingL)
-    if (tipsLine.size() === 0) {
-      svg.append('g')
-        .attr('class', 'verline-tips-group')
+    if (tipsLineG.empty()) {
+      tipsG.append('g')
+        .attr('class', 'tips-line-groups')
         .append('line')
-        .attr('class', 'verline-tips')
+        .attr('class', 'tips-line')
         .attr('x1', xScale(d))
         .attr('y1', paddingT)
         .attr('x2', xScale(d))
         .attr('y2', height - paddingB)
         .attr('stroke', '#999')
-        .on('mouseover', function () {
-          d3.select('.line-tips').transition().duration(200).style('display', 'block')
-          d3.select('.verline-tips-group').transition().duration(200).style('display', 'block')
-        })
-        .on('mouseout', function () {
-          d3.select('.line-tips').transition().duration(100).style('display', 'block')
-          d3.select('.verline-tips-group').transition().duration(200).style('display', 'block')
-        })
     }
-    let tipsLineCircle = tipsLine.selectAll('.verline-tips-circle').data(points)
+    let tipsLineCircle = tipsLineG.selectAll('.tips-circle').data(points)
     tipsLineCircle
       .attr('cx', xScale(d) + paddingL)
       .attr('cy', (d) => {
         return yScale(d) + paddingT
       })
+      .attr('opacity', (d, i) => {
+        let opacity = d3.selectAll('.legend-item' + i).selectAll('.legend-i').style('opacity')
+        opacity = (parseInt(opacity) === 1) ? 1 : 0
+        return opacity
+      })
     let enterTipsLineCircle = tipsLineCircle.enter()
     enterTipsLineCircle.append('circle')
-      .attr('class', 'verline-tips-circle')
+      .attr('class', 'tips-circle')
       .attr('r', 5)
       .attr('cx', xScale(d) + paddingL)
       .attr('cy', (d) => {
@@ -595,70 +676,175 @@
       .attr('fill', (d, i) => {
         return color[i]
       })
-      .on('mouseover', function () {
-        d3.select('.line-tips').transition().duration(200).style('display', 'block')
-        d3.select('.verline-tips-group').transition().duration(200).style('display', 'block')
-      })
-      .on('mouseout', function () {
-        d3.select('.line-tips').transition().duration(100).style('display', 'block')
-        d3.select('.verline-tips-group').transition().duration(200).style('display', 'block')
+      .attr('opacity', (d, i) => {
+        let opacity = d3.selectAll('.legend-item' + i).selectAll('.legend-i').style('opacity')
+        opacity = (parseInt(opacity) === 1) ? 1 : 0
+        return opacity
       })
     tipsLineCircle.exit().remove()
 
     // tip框填充相应文字数据
     let timeFormat = d3.timeFormat('%Y-%m-%d %H:%M:%S')
-    let tips = d3.select('.line-tips')
-    let tipsTitle = tips.selectAll('.tip-title')
+    let tipsContent = d3.selectAll('.tips-content')
+    let tipsTitle = tipsContent.selectAll('.tips-title')
     tipsTitle.text('时间: ' + timeFormat(d))
-    if (tipsTitle.size() === 0) {
-      tips.append('p')
-        .attr('class', 'tip-title')
+    if (tipsTitle.empty()) {
+      tipsContent.append('p')
+        .attr('class', 'tips-title')
         .text('时间: ' + timeFormat(d))
     }
-    let tipsPoint = tips.selectAll('.tip-content').data(points)
-    tipsPoint.select('span')
-      .text((d, i) => {
-        return lineData.legend[i] + ' 数据: ' + d
-      })
-
-    let enterTipsPoint = tipsPoint.enter()
-    let tipsPointDiv = enterTipsPoint
-      .append('div')
-      .attr('class', 'tip-content')
-    tipsPointDiv.append('i')
-      .attr('class', 'tip-content-i')
+    let tipItem = tipsContent.selectAll('.tip-item').data(points)
+    // update
+    tipItem.style('display', (d, i) => {
+      let opacity = d3.selectAll('.legend-item' + i).selectAll('.legend-i').style('opacity')
+      opacity = (parseInt(opacity) === 1) ? 'inline-block' : 'none'
+      return opacity
+    })
+    tipItem.select('i')
       .style('background-color', (d, i) => {
         return color[i]
       })
-    tipsPointDiv.append('span')
+    tipItem.select('span')
       .text((d, i) => {
-        return lineData.legend[i] + ' 数据: ' + d
+        return lineData.legend[i] + ' : ' + d
       })
-    tipsPoint.exit().remove()
+    // add
+    let enterTipItem = tipItem.enter()
+    let tipItemDiv = enterTipItem
+      .append('div')
+      .attr('class', 'tip-item')
+      .style('display', (d, i) => {
+        let opacity = d3.selectAll('.legend-item' + i).selectAll('.legend-i').style('opacity')
+        opacity = (parseInt(opacity) === 1) ? 'inline-block' : 'none'
+        return opacity
+      })
+    tipItemDiv.append('i')
+      .attr('class', 'tip-i')
+      .style('background-color', (d, i) => {
+        return color[i]
+      })
+    tipItemDiv.append('span')
+      .attr('class', 'tip-text')
+      .text((d, i) => {
+        return lineData.legend[i] + ' : ' + d
+      })
+    // del
+    tipItem.exit().remove()
 
     // tip框位置处理 边界处理
     let svgCenterW = width / 2, svgCenterH = height / 2, tipsL, tipsT
     if (d3.mouse(this)[0] > svgCenterW) {
-      tipsL = d3.mouse(this)[0] - parseInt(tips.style('width')) - 20 + 'px'
+      tipsL = d3.mouse(this)[0] - parseInt(tipsContent.style('width')) - 20 + 'px'
     } else {
       tipsL = d3.mouse(this)[0] + 20 + 'px'
     }
     if (d3.mouse(this)[1] > svgCenterH) {
-      tipsT = d3.mouse(this)[1] - parseInt(tips.style('height')) - 20 + 'px'
+      tipsT = d3.mouse(this)[1] - parseInt(tipsContent.style('height')) - 20 + 'px'
     } else {
       tipsT = d3.mouse(this)[1] + 20 + 'px'
     }
-    tips.style('left', tipsL)
+    tipsContent.style('left', tipsL)
       .style('top', tipsT)
   }
 
   function media () {
     window.onresize = function () {
-      width = document.body.clientWidth
-      lineWidth = width - paddingL - paddingR
-      svg.attr('width', width)
-      drawLine()
+      let docWidth = document.body.clientWidth
+      if (docWidth !== width) {
+        width = document.body.clientWidth
+        lineWidth = width - paddingL - paddingR
+        svg.attr('width', width)
+        drawLine()
+      }
     }
+  }
+
+  function chartZoom () {
+    zoomG = svg.selectAll('.zoom-group')
+    if (zoomG.empty()) {
+      zoomG = svg.append('g')
+        .attr('class', 'zoom-group')
+    }
+    // 矩形条
+    zoomG.append('rect')
+      .attr('class', 'zoom-rect-box')
+      .attr('width', lineWidth)
+      .attr('height', 20)
+      .attr('x', paddingL)
+      .attr('y', height - paddingB / 2)
+      .attr('stroke', '#ccc')
+      .attr('fill', 'none')
+    zoomG.append('rect')
+      .attr('class', 'zoom-rect')
+      .attr('width', lineWidth)
+      .attr('height', 20)
+      .attr('x', paddingL)
+      .attr('y', height - paddingB / 2)
+      .attr('stroke', 'none')
+      .attr('fill', color[0])
+      .attr('fill-opacity', 0.5)
+
+    // 两端滑块
+    let drag = d3.drag()
+      .on('drag', function (d, i) {
+        d3.select(this).select('.rect-box')
+          .attr('x', () => {
+            let x = d3.mouse(this)[0]
+            if (parseInt(d3.mouse(this)[0]) <= parseInt(paddingL)) {
+              x = paddingL
+            } else if (parseInt(d3.mouse(this)[0]) >= parseInt(width - paddingR)) {
+              x = width - paddingR - 10
+            }
+            return x
+          })
+        let rectWidth = d3.select('.zoom-rect').attr('width')
+        if (i === 0) {
+          console.log(rectWidth - d3.mouse(this)[0] + paddingL)
+          d3.select('.zoom-rect')
+            .attr('width', rectWidth - d3.mouse(this)[0] + paddingL)
+            .attr('x', d3.mouse(this)[0])
+        } else {
+          d3.select('.zoom-rect')
+            .attr('width', d3.mouse(this)[0] - paddingL)
+        }
+      })
+    let rectData = [
+      {
+        width: 10,
+        height: 20,
+        x: paddingL,
+        y: height - paddingB / 2
+      },
+      {
+        width: 10,
+        height: 20,
+        x: width - paddingR - 10,
+        y: height - paddingB / 2
+      }
+    ]
+    let zoomMark = zoomG.selectAll('g').data(rectData)
+    let enterZoomMark = zoomMark.enter()
+    enterZoomMark.append('g').attr('class', (d, i) => {
+      return 'zoom-mark zoom-mark' + i
+    })
+      .style('cursor', 'pointer')
+      .call(drag)
+      .append('rect')
+      .attr('class', 'rect-box')
+      .attr('width', (d) => {
+        return d.width
+      })
+      .attr('height', (d) => {
+        return d.height
+      })
+      .attr('x', (d) => {
+        return d.x
+      })
+      .attr('y', (d) => {
+        return d.y
+      })
+      .attr('stroke', 'none')
+      .attr('fill', color[0])
   }
 
   // 方法
