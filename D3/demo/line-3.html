@@ -120,7 +120,7 @@
     'zoom': true,
     'title': 'QPS',
     'legend': {
-      'show': false,
+      'show': true,
       'data': ['WRITE', 'READ']
     },
     'yAxis': {
@@ -1014,35 +1014,26 @@
         if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'mousedown') {
           mouseChange(0, d3.mouse(this))
         }
-        if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'wheel') {
-          touchChange(0, d3.event.transform)
-        }
       })
       .on('zoom', function () {
         if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'mousemove') {
+          d3.select('.tips-content').transition().duration(200).style('display', 'none')
+          d3.select('.tips-line-groups').transition().duration(200).style('display', 'none')
           mouseChange(1, d3.mouse(this))
-        }
-        if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'wheel') {
-          touchChange(1, d3.event.transform)
         }
       })
       .on('end', function () {
         if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'mouseup') {
           mouseChange(2, d3.mouse(this))
         }
-        if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'wheel') {
-          touchChange(2, d3.event.transform)
-        }
       })
     svg.call(zoom)
   }
 
   function mouseChange (type, d) {
-    d3.select('.tips-content').transition().duration(200).style('display', 'none')
-    d3.select('.tips-line-groups').transition().duration(200).style('display', 'none')
     let mouseG = svg.selectAll('.mouse-group')
     let mouseRect = mouseG.selectAll('.mouse-rect')
-    if (mouseRect.empty()) {
+    if (mouseG.empty()) {
       mouseRect = svg.append('g')
         .attr('class', 'mouse-group')
         .append('rect')
@@ -1052,8 +1043,8 @@
         .attr('opacity', .7)
         .attr('stroke-dasharray', '5, 5')
     }
-    let dataX = mouseRect.attr('data-x'),
-      dataY = mouseRect.attr('data-y')
+
+    let dataX, dataY
     if (type === 0) {
       mouseRect.attr('x', d[0])
         .attr('y', d[1])
@@ -1062,6 +1053,8 @@
         .attr('data-x', d[0])
         .attr('data-y', d[1])
     } else if (type === 1) {
+      dataX = mouseRect.attr('data-x')
+      dataY = mouseRect.attr('data-y')
       let rectWidth = Math.abs(d[0] - dataX)
       let rectHeight = Math.abs(d[1] - dataY)
       mouseRect
@@ -1070,8 +1063,9 @@
         .attr('x', d[0] - dataX > 0 ? dataX : d[0])
         .attr('y', d[1] - dataY > 0 ? dataY : d[1])
     } else {
+      dataX = mouseRect.attr('data-x')
       if (Math.abs(d[0] - dataX) <= 3) {
-        mouseRect.remove()
+        mouseG.remove()
         return false
       }
       let x0 = zoomScale.invert(dataX - paddingL)
@@ -1082,7 +1076,7 @@
         xScale.domain([x0, x1])
       }
       zoomScale = xScale
-      mouseRect.remove()
+      mouseG.remove()
       drawAxis()
       drawLine()
       let backG = d3.selectAll('.back-group')
@@ -1096,37 +1090,6 @@
           drawLine()
           d3.select(this).style('display', 'none')
         })
-    }
-  }
-  function touchChange (type, d) {
-    console.log(type, d)
-    /*let wheelRect = svg.selectAll('.wheel-group').selectAll('.wheel-rect')
-     if (wheelRect.empty()) {
-     wheelRect = svg.append('g')
-     .attr('class', 'wheel-group')
-     .append('rect')
-     .attr('class', 'wheel-rect')
-     .attr('data-k', d.k)
-     .attr('data-x', d.x)
-     }*/
-
-    //console.log(type, d.x, d.k)
-    /*if (type === 0) {
-     wheelRect = svg.append('g')
-     .attr('data-k', d.k)
-     .attr('data-x', d.x)
-     } else if (type === 1) {
-
-     } else {
-
-     }*/
-
-    if (d.k > 1) {
-      // 放大
-      //let x = wheelRect.attr('data-x')
-      // console.log('big-----', x, d.x)
-    } else {
-      // 缩小-->最小缩放到原始比例尺
     }
   }
 
