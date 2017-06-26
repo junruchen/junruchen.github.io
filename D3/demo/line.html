@@ -32,7 +32,7 @@
       color: #333;
     }
 
-    .legends-group, .tips-content {
+    .legends-group, .tips-content, .back-group {
       position: absolute;
       font-size: 12px;
     }
@@ -72,6 +72,23 @@
       border-radius: 50%;
     }
 
+    .back-group {
+      display: none;
+      top: 0;
+      right: 0;
+      background: rgba(255, 255, 255, .5);
+      padding: 3px 13px;
+      border: 1px solid #ddd;
+      border-radius: 3px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .back-group:hover {
+      border-color: #58a;
+      color: #58a;
+    }
+
   </style>
 </head>
 <body>
@@ -82,6 +99,7 @@
       <div class="chart-title"></div>
       <div class="legends-group"></div>
       <div class="tips-content"></div>
+      <button class="back-group">返回</button>
     </div>
 
   </div>
@@ -91,16 +109,23 @@
 <script>
   // 用户指定
   let paddingT = 60
-  let paddingB = 40
+  let paddingB = 60
   let paddingL = 60
-  let paddingR = 40
+  let paddingR = 60
   let color = ['#5588AA', '#FFBB33', 'red', 'green', 'purple', 'black', '#cccccc']
 
   let lineData = {
+    'tips': true,
+    'drag': true,
+    'zoom': true,
     'title': 'QPS',
-    'legend': ['QPS READ', 'QPS WRITE'],
+    'legend': {
+      'show': true,
+      'data': ['WRITE', 'READ']
+    },
     'yAxis': {
-      'title': 'GDP'
+      'title': 'GDP',
+      'multi': false
     },
     'xAxis': {
       'title': '日期',
@@ -110,34 +135,34 @@
       [{'data': 3356, 'time': '2017-06-22 17:01:16'}, {
         'data': 3338,
         'time': '2017-06-22 17:01:36'
-      }, {'data': 9646, 'time': '2017-06-22 17:01:56'}, {
+      }, {'data': 2646, 'time': '2017-06-22 17:01:56'}, {
         'data': 3379,
         'time': '2017-06-22 17:02:16'
-      }, {'data': 7872, 'time': '2017-06-22 17:02:36'}, {
-        'data': 6584,
+      }, {'data': 4872, 'time': '2017-06-22 17:02:36'}, {
+        'data': 3584,
         'time': '2017-06-22 17:02:56'
-      }, {'data': 6985, 'time': '2017-06-22 17:03:16'}, {
+      }, {'data': 1985, 'time': '2017-06-22 17:03:16'}, {
         'data': 2661,
         'time': '2017-06-22 17:03:36'
-      }, {'data': 6921, 'time': '2017-06-22 17:03:56'}, {
-        'data': 7087,
+      }, {'data': 2921, 'time': '2017-06-22 17:03:56'}, {
+        'data': 4087,
         'time': '2017-06-22 17:04:16'
       }, {'data': 4514, 'time': '2017-06-22 17:04:36'}, {
-        'data': 9251,
+        'data': 251,
         'time': '2017-06-22 17:04:56'
-      }, {'data': 5592, 'time': '2017-06-22 17:05:16'}, {
+      }, {'data': 2592, 'time': '2017-06-22 17:05:16'}, {
         'data': 5846,
         'time': '2017-06-22 17:05:36'
       }, {'data': 5508, 'time': '2017-06-22 17:05:56'}, {
-        'data': 7787,
+        'data': 4787,
         'time': '2017-06-22 17:06:16'
       }, {'data': 3246, 'time': '2017-06-22 17:06:36'}, {
-        'data': 8543,
+        'data': 2543,
         'time': '2017-06-22 17:06:56'
-      }, {'data': 8258, 'time': '2017-06-22 17:07:16'}, {
-        'data': 9142,
+      }, {'data': 3258, 'time': '2017-06-22 17:07:16'}, {
+        'data': 4142,
         'time': '2017-06-22 17:07:36'
-      }, {'data': 6821, 'time': '2017-06-22 17:07:56'}, {
+      }, {'data': 5821, 'time': '2017-06-22 17:07:56'}, {
         'data': 2585,
         'time': '2017-06-22 17:08:16'
       }, {'data': 35, 'time': '2017-06-22 17:08:36'}, {
@@ -147,7 +172,7 @@
         'data': 2115,
         'time': '2017-06-22 17:09:36'
       }, {'data': 701, 'time': '2017-06-22 17:09:56'}, {
-        'data': 9965,
+        'data': 1965,
         'time': '2017-06-22 17:10:16'
       }, {'data': 4072, 'time': '2017-06-22 17:10:36'}, {
         'data': 1592,
@@ -155,7 +180,7 @@
       }, {'data': 2367, 'time': '2017-06-22 17:11:16'}, {
         'data': 175,
         'time': '2017-06-22 17:11:36'
-      }, {'data': 7757, 'time': '2017-06-22 17:11:56'}, {
+      }, {'data': 2757, 'time': '2017-06-22 17:11:56'}, {
         'data': 3794,
         'time': '2017-06-22 17:12:16'
       }, {'data': 1629, 'time': '2017-06-22 17:12:36'}, {
@@ -165,22 +190,22 @@
         'data': 245,
         'time': '2017-06-22 17:13:36'
       }, {'data': 3648, 'time': '2017-06-22 17:13:56'}, {
-        'data': 6198,
+        'data': 4198,
         'time': '2017-06-22 17:14:16'
       }, {'data': 1248, 'time': '2017-06-22 17:14:36'}, {
-        'data': 7314,
+        'data': 5314,
         'time': '2017-06-22 17:14:56'
       }, {'data': 1592, 'time': '2017-06-22 17:15:16'}, {
         'data': 1253,
         'time': '2017-06-22 17:15:36'
       }, {'data': 747, 'time': '2017-06-22 17:15:56'}, {
-        'data': 6343,
+        'data': 2343,
         'time': '2017-06-22 17:16:16'
-      }, {'data': 6370, 'time': '2017-06-22 17:16:36'}, {
+      }, {'data': 3370, 'time': '2017-06-22 17:16:36'}, {
         'data': 3966,
-        'time': '2017-06-22T17:16:56.253123'
+        'time': '2017-06-22T17:16:56'
       }, {
-        'data': 6075, 'time': '2017-06-22 17:17:16'
+        'data': 1075, 'time': '2017-06-22 17:17:16'
       }, {'data': 2753, 'time': '2017-06-22 17:17:36'}
       ],
       [{'data': 3256, 'time': '2017-06-22 17:01:16'}, {
@@ -254,7 +279,7 @@
         'time': '2017-06-22 17:16:16'
       }, {'data': 4370, 'time': '2017-06-22 17:16:36'}, {
         'data': 5966,
-        'time': '2017-06-22T17:16:56.253123'
+        'time': '2017-06-22T17:16:56'
       }, {
         'data': 4075, 'time': '2017-06-22 17:17:16'
       }, {'data': 8753, 'time': '2017-06-22 17:17:36'}
@@ -273,25 +298,70 @@
     .attr('height', height)
 
   // 定义图表组, 坐标系组, legend组, tip组
-  let chartG, xAxisG, yAxisG, legendsG, tipsG
+  let chartG, xAxisG, yAxisG, legendsG, tipsG, dragG
 
-  // 时间比例尺, 线性比例尺, 坐标轴
-  let xScale = d3.scaleTime(),
-    yScale = d3.scaleLinear(),
+  // 时间比例尺, 线性比例尺, 坐标轴, 多y轴
+  let xScale = d3.scaleTime()
+      .domain([new Date(d3.min(lineData.xAxis.data)), new Date(d3.max(lineData.xAxis.data))])
+      .range([0, lineWidth]),
+    dragScale = xScale.copy(),
+    zoomScale = xScale.copy(),
+    yScale,
+    y0Scale,
     xAxis,
     yAxis
 
+  check() // 判断参数是否存在, 单个y还是多个等
   media() // 自适应处理
-  drawD3Chart() // 画图
-  drawTips() // tips控制
-  chartZoom() // 选区控制
 
-  function drawD3Chart () {
-    drawTitle() // 绘制title
-    drawLegend() // 绘制legend
+  function check () {
+    if (lineData.title) {
+      drawTitle() // 绘制title
+    }
+
+    if (lineData.legend.show && lineData.legend.data.length > 0) {
+      drawLegend() // 绘制legend
+    }
+
+    if (lineData.yAxis.multi) {
+      // multi === true
+      y0Scale = d3.scaleLinear()
+        .domain([0, getMax(0)])
+        .range([lineHeight, 0])
+
+      y0Axis = d3.axisRight()
+        .scale(y0Scale)
+        .ticks(5)
+      // 绘制y轴
+      y0AxisG = svg.select('.y0Axis')
+        .call(y0Axis)
+        .attr('transform', 'translate(' + width - paddingR + ',' + paddingT + ')')
+      if (y0AxisG.empty()) {
+        y0AxisG = svg.append('g')
+          .call(y0Axis)
+          .attr('class', 'y0Axis')
+          .attr('transform', 'translate(' + (width - paddingR) + ',' + paddingT + ')')
+          .append('text')
+          .text(lineData.yAxis.title)
+          .attr('stroke-width', 0)
+          .attr('fill', 'black')
+          .attr('text-anthor', 'middle')
+      }
+    }
     drawAxis() // 绘制坐标系
     drawLine() // 绘制折线
-    // svgZoom() // 缩放
+
+    if (lineData.tips) {
+      drawTips() // tips控制
+    }
+
+    if (lineData.drag) {
+      chartDrag() // 时间滑块控制 chartDrag与chartZoom最好值选择用一个
+    }
+
+    if (lineData.zoom) {
+      chartZoom() // 鼠标滚轮以及触摸板控制
+    }
   }
 
   function drawTitle () {
@@ -305,12 +375,13 @@
   }
   function drawLegend () {
     legendsG = d3.select('.legends-group')
-    let legendItemG = legendsG.selectAll('.legend-item').data(lineData.legend)
+
+    let legendItemG = legendsG.selectAll('.legend-item').data(lineData.legend.data)
     let enterLegendItem = legendItemG.enter()
 
     // update
     legendItemG
-      .selectAll('.legend-i')
+      .select('.legend-i')
       .style('background-color', (d, i) => {
         return color[i]
       })
@@ -342,7 +413,7 @@
           .select('.line-path-item' + i)
           .transition()
           .duration(200)
-          .attr('stroke-opacity', (opacity === 1) ? 0 : 1)
+          .attr('opacity', (opacity === 1) ? 0 : 1)
         d3.select('.chart-group').select('.circle-group')
           .select('.line-ciecle-item' + i)
           .transition()
@@ -364,11 +435,8 @@
     // del
     legendItemG.exit().remove()
   }
-  function drawAxis () {
-    // x轴时间比例尺 值域定义域设置
-    xScale.domain([new Date(d3.min(lineData.xAxis.data)), new Date(d3.max(lineData.xAxis.data))])
-      .range([0, lineWidth])
 
+  function drawAxis () {
     // x轴坐标系设置
     xAxis = d3.axisBottom(xScale)
       .ticks(5)
@@ -377,22 +445,36 @@
     xAxisG = svg.select('.xAxis')
       .call(xAxis)
       .attr('transform', 'translate(' + paddingL + ',' + (height - paddingB) + ')')
-    if (xAxisG.size() === 0) {
+    xAxisG.selectAll('.xAxis-title')
+      .attr('transform', 'translate(' + lineWidth + ', 0)')
+    xAxisG.selectAll('#clip-xAxisG').select('rect')
+      .attr('width', lineWidth + paddingR)
+    if (xAxisG.empty()) {
       xAxisG = svg.append('g')
         .call(xAxis)
         .attr('class', 'xAxis')
         .attr('transform', 'translate(' + paddingL + ',' + (height - paddingB) + ')')
-        .append('text')
+      xAxisG.append('text')
+        .attr('class', 'xAxis-title')
         .text(lineData.xAxis.title)
         .attr('stroke-width', 0)
         .attr('fill', 'black')
         .attr('transform', 'translate(' + lineWidth + ', 0)')
-        .attr('dx', '1rem')
+        .attr('dy', '1rem')
+        .attr('text-anchor', 'start')
+      // 隐藏多余的内容，主要用在drag时，防止x轴文字出边界
+      xAxisG.append('defs')
+        .append('clipPath')
+        .attr('id', 'clip-xAxisG')
+        .append('rect')
+        .attr('width', lineWidth + paddingR)
+        .attr('height', 20)
     }
+    xAxisG.attr('clip-path', 'url(#clip-xAxisG)')
 
-    // y轴线性比例尺 值域定义域设置
-    let maxData = getMax()
-    yScale.domain([0, maxData])
+    // 线性比例尺
+    yScale = d3.scaleLinear()
+      .domain([0, getMax(1)])
       .range([lineHeight, 0])
     // y轴坐标系设置
     yAxis = d3.axisLeft()
@@ -402,7 +484,7 @@
     yAxisG = svg.select('.yAxis')
       .call(yAxis)
       .attr('transform', 'translate(' + paddingL + ',' + paddingT + ')')
-    if (yAxisG.size() === 0) {
+    if (yAxisG.empty()) {
       yAxisG = svg.append('g')
         .call(yAxis)
         .attr('class', 'yAxis')
@@ -416,9 +498,22 @@
   }
   function drawLine () {
     chartG = svg.selectAll('.chart-group')
-    if (chartG.size() === 0) {
+    chartG.selectAll('#clip').select('rect')
+      .attr('width', lineWidth)
+      .attr('height', lineHeight + 5)
+    if (chartG.empty()) {
       chartG = svg.append('g')
         .attr('class', 'chart-group')
+      // 隐藏多余的内容
+      chartG.append('defs')
+        .append('clipPath')
+        .attr('id', 'clip')
+        .append('rect')
+        .attr('width', lineWidth)
+        .attr('height', lineHeight + 5)
+        .attr('x', paddingL)
+        .attr('y', paddingT - 5)
+      chartG.attr('clip-path', 'url(#clip)')
       chartG.append('g')
         .attr('class', 'area-group')
       chartG.append('g')
@@ -440,14 +535,20 @@
       .y0(() => {
         return height - paddingB
       })
-      .y1((d) => {
-        return yScale(d.data) + paddingT
-      })
 
     let areaPath = areaG.selectAll('.line-area-item').data(lineData.series)
     let enterAreaPath = areaPath.enter()
     // update
-    areaPath.attr('d', (d) => {
+    areaPath.attr('d', (d, i) => {
+      if (lineData.yAxis.multi && i === 0) {
+        areaLine.y1((d) => {
+          return y0Scale(d.data) + paddingT
+        })
+      } else {
+        areaLine.y1((d) => {
+          return yScale(d.data) + paddingT
+        })
+      }
       return areaLine(d)
     })
     // add
@@ -455,7 +556,16 @@
       .attr('class', (d, i) => {
         return 'line-area-item line-area-item' + i
       })
-      .attr('d', (d) => {
+      .attr('d', (d, i) => {
+        if (lineData.yAxis.multi && i === 0) {
+          areaLine.y1((d) => {
+            return y0Scale(d.data) + paddingT
+          })
+        } else {
+          areaLine.y1((d) => {
+            return yScale(d.data) + paddingT
+          })
+        }
         return areaLine(d)
       })
       .attr('stroke', 'none')
@@ -464,17 +574,6 @@
       })
       .attr('fill-opacity', '.3')
       .attr('transform', 'translate(' + paddingL + ')')
-    /*enterAreaPath.append('rect')
-     .attr('class', 'path-area-mark')
-     .attr('width', lineWidth)
-     .attr('height', lineHeight)
-     .attr('x', paddingL + 1)
-     .attr('y', paddingT)
-     .attr('fill', '#fff')
-     .attr('transform-origin', 'right center')
-     .transition()
-     .duration(1000)
-     .attr('transform', 'scale(0, 1)')*/
     // del
     areaPath.exit().remove()
   }
@@ -485,15 +584,21 @@
       .x((d) => {
         return xScale(new Date(d.time))
       })
-      .y((d) => {
-        return yScale(d.data) + paddingT
-      })
 
     let path = pathG.selectAll('.line-path-item').data(lineData.series)
     let enterPath = path.enter()
     // update
     path
-      .attr('d', (d) => {
+      .attr('d', (d, i) => {
+        if (lineData.yAxis.multi && i === 0) {
+          line.y((dy) => {
+            return y0Scale(dy.data) + paddingT
+          })
+        } else {
+          line.y((dy) => {
+            return yScale(dy.data) + paddingT
+          })
+        }
         return line(d)
       })
       .attr('stroke-dasharray', function () {
@@ -512,7 +617,16 @@
     enterPath.append('path').attr('class', (d, i) => {
       return 'line-path-item line-path-item' + i
     })
-      .attr('d', (d) => {
+      .attr('d', (d, i) => {
+        if (lineData.yAxis.multi && i === 0) {
+          line.y((dy) => {
+            return y0Scale(dy.data) + paddingT
+          })
+        } else {
+          line.y((dy) => {
+            return yScale(dy.data) + paddingT
+          })
+        }
         return line(d)
       })
       .attr('stroke', function (d, i) {
@@ -563,7 +677,11 @@
         return xScale(new Date(d.time))
       })
         .attr('cy', (d) => {
-          return yScale(d.data)
+          if (lineData.yAxis.multi && idx === 0) {
+            return y0Scale(d.data)
+          } else {
+            return yScale(d.data)
+          }
         })
       // add
       enterCircle.append('circle')
@@ -571,25 +689,36 @@
           return xScale(new Date(d.time))
         })
         .attr('cy', (d) => {
-          return yScale(d.data)
+          if (lineData.yAxis.multi && idx === 0) {
+            return y0Scale(d.data)
+          } else {
+            return yScale(d.data)
+          }
         })
         .attr('r', 3.5)
         .style('cursor', 'pointer')
         .attr('fill-opacity', 0)
         .transition()
         .duration(1000)
-        .attr('fill-opacity', 1)
+        .attr('fill-opacity', .8)
       // del
       circle.exit().remove()
     })
   }
 
   function drawTips () {
-    tipsG = svg.append('g')
-      .attr('class', 'tips-group')
-    tipsG.append('rect')
-      .attr('class', 'mousemove-rect')
-      .attr('width', lineWidth)
+    tipsG = svg.selectAll('.tips-group')
+    if (tipsG.empty()) {
+      tipsG = svg.append('g')
+        .attr('class', 'tips-group')
+
+    }
+    let tipsRect = tipsG.selectAll('.mousemove-rect')
+    if (tipsRect.empty()) {
+      tipsRect = tipsG.append('rect')
+        .attr('class', 'mousemove-rect')
+    }
+    tipsRect.attr('width', lineWidth)
       .attr('height', lineHeight)
       .attr('x', paddingL)
       .attr('y', paddingT)
@@ -632,7 +761,7 @@
     let tipsLineG = tipsG.selectAll('.tips-line-groups')
     tipsLineG.selectAll('.tips-line').attr('x1', xScale(d) + paddingL)
       .attr('x2', xScale(d) + paddingL)
-    if (tipsLineG.size() === 0) {
+    if (tipsLineG.empty()) {
       tipsG.append('g')
         .attr('class', 'tips-line-groups')
         .append('line')
@@ -650,9 +779,12 @@
         return yScale(d) + paddingT
       })
       .attr('opacity', (d, i) => {
-        let opacity = d3.selectAll('.legend-item' + i).selectAll('.legend-i').style('opacity')
-        opacity = (parseInt(opacity) === 1) ? 1 : 0
-        return opacity
+        if (!lineData.legend.show || lineData.legend.data.length <= 0) {
+          return 1
+        } else {
+          let opacity = d3.selectAll('.legend-item' + i).selectAll('.legend-i').style('opacity')
+          return (parseInt(opacity) === 1) ? 1 : 0
+        }
       })
     let enterTipsLineCircle = tipsLineCircle.enter()
     enterTipsLineCircle.append('circle')
@@ -666,9 +798,12 @@
         return color[i]
       })
       .attr('opacity', (d, i) => {
-        let opacity = d3.selectAll('.legend-item' + i).selectAll('.legend-i').style('opacity')
-        opacity = (parseInt(opacity) === 1) ? 1 : 0
-        return opacity
+        if (!lineData.legend.show || lineData.legend.data.length <= 0) {
+          return 1
+        } else {
+          let opacity = d3.selectAll('.legend-item' + i).selectAll('.legend-i').style('opacity')
+          return (parseInt(opacity) === 1) ? 1 : 0
+        }
       })
     tipsLineCircle.exit().remove()
 
@@ -677,7 +812,7 @@
     let tipsContent = d3.selectAll('.tips-content')
     let tipsTitle = tipsContent.selectAll('.tips-title')
     tipsTitle.text('时间: ' + timeFormat(d))
-    if (tipsTitle.size() === 0) {
+    if (tipsTitle.empty()) {
       tipsContent.append('p')
         .attr('class', 'tips-title')
         .text('时间: ' + timeFormat(d))
@@ -685,9 +820,12 @@
     let tipItem = tipsContent.selectAll('.tip-item').data(points)
     // update
     tipItem.style('display', (d, i) => {
-      let opacity = d3.selectAll('.legend-item' + i).selectAll('.legend-i').style('opacity')
-      opacity = (parseInt(opacity) === 1) ? 'inline-block' : 'none'
-      return opacity
+      if (!lineData.legend.show || lineData.legend.data.length <= 0) {
+        return 'block'
+      } else {
+        let opacity = d3.selectAll('.legend-item' + i).selectAll('.legend-i').style('opacity')
+        return (parseInt(opacity) === 1) ? 'block' : 0
+      }
     })
     tipItem.select('i')
       .style('background-color', (d, i) => {
@@ -695,7 +833,11 @@
       })
     tipItem.select('span')
       .text((d, i) => {
-        return lineData.legend[i] + ' : ' + d
+        if (!lineData.legend.show || lineData.legend.data.length <= 0) {
+          return d
+        } else {
+          return lineData.legend.data[i] + ' : ' + d
+        }
       })
     // add
     let enterTipItem = tipItem.enter()
@@ -703,9 +845,12 @@
       .append('div')
       .attr('class', 'tip-item')
       .style('display', (d, i) => {
-        let opacity = d3.selectAll('.legend-item' + i).selectAll('.legend-i').style('opacity')
-        opacity = (parseInt(opacity) === 1) ? 'inline-block' : 'none'
-        return opacity
+        if (!lineData.legend.show || lineData.legend.data.length <= 0) {
+          return 'block'
+        } else {
+          let opacity = d3.selectAll('.legend-item' + i).selectAll('.legend-i').style('opacity')
+          return (parseInt(opacity) === 1) ? 'block' : 0
+        }
       })
     tipItemDiv.append('i')
       .attr('class', 'tip-i')
@@ -715,7 +860,11 @@
     tipItemDiv.append('span')
       .attr('class', 'tip-text')
       .text((d, i) => {
-        return lineData.legend[i] + ' : ' + d
+        if (!lineData.legend.show || lineData.legend.data.length <= 0) {
+          return d
+        } else {
+          return lineData.legend.data[i] + ' : ' + d
+        }
       })
     // del
     tipItem.exit().remove()
@@ -736,6 +885,214 @@
       .style('top', tipsT)
   }
 
+  function chartDrag () {
+    dragG = svg.selectAll('.drag-group')
+    if (dragG.empty()) {
+      dragG = svg.append('g')
+        .attr('class', 'drag-group')
+    }
+    // 矩形条
+    let dragRectBox = dragG.selectAll('.drag-rect-box')
+    if (dragRectBox.empty()) {
+      dragRectBox = dragG.append('rect')
+        .attr('class', 'drag-rect-box')
+    }
+    dragRectBox.attr('width', lineWidth)
+      .attr('height', 20)
+      .attr('x', paddingL)
+      .attr('y', height - paddingB / 2)
+      .attr('stroke', '#ccc')
+      .attr('fill', 'none')
+
+    let dragRect = dragG.selectAll('.drag-rect')
+    if (dragRect.empty()) {
+      dragRect = dragG.append('rect')
+        .attr('class', 'drag-rect')
+    }
+    dragRect.attr('width', lineWidth)
+      .attr('height', 20)
+      .attr('x', paddingL)
+      .attr('y', height - paddingB / 2)
+      .attr('stroke', 'none')
+      .attr('fill', color[0])
+      .attr('fill-opacity', 0.5)
+
+    // 两端滑块
+    let drag = d3.drag()
+      .on('drag', function (d, i) {
+        // 滑块位置控制
+        let x = d3.mouse(this)[0]
+        if (parseInt(d3.mouse(this)[0]) <= parseInt(paddingL)) {
+          x = paddingL
+        } else if (parseInt(d3.mouse(this)[0]) >= parseInt(width - paddingR)) {
+          x = width - paddingR - 10
+        }
+        d3.select(this).select('.rect-box')
+          .attr('x', x)
+          .attr('data-x', x)
+
+        // 控制条宽度以及位置更改
+        let xA = parseInt(d3.select('.rect-box0').attr('data-x'))
+        let xB = parseInt(d3.select('.rect-box1').attr('data-x'))
+        d3.select('.drag-rect')
+          .attr('width', (xB - xA + 10) > 0 ? (xB - xA + 10) : xA - xB)
+          .attr('x', (xB - xA + 10) > 0 ? xA : xB + 10)
+
+        // 计算x轴 新的日期定义域【】值域【0，width】
+        let x0 = dragScale.invert(xA - paddingL)
+        let x1 = dragScale.invert(xB + 10 - paddingL)
+        if (xA > xB) {
+          xScale.domain([x1, x0])
+        } else {
+          xScale.domain([x0, x1])
+        }
+        drawAxis()
+        drawLine()
+      })
+    let rectData = [
+      {
+        width: 10,
+        height: 20,
+        x: paddingL,
+        y: height - paddingB / 2
+      },
+      {
+        width: 10,
+        height: 20,
+        x: width - paddingR - 10,
+        y: height - paddingB / 2
+      }
+    ]
+    let dragMark = dragG.selectAll('g').data(rectData)
+    dragMark.select('.rect-box')
+      .attr('x', (d) => {
+        return d.x
+      })
+      .attr('y', (d) => {
+        return d.y
+      })
+      .attr('data-x', (d) => {
+        return d.x
+      })
+    // add
+    let enterDragMark = dragMark.enter()
+    enterDragMark.append('g')
+      .attr('class', (d, i) => {
+        return 'drag-mark drag-mark' + i
+      })
+      .style('cursor', 'pointer')
+      .call(drag)
+      .append('rect')
+      .attr('class', (d, i) => {
+        return 'rect-box rect-box' + i
+      })
+      .attr('width', (d) => {
+        return d.width
+      })
+      .attr('height', (d) => {
+        return d.height
+      })
+      .attr('x', (d) => {
+        return d.x
+      })
+      .attr('y', (d) => {
+        return d.y
+      })
+      .attr('data-x', (d) => {
+        return d.x
+      })
+      .attr('stroke', 'none')
+      .attr('fill', color[0])
+
+    dragMark.exit().remove()
+  }
+  function chartZoom () {
+    // 鼠标选区放大缩小
+    // 滚轮／触摸板放大缩小---transform
+    let zoom = d3.zoom()
+      .on('start', function (d, i) {
+        if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'mousedown') {
+          mouseChange(0, d3.mouse(this))
+        }
+      })
+      .on('zoom', function () {
+        if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'mousemove') {
+          d3.select('.tips-content').transition().duration(200).style('display', 'none')
+          d3.select('.tips-line-groups').transition().duration(200).style('display', 'none')
+          mouseChange(1, d3.mouse(this))
+        }
+      })
+      .on('end', function () {
+        if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'mouseup') {
+          mouseChange(2, d3.mouse(this))
+        }
+      })
+    svg.call(zoom)
+  }
+
+  function mouseChange (type, d) {
+    let mouseG = svg.selectAll('.mouse-group')
+    let mouseRect = mouseG.selectAll('.mouse-rect')
+    if (mouseG.empty()) {
+      mouseRect = svg.append('g')
+        .attr('class', 'mouse-group')
+        .append('rect')
+        .attr('class', 'mouse-rect')
+        .attr('fill', '#fff')
+        .attr('stroke', '#ccc')
+        .attr('opacity', .7)
+        .attr('stroke-dasharray', '5, 5')
+    }
+
+    let dataX, dataY
+    if (type === 0) {
+      mouseRect.attr('x', d[0])
+        .attr('y', d[1])
+        .attr('width', 0)
+        .attr('height', 0)
+        .attr('data-x', d[0])
+        .attr('data-y', d[1])
+    } else if (type === 1) {
+      dataX = mouseRect.attr('data-x')
+      dataY = mouseRect.attr('data-y')
+      let rectWidth = Math.abs(d[0] - dataX)
+      let rectHeight = Math.abs(d[1] - dataY)
+      mouseRect
+        .attr('width', rectWidth <= 3 ? 0 : rectWidth)
+        .attr('height', rectHeight <= 3 ? 0 : rectHeight)
+        .attr('x', d[0] - dataX > 0 ? dataX : d[0])
+        .attr('y', d[1] - dataY > 0 ? dataY : d[1])
+    } else {
+      dataX = mouseRect.attr('data-x')
+      if (Math.abs(d[0] - dataX) <= 3) {
+        mouseG.remove()
+        return false
+      }
+      let x0 = zoomScale.invert(dataX - paddingL)
+      let x1 = zoomScale.invert(d[0] - paddingL)
+      if (dataX > d[0]) {
+        xScale.domain([x1, x0])
+      } else {
+        xScale.domain([x0, x1])
+      }
+      zoomScale = xScale
+      mouseG.remove()
+      drawAxis()
+      drawLine()
+      let backG = d3.selectAll('.back-group')
+      backG.style('display', 'block')
+        .style('right', paddingR + 'px')
+        .style('top', paddingT + 'px')
+        .on('click', function () {
+          xScale
+            .domain([new Date(d3.min(lineData.xAxis.data)), new Date(d3.max(lineData.xAxis.data))])
+          drawAxis()
+          drawLine()
+          d3.select(this).style('display', 'none')
+        })
+    }
+  }
+
   function media () {
     window.onresize = function () {
       let docWidth = document.body.clientWidth
@@ -743,33 +1100,22 @@
         width = document.body.clientWidth
         lineWidth = width - paddingL - paddingR
         svg.attr('width', width)
-        drawLine()
+        xScale = d3.scaleTime()
+          .domain([new Date(d3.min(lineData.xAxis.data)), new Date(d3.max(lineData.xAxis.data))])
+          .range([0, lineWidth])
+        dragScale = xScale.copy()
+        zoomScale = xScale.copy()
+        check()
       }
     }
   }
 
-  function chartZoom () {
-    let zoom = d3.zoom()
-      .scaleExtent([1, 40])
-      .translateExtent([[-100, -100], [width + 90, height + 100]])
-      .on('zoom', function () {
-        chartG.attr('transform', d3.event.transform)
-        xAxisG.call(xAxis.scale(d3.event.transform.rescaleX(xScale)))
-        yAxisG.call(yAxis.scale(d3.event.transform.rescaleY(yScale)))
-      })
-    svg.call(zoom)
-  }
-
   // 方法
-  function getMax () {
-    let maxData = []
-    lineData.series.forEach((item, idx) => {
-      let itemMax = d3.max(item, (d) => {
-        return d.data
-      })
-      maxData.push(itemMax)
+  function getMax (type) {
+    let itemMax = d3.max(lineData.series[type], (d) => {
+      return d.data
     })
-    return d3.max(maxData)
+    return itemMax
   }
 
 </script>
