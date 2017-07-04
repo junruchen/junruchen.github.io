@@ -18,8 +18,8 @@
     }
 
     .line-box {
-      width: 100%;
-      height: 340px;
+      width: 476px;
+      height: 200px;
     }
 
     .line-chart-d3 {
@@ -56,19 +56,20 @@
     .legends-group .legend-item .legend-i, .tips-content .tip-item .tip-i {
       display: inline-block;
       vertical-align: middle;
-      height: 13px;
       margin-right: 5px;
     }
 
     .legends-group .legend-item .legend-i {
       opacity: 1;
       width: 23px;
+      height: 13px;
       border-radius: 3px;
       cursor: pointer;
     }
 
     .tips-content .tip-item .tip-i {
-      width: 13px;
+      width: 10px;
+      height: 10px;
       border-radius: 50%;
     }
 
@@ -76,17 +77,18 @@
       display: none;
       top: 0;
       right: 0;
-      background: rgba(255, 255, 255, .5);
-      padding: 3px 13px;
-      border: 1px solid #ddd;
+      background: rgba(255, 255, 255, .8);
+      padding: 0px 8px;
+      border: 1px solid #E8E8E8;
       border-radius: 3px;
       outline: none;
       cursor: pointer;
+      color: #35404D;
     }
 
     .back-group:hover {
-      border-color: #58a;
-      color: #58a;
+      color: #548DD8;
+      border-color: #5B97E5;
     }
 
   </style>
@@ -107,14 +109,28 @@
 </body>
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script>
-  // 用户指定
+  /**
+   * 折线图
+   * 0、标题，tip【tip可操作，点击控制展示折线数量】
+   * 1、路径、区域、圆点
+   * 2、坐标轴【水平x，垂直y，多y轴】，自适应时，更改值域，使用drag或者zoom时，更改定义域，超出部分隐藏
+   * 3、drag，拖动小方块，更改水平x坐标轴的定义域来更改图形。ps: drag本身有一个坐标轴，只有自适应时更改值域
+   * 4、zoom，鼠标绘制选区，选区内容放大。
+   * 5、自适应，获取width，更改盒子宽度以及水平轴值域
+   * */
+
+    // 用户指定
   let paddingT = 60
   let paddingB = 60
   let paddingL = 60
   let paddingR = 60
-  let color = ['#5588AA', '#FFBB33', 'red', 'green', 'purple', 'black', '#cccccc']
-
   let lineData = {
+    'padding': {
+      left: 60,
+      right: 60,
+      top: 60,
+      bottom: 60
+    },
     'tips': true,
     'drag': true,
     'zoom': true,
@@ -287,6 +303,8 @@
     ]
   }
 
+  let color = d3.scaleOrdinal(d3.schemeCategory20)
+
   // 全局变量
   let width = parseInt(d3.select('.line-box').style('width'))
   let height = parseInt(d3.select('.line-box').style('height'))
@@ -296,20 +314,45 @@
     .append('svg')
     .attr('width', width)
     .attr('height', height)
-
   // 定义图表组, 坐标系组, legend组, tip组
   let chartG, xAxisG, yAxisG, legendsG, tipsG, dragG
-
   // 时间比例尺, 线性比例尺, 坐标轴, 多y轴
   let xScale = d3.scaleTime()
       .domain([new Date(d3.min(lineData.xAxis.data)), new Date(d3.max(lineData.xAxis.data))])
       .range([0, lineWidth]),
-    dragScale = xScale.copy(),
-    zoomScale = xScale.copy(),
-    yScale,
-    y0Scale,
-    xAxis,
-    yAxis
+    dragScale = xScale.copy(), // 用来控制底部水平矩形轴，定义域一直不变，自适应时，值域变
+    yScale = d3.scaleLinear()
+      .domain([0, getMax(1)])
+      .range([lineHeight, 0]),
+    y0Scale
+
+  // 公共方法 -->获取指定长度数组的最大值
+  function getMax (type, startIdx, endIdx) {
+    startIdx = startIdx || 0
+    endIdx = endIdx || lineData.series[type].length
+    let newArr = lineData.series[type].slice(startIdx, endIdx)
+    let itemMax = d3.max(newArr, (d) => {
+      return d.data
+    })
+    return itemMax
+  }
+  // 公共方法 -->返回指定长度的数组, length为除去0的个数，包含末尾
+  function getData (arr, length) {
+    let newArr = [arr[0]]
+    let step = arr.length / length
+    for (let i = 1; i <= length; i++) {
+      if (i === length) {
+        newArr.push(arr[arr.length - 1])
+      } else {
+        newArr.push(arr[parseInt(i * step)])
+      }
+    }
+    return newArr
+  }
+  // 公共方法 -->获取指定数据对应的index
+  let bisect = d3.bisector(function (d) {
+    return new Date(d)
+  }).left
 
   check() // 判断参数是否存在, 单个y还是多个等
   media() // 自适应处理
@@ -383,7 +426,7 @@
     legendItemG
       .select('.legend-i')
       .style('background-color', (d, i) => {
-        return color[i]
+        return color(i)
       })
     legendItemG
       .selectAll('legend-text')
@@ -395,10 +438,24 @@
       .attr('class', (d, i) => {
         return 'legend-item legend-item' + i
       })
+      .on('mousemove', function (d, i) {
+        d3.select('.chart-group').select('.circle-group')
+          .select('.line-ciecle-item' + i).selectAll('circle')
+          .transition()
+          .duration(100)
+          .attr('r', 5)
+      })
+      .on('mouseout', function (d, i) {
+        d3.select('.chart-group').select('.circle-group')
+          .select('.line-ciecle-item' + i).selectAll('circle')
+          .transition()
+          .duration(100)
+          .attr('r', 2.5)
+      })
     legendDiv.append('i')
       .attr('class', 'legend-i')
       .style('background-color', (d, i) => {
-        return color[i]
+        return color(i)
       })
       .on('click', function (d, i) {
         let opacity = parseInt(d3.select(this).style('opacity'))
@@ -438,8 +495,8 @@
 
   function drawAxis () {
     // x轴坐标系设置
-    xAxis = d3.axisBottom(xScale)
-      .ticks(5)
+    let xAxis = d3.axisBottom(xScale)
+      .ticks(2)
       .tickFormat(d3.timeFormat('%Y-%m-%d %H:%M:%S'))
     // 绘制x轴
     xAxisG = svg.select('.xAxis')
@@ -472,12 +529,8 @@
     }
     xAxisG.attr('clip-path', 'url(#clip-xAxisG)')
 
-    // 线性比例尺
-    yScale = d3.scaleLinear()
-      .domain([0, getMax(1)])
-      .range([lineHeight, 0])
     // y轴坐标系设置
-    yAxis = d3.axisLeft()
+    let yAxis = d3.axisLeft()
       .scale(yScale)
       .ticks(5)
     // 绘制y轴
@@ -570,7 +623,7 @@
       })
       .attr('stroke', 'none')
       .attr('fill', (d, i) => {
-        return color[i]
+        return color(i)
       })
       .attr('fill-opacity', '.3')
       .attr('transform', 'translate(' + paddingL + ')')
@@ -630,7 +683,7 @@
         return line(d)
       })
       .attr('stroke', function (d, i) {
-        return color[i]
+        return color(i)
       })
       .attr('fill', 'none')
       .attr('transform', 'translate(' + paddingL + ')')
@@ -661,13 +714,16 @@
         return 'line-ciecle-item line-ciecle-item' + i
       })
       .attr('transform', 'translate(' + paddingL + ', ' + paddingT + ')')
-      .attr('fill', (d, i) => {
-        return color[i]
+      .attr('stroke', (d, i) => {
+        return color(i)
       })
+      .attr('fill', '#fff')
     // del
     circleItemG.exit().remove()
 
     lineData.series.forEach((item, idx) => {
+      item = getData(item, xScale.ticks(5).length + 1) // 与 x轴个数同步
+
       let parentG = svg.selectAll('.line-ciecle-item' + idx)
       let circle = parentG.selectAll('circle')
         .data(item)
@@ -695,12 +751,13 @@
             return yScale(d.data)
           }
         })
-        .attr('r', 3.5)
+        .attr('r', 2.5)
         .style('cursor', 'pointer')
-        .attr('fill-opacity', 0)
+        .attr('opacity', 0)
         .transition()
-        .duration(1000)
-        .attr('fill-opacity', .8)
+        .duration(700)
+        .delay(300)
+        .attr('opacity', 1)
       // del
       circle.exit().remove()
     })
@@ -735,11 +792,6 @@
       .on('mousemove', showTip)
   }
   function showTip () {
-    // 获取当前index
-    var bisect = d3.bisector(function (d) {
-      return new Date(d)
-    }).left
-
     // 获取x轴坐标
     let x0 = xScale.invert(d3.mouse(this)[0] - paddingL),
       i = bisect(lineData.xAxis.data, x0),
@@ -794,9 +846,10 @@
       .attr('cy', (d) => {
         return yScale(d) + paddingT
       })
-      .attr('fill', (d, i) => {
-        return color[i]
+      .attr('stroke', (d, i) => {
+        return color(i)
       })
+      .attr('fill', '#fff')
       .attr('opacity', (d, i) => {
         if (!lineData.legend.show || lineData.legend.data.length <= 0) {
           return 1
@@ -804,6 +857,14 @@
           let opacity = d3.selectAll('.legend-item' + i).selectAll('.legend-i').style('opacity')
           return (parseInt(opacity) === 1) ? 1 : 0
         }
+      })
+      .on('mouseover', function () {
+        d3.select('.tips-content').transition().duration(200).style('display', 'block')
+        d3.select('.tips-line-groups').transition().duration(200).style('display', 'block')
+      })
+      .on('mouseout', function () {
+        d3.select('.tips-content').transition().duration(200).style('display', 'none')
+        d3.select('.tips-line-groups').transition().duration(200).style('display', 'none')
       })
     tipsLineCircle.exit().remove()
 
@@ -829,7 +890,7 @@
     })
     tipItem.select('i')
       .style('background-color', (d, i) => {
-        return color[i]
+        return color(i)
       })
     tipItem.select('span')
       .text((d, i) => {
@@ -855,7 +916,7 @@
     tipItemDiv.append('i')
       .attr('class', 'tip-i')
       .style('background-color', (d, i) => {
-        return color[i]
+        return color(i)
       })
     tipItemDiv.append('span')
       .attr('class', 'tip-text')
@@ -885,94 +946,159 @@
       .style('top', tipsT)
   }
 
+  // 滑块
   function chartDrag () {
     dragG = svg.selectAll('.drag-group')
     if (dragG.empty()) {
       dragG = svg.append('g')
         .attr('class', 'drag-group')
     }
-    // 矩形条
+    // 矩形边框
     let dragRectBox = dragG.selectAll('.drag-rect-box')
     if (dragRectBox.empty()) {
       dragRectBox = dragG.append('rect')
         .attr('class', 'drag-rect-box')
     }
     dragRectBox.attr('width', lineWidth)
-      .attr('height', 20)
+      .attr('height', 15)
       .attr('x', paddingL)
       .attr('y', height - paddingB / 2)
-      .attr('stroke', '#ccc')
+      .attr('stroke', '#E8E8E8')
       .attr('fill', 'none')
 
+    // 蓝色矩形块 拖动
+    let rectDrag = d3.drag()
+      .on('start', function () {
+        d3.select(this)
+          .attr('data-mouse-x', d3.mouse(this)[0])
+      })
+      .on('drag', function () {
+        let lastMouseX = d3.select(this).attr('data-mouse-x')
+        let moveLength = parseFloat(d3.mouse(this)[0] - lastMouseX)
+        let x = parseFloat(d3.select(this).attr('x')) + moveLength
+        if (x <= paddingL) {
+          x = paddingL
+        } else if (x + parseFloat(d3.select(this).attr('width')) >= lineWidth + paddingL) {
+          x = lineWidth - parseFloat(d3.select(this).attr('width')) + paddingL
+        }
+        // 矩形位置控制
+        d3.select(this)
+          .attr('x', x)
+        d3.select(this).attr('data-mouse-x', d3.mouse(this)[0])
+
+        // 滑块位置控制
+        let rect0 = d3.select('.rect-box0')
+        let rect1 = d3.select('.rect-box1')
+        if (parseFloat(rect0.attr('x')) > parseFloat(rect1.attr('x'))) {
+          rect0 = d3.select('.rect-box1')
+          rect1 = d3.select('.rect-box0')
+        }
+        let x0 = dragScale.invert(x - paddingL)
+        let x1 = dragScale.invert(x + parseFloat(d3.select(this).attr('width') - paddingL))
+        rect0.attr('x', x)
+          .attr('data-x', x)
+          .attr('data-time', x0)
+        rect1.attr('x', x + parseFloat(d3.select(this).attr('width')) - 10)
+          .attr('data-x', x + parseFloat(d3.select(this).attr('width')) - 10)
+          .attr('data-time', x1)
+
+        // 计算x轴 y轴 新的定义域【】，值域不变
+        let idxL = bisect(lineData.xAxis.data, x0)
+        let idxR = bisect(lineData.xAxis.data, x1)
+        xScale.domain([x0, x1])
+        if (Math.abs(idxR - idxL) > 2)
+          yScale.domain([0, getMax(1, idxL, idxR + 1)])
+        drawAxis()
+        drawLine()
+
+      })
+    // 矩形背景蓝色
     let dragRect = dragG.selectAll('.drag-rect')
     if (dragRect.empty()) {
       dragRect = dragG.append('rect')
         .attr('class', 'drag-rect')
     }
-    dragRect.attr('width', lineWidth)
-      .attr('height', 20)
-      .attr('x', paddingL)
+    dragRect
+      .attr('width', () => {
+        let width = lineWidth
+        if (!d3.select('.rect-box0').empty()) {
+          let xA = dragScale(new Date(d3.select('.rect-box0').attr('data-time'))) + paddingL
+          let xB = dragScale(new Date(d3.select('.rect-box1').attr('data-time'))) + paddingL
+          width = (xB - xA) > 0 ? xB - xA : xA - xB
+        }
+        return width
+      })
+      .attr('height', 15)
+      .attr('x', () => {
+        let x = paddingL
+        if (!d3.select('.rect-box0').empty()) {
+          let xA = dragScale(new Date(d3.select('.rect-box0').attr('data-time'))) + paddingL
+          let xB = dragScale(new Date(d3.select('.rect-box1').attr('data-time'))) + paddingL
+          x = (xB - xA) > 0 ? xA : xB
+        }
+        return x
+      })
       .attr('y', height - paddingB / 2)
       .attr('stroke', 'none')
-      .attr('fill', color[0])
+      .attr('fill', color(0))
       .attr('fill-opacity', 0.5)
+      .style('cursor', 'pointer')
+      .call(rectDrag)
 
-    // 两端滑块
+    // 两端滑块 拖动
     let drag = d3.drag()
-      .on('drag', function (d, i) {
+      .on('drag', function () {
         // 滑块位置控制
-        let x = d3.mouse(this)[0]
-        if (parseInt(d3.mouse(this)[0]) <= parseInt(paddingL)) {
-          x = paddingL
-        } else if (parseInt(d3.mouse(this)[0]) >= parseInt(width - paddingR)) {
-          x = width - paddingR - 10
+        let rectX = d3.mouse(this)[0]
+        let rectDataTimeX = rectX - paddingL
+        if (parseFloat(d3.mouse(this)[0]) <= parseFloat(paddingL)) {
+          rectX = paddingL
+          rectDataTimeX = rectX - paddingL
+        } else if (parseFloat(d3.mouse(this)[0]) >= parseFloat(width - paddingR)) {
+          rectX = width - paddingR - 10
+          rectDataTimeX = rectX - paddingL + 10
         }
         d3.select(this).select('.rect-box')
-          .attr('x', x)
-          .attr('data-x', x)
+          .attr('x', rectX)
+          .attr('data-x', rectX)
+          .attr('data-time', dragScale.invert(rectDataTimeX))
 
         // 控制条宽度以及位置更改
-        let xA = parseInt(d3.select('.rect-box0').attr('data-x'))
-        let xB = parseInt(d3.select('.rect-box1').attr('data-x'))
+        let xA = dragScale(new Date(d3.select('.rect-box0').attr('data-time'))) + paddingL
+        let xB = dragScale(new Date(d3.select('.rect-box1').attr('data-time'))) + paddingL
         d3.select('.drag-rect')
-          .attr('width', (xB - xA + 10) > 0 ? (xB - xA + 10) : xA - xB)
-          .attr('x', (xB - xA + 10) > 0 ? xA : xB + 10)
+          .attr('width', (xB - xA) > 0 ? (xB - xA) : (xA - xB))
+          .attr('x', (xB - xA) > 0 ? xA : xB)
 
-        // 计算x轴 新的日期定义域【】值域【0，width】
-        let x0 = dragScale.invert(xA - paddingL)
-        let x1 = dragScale.invert(xB + 10 - paddingL)
+        // 计算x轴 y轴 新的定义域【】，值域不变
+        let x0 = new Date(d3.select('.rect-box0').attr('data-time')),
+          x1 = new Date(d3.select('.rect-box1').attr('data-time')),
+          idxL, idxR
         if (xA > xB) {
-          xScale.domain([x1, x0])
-        } else {
-          xScale.domain([x0, x1])
+          x0 = new Date(d3.select('.rect-box1').attr('data-time'))
+          x1 = new Date(d3.select('.rect-box0').attr('data-time'))
         }
+        idxL = bisect(lineData.xAxis.data, x0)
+        idxR = bisect(lineData.xAxis.data, x1)
+        xScale.domain([x0, x1])
+        if (Math.abs(idxR - idxL) > 2)
+          yScale.domain([0, getMax(1, idxL, idxR + 1)])
         drawAxis()
         drawLine()
       })
-    let rectData = [
-      {
-        width: 10,
-        height: 20,
-        x: paddingL,
-        y: height - paddingB / 2
-      },
-      {
-        width: 10,
-        height: 20,
-        x: width - paddingR - 10,
-        y: height - paddingB / 2
-      }
-    ]
+    let rectData = [{x: paddingL}, {x: width - paddingR - 10}]
     let dragMark = dragG.selectAll('g').data(rectData)
+    // update 自适应窗口 位置变化
     dragMark.select('.rect-box')
-      .attr('x', (d) => {
-        return d.x
+      .attr('x', function (d, i) {
+        let x = dragScale(new Date(d3.select(this).attr('data-time'))) + paddingL
+        if (i === 1) {
+          x = x - 10
+        }
+        return x
       })
-      .attr('y', (d) => {
-        return d.y
-      })
-      .attr('data-x', (d) => {
-        return d.x
+      .attr('data-x', function () {
+        return dragScale(new Date(d3.select(this).attr('data-time'))) + paddingL
       })
     // add
     let enterDragMark = dragMark.enter()
@@ -986,30 +1112,31 @@
       .attr('class', (d, i) => {
         return 'rect-box rect-box' + i
       })
-      .attr('width', (d) => {
-        return d.width
-      })
-      .attr('height', (d) => {
-        return d.height
-      })
+      .attr('width', 10)
+      .attr('height', 15)
       .attr('x', (d) => {
         return d.x
       })
-      .attr('y', (d) => {
-        return d.y
-      })
+      .attr('y', height - paddingB / 2)
       .attr('data-x', (d) => {
         return d.x
       })
+      .attr('data-time', (d, i) => {
+        let dataTime = i === 0 ? dragScale.invert(d.x - paddingL) : dragScale.invert(d.x - paddingL + 10)
+        return dataTime
+      })
       .attr('stroke', 'none')
-      .attr('fill', color[0])
+      .attr('fill', color(0))
 
     dragMark.exit().remove()
   }
+  // 事件控制【鼠标选区／鼠标滚轮／触摸板】
   function chartZoom () {
     // 鼠标选区放大缩小
     // 滚轮／触摸板放大缩小---transform
     let zoom = d3.zoom()
+      .scaleExtent([1, 10])
+      // .translateExtent([0, 0], [0, 0])
       .on('start', function (d, i) {
         if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'mousedown') {
           mouseChange(0, d3.mouse(this))
@@ -1021,6 +1148,9 @@
           d3.select('.tips-line-groups').transition().duration(200).style('display', 'none')
           mouseChange(1, d3.mouse(this))
         }
+        /*if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'wheel') {
+         wheelChange(d3.zoomTransform(this), d3.mouse(this))
+         }*/
       })
       .on('end', function () {
         if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'mouseup') {
@@ -1028,8 +1158,9 @@
         }
       })
     svg.call(zoom)
+      .on('dbclick.zoom', null)
   }
-
+  // 鼠标选区
   function mouseChange (type, d) {
     let mouseG = svg.selectAll('.mouse-group')
     let mouseRect = mouseG.selectAll('.mouse-rect')
@@ -1068,14 +1199,32 @@
         mouseG.remove()
         return false
       }
-      let x0 = zoomScale.invert(dataX - paddingL)
-      let x1 = zoomScale.invert(d[0] - paddingL)
+      let x0 = xScale.invert(dataX - paddingL)
+      let x1 = xScale.invert(d[0] - paddingL)
       if (dataX > d[0]) {
-        xScale.domain([x1, x0])
-      } else {
-        xScale.domain([x0, x1])
+        x0 = xScale.invert(d[0] - paddingL)
+        x1 = xScale.invert(dataX - paddingL)
       }
-      zoomScale = xScale
+      xScale.domain([x0, x1])
+
+      // 关联 drag
+      if (!d3.select('.rect-box0').empty()) {
+        // 滑块
+        d3.select('.rect-box0')
+          .attr('x', dragScale(new Date(x0)) + paddingL)
+          .attr('data-x', dragScale(new Date(x0)) + paddingL)
+          .attr('data-time', x0)
+        d3.select('.rect-box1')
+          .attr('x', dragScale(new Date(x1)) + paddingL - 10)
+          .attr('data-x', dragScale(new Date(x1)) + paddingL - 10)
+          .attr('data-time', x1)
+
+        // 控制条宽度以及位置更改
+        d3.select('.drag-rect')
+          .attr('width', dragScale(new Date(x1)) - dragScale(new Date(x0)))
+          .attr('x', dragScale(new Date(x0)) + paddingL)
+      }
+
       mouseG.remove()
       drawAxis()
       drawLine()
@@ -1089,6 +1238,23 @@
           drawAxis()
           drawLine()
           d3.select(this).style('display', 'none')
+          // 关联 drag 滑块复原
+          if (!d3.select('.rect-box0').empty()) {
+            // 滑块
+            d3.select('.rect-box0')
+              .attr('x', paddingL)
+              .attr('data-x', paddingL)
+              .attr('data-time', new Date(d3.min(lineData.xAxis.data)))
+            d3.select('.rect-box1')
+              .attr('x', lineWidth + paddingL - 10)
+              .attr('data-x', lineWidth + paddingL - 10)
+              .attr('data-time', new Date(d3.max(lineData.xAxis.data)))
+
+            // 控制条宽度以及位置更改
+            d3.select('.drag-rect')
+              .attr('width', lineWidth)
+              .attr('x', paddingL)
+          }
         })
     }
   }
@@ -1100,23 +1266,11 @@
         width = document.body.clientWidth
         lineWidth = width - paddingL - paddingR
         svg.attr('width', width)
-        xScale = d3.scaleTime()
-          .domain([new Date(d3.min(lineData.xAxis.data)), new Date(d3.max(lineData.xAxis.data))])
-          .range([0, lineWidth])
-        dragScale = xScale.copy()
-        zoomScale = xScale.copy()
+        xScale.range([0, lineWidth])
+        dragScale.range([0, lineWidth])
         check()
       }
     }
   }
-
-  // 方法
-  function getMax (type) {
-    let itemMax = d3.max(lineData.series[type], (d) => {
-      return d.data
-    })
-    return itemMax
-  }
-
 </script>
 </html>

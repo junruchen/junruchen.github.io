@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+
+</body>
+<script>
+  /**
+   * 力导向图 force
+   * d3.forceSimulation  // create a force layout
+   * force.size([size]) // 设置或获取作用范围， 默认[1, 1]
+   * 使用：force.size([x, y])，表示：重力的重心位置（x/2, y/2）; 节点的初始位置限定在[0,x], [0,y]之间
+   *
+   * 节点相关
+   * force.nodes([nodes]) // 设置或获取节点数组 index x y dx dy fx fy
+   *
+   * force.friction([firction]) // 设置获取摩擦系数，范围[0,1]，默认0.9，越接近0，耗损越大；
+   * force.charge([charge]) // 设置获取电荷数 默认-30，正值：相互吸引；负值：相互排斥，绝对值越大 力越大
+   * force.chargeDistance([distance]) // 设置或获取引力的作用距离， 超过该距离，无引力
+   * force.gravity([gravity]) // 设置或获取重力，size()设定的中心产生重力，各节点向中心移动，默认值0.1，0表示无重力
+   * force.links([links]) // 设置或获取连线数组
+   * force.linkDistance([distance]) // 设置或获取连线长度 默认20
+   * force.linkStrength([strength]) // 设置或获取连线的坚硬度，范围[0,1]，越大越坚硬
+   *
+   * 动画相关
+   * force.restart() // 重启
+   * force.stop() 停止
+   * force.tick() 下一步
+   * force.alpha([value])
+   * force.alphaDecay()
+   * force.alphaTarget()
+   * force.velocityDecay()
+   *
+   * force.start() 开始
+   * force.resume() 重启
+   * force.on()
+   *
+   * 交互相关
+   * force.drag() 拖拽
+   *
+   * */
+</script>
+</html>

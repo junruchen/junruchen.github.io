@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>D3 -- tree</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-size: 12px;
+    }
+
+    p, div {
+      padding: 0;
+      margin: 0;
+    }
+
+    svg {
+      border: 1px solid;
+    }
+
+    .tree-box {
+      width: 100%;
+      height: 200px;
+    }
+
+    .tree-chart-d3 {
+      position: relative;
+    }
+
+    .base-img1, .base-img2 {
+      position: absolute;
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+    }
+
+    .base-img1 {
+      background-color: red;
+    }
+
+    .base-img2 {
+      background-color: blue;
+    }
+  </style>
+</head>
+<body>
+<div class="d3-container">
+  <div class="tree-box">
+    <div class="tree-chart-d3">
+      <i class="base-img1"></i>
+      <i class="base-img2"></i>
+    </div>
+  </div>
+</div>
+</body>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script>
+  /**
+   * 树图
+   * */
+
+    // 用户指定
+  let paddingT = 35
+  let paddingB = 20
+  let paddingL = 30
+  let paddingR = 30
+  let color = d3.scaleOrdinal(d3.schemeCategory20)
+
+  let treeData = {
+    name: '中国',
+    children: [{
+      name: '浙江',
+      children: [{
+        name: '杭州'
+      }, {
+        name: '宁波'
+      }, {
+        name: '温州'
+      }, {
+        name: '绍兴'
+      }]
+    },
+      {
+        name: '广西',
+        children: [{
+          name: '桂林',
+          children: [{
+            name: '秀峰区'
+          }, {
+            name: '象山区'
+          }, {
+            name: '七星区'
+          }]
+        }, {
+          name: '南宁'
+        }, {
+          name: '柳州'
+        }, {
+          name: '防城港'
+        }]
+      }]
+  }
+  // 全局变量
+  let width = parseInt(d3.select('.tree-box').style('width'))
+  let height = parseInt(d3.select('.tree-box').style('height'))
+  let lineWidth = width - paddingL - paddingR
+  let lineHeight = height - paddingT - paddingB
+  let svg = d3.select('.tree-chart-d3')
+    .append('svg')
+    .attr('width', width)
+    .attr('height', height)
+
+  let g = svg.append('g')
+    .attr('transform', () => {
+      return 'translate(' + (parseInt(paddingL)+ 50) + ',' + paddingT + ')'
+    })
+
+  // 数据处理：
+  let tree = d3.cluster()
+    .size([lineHeight, lineWidth-100])
+    .separation((a, b) => {
+      return a.parent == b.parent ? 2 : 2
+    })
+
+  let root = d3.hierarchy(treeData)
+  tree(root)
+
+  let link = g.append('g')
+    .attr('class', 'link')
+    .selectAll('line')
+    .data(root.descendants().slice(1))
+    .enter()
+    .append('line')
+    .attr('class', 'link')
+    .attr('stroke', 'black')
+    .attr('fill', 'none')
+    .attr('x1', (d) => {
+      return d.y
+    })
+    .attr('y1', (d) => {
+      return d.x
+    })
+    .attr('x2', (d) => {
+      return d.parent.y
+    })
+    .attr('y2', (d) => {
+      return d.parent.x
+    })
+
+  let node = g.append('g')
+    .attr('class', 'node')
+
+  node.selectAll('circle')
+    .data(root.descendants())
+    .enter()
+    .append('circle')
+    .attr('r', 2.5)
+    .attr('cx', (d) => {
+      return d.y
+    })
+    .attr('cy', (d) => {
+      return d.x
+    })
+  node.selectAll('text')
+    .data(root.descendants())
+    .enter()
+    .append('text')
+    .attr('x', (d) => {
+      return d.y
+    })
+    .attr('y', (d) => {
+      return d.x
+    })
+    .text((d) => {
+      return d.data.name
+    })
+    .style('text-anchor', (d) => {
+      let anchor = 'middle'
+      if (!d.parent) {
+        anchor = 'end'
+      }
+      if (!d.children) {
+        anchor = 'start'
+      }
+      return anchor
+    })
+    .attr('dx', (d) => {
+      let dx = '0'
+      if (!d.parent) {
+        dx = '-0.3rem'
+      }
+      if (!d.children) {
+        dx = '0.3rem'
+      }
+      return dx
+    })
+    .attr('dy', (d) => {
+      let dy = '1rem'
+      if (!d.parent || !d.children) {
+        dy = '0.5rem'
+      }
+      return dy
+    })
+</script>
+</html>

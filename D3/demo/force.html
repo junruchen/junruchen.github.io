@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>D3 -- force</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    p, div {
+      padding: 0;
+      margin: 0;
+    }
+
+    svg {
+      border: 1px solid;
+    }
+
+    .force-box {
+      width: 476px;
+      height: 260px;
+    }
+
+    .force-chart-d3 {
+      position: relative;
+    }
+
+    .tips-content {
+      position: absolute;
+      display: none;
+      padding: 5px;
+      border-radius: 4px;
+      min-width: 100px;
+      max-width: 200px;
+      background-color: rgba(0, 0, 0, .6);
+      color: #fff;
+      font-size: 12px;
+    }
+
+  </style>
+</head>
+<body>
+<div class="d3-container">
+  <div class="force-box">
+    <div class="force-chart-d3">
+      <div class="tips-content"></div>
+      <svg>
+        <symbol id="service" viewBox="0 0 1024 1024">
+          <path stroke-width="50" fill="white"
+                d="M736.232934 118.192202h-448.922521L62.848129 506.970675 287.309389 895.749148h448.922521l224.46126-388.778473L736.232934 118.192202z"/>
+          <path stroke-width="0"
+                d="M335.341898 342.768138l-58.928696 102.067032 58.928696 102.067033h117.856368l58.928696-102.067033-58.928696-102.067032zM453.198266 546.902203l-58.927672 102.068056 58.927672 102.067033h117.857392l58.928696-102.067033-58.928696-102.068056zM688.91305 342.768138H571.055658l-58.928696 102.067032 58.928696 102.067033h117.857392l58.928696-102.067033z"/>
+        </symbol>
+        <symbol id="instance" viewBox="0 0 1024 1024">
+          <path stroke-width="50"
+                d="M864.035 368.444V208.427c0-17.673-14.327-32-32-32h-640.07c-17.673 0-32 14.327-32 32v160.017c0 16.023 11.776 29.295 27.146 31.634-15.37 2.339-27.146 15.611-27.146 31.634v160.017c0 16.92 13.135 30.765 29.764 31.914-16.629 1.149-29.764 14.993-29.764 31.914v160.018c0 17.673 14.327 32 32 32h640.07c17.673 0 32-14.327 32-32v-160.02c0-16.92-13.136-30.765-29.764-31.914 16.629-1.149 29.764-14.993 29.764-31.914V431.711c0-16.023-11.777-29.295-27.146-31.634 15.369-2.338 27.146-15.611 27.146-31.633z"/>
+          <rect x="186" y="200" width="652" height="175" rx="10" fill="white"></rect>
+          <rect x="186" y="420" width="652" height="175" rx="10" fill="white"></rect>
+          <rect x="186" y="645" width="652" height="175" rx="10" fill="white"></rect>
+        </symbol>
+      </svg>
+    </div>
+  </div>
+</div>
+</body>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script>
+  /**
+   * 力导向图
+   * */
+
+    // 用户指定
+  let paddingT = 35
+  let paddingB = 20
+  let color = d3.scaleOrdinal(d3.schemeCategory20)
+
+  let nodes = [
+    {name: 0, data: {id: 0, value: 0}},
+    {name: 1, data: {id: 1, value: 0}},
+    {name: 2, data: {id: 2, value: 0}},
+    {name: 3, data: {id: 1, value: 0}},
+    {name: 4, data: {id: 2, value: 0}},
+    {name: 5, data: {id: 1, value: 0}},
+    {name: 6, data: {id: 2, value: 0}}
+  ]
+  let links = [
+    {source: 0, target: 1},
+    {source: 0, target: 2},
+    {source: 0, target: 3},
+    {source: 0, target: 4},
+    {source: 0, target: 5},
+    {source: 0, target: 6}
+  ]
+
+  let forceData = {
+    instance: [{
+      ctime: '2017-06-12 00:11:22',
+      host: '47.92.71.145',
+      id: 27,
+      name: '47.92.71.145:9000',
+      pool: 'aliyun',
+      port: 9000,
+      status: 'unavaliable',
+      type: 'Master',
+      version: '0'
+    }, {
+      ctime: '2017-06-12 00:11:22',
+      host: '47.92.65.89',
+      id: 28,
+      name: '47.92.65.89:9000',
+      pool: 'aliyun',
+      port: 9000,
+      status: 'unavaliable',
+      type: 'Slave',
+      version: '0'
+    }, {
+      ctime: '2017-06-12 00:11:22',
+      host: '47.92.38.58',
+      id: 29,
+      name: '47.92.38.58:9000',
+      pool: 'aliyun',
+      port: 9000,
+      status: 'unavaliable',
+      type: 'Slave',
+      version: '0'
+    }],
+    link: [
+      {source: 27, target: 28},
+      {source: 27, target: 29}
+    ]
+  }
+
+  // 全局变量
+  let width = parseInt(d3.select('.force-box').style('width'))
+  let height = parseInt(d3.select('.force-box').style('height'))
+  let lineHeight = height - paddingT - paddingB
+  let svg = d3.select('svg')
+    .attr('width', width)
+    .attr('height', height)
+
+  // 数据处理：
+  let simulation = d3.forceSimulation()
+    .force('link', d3.forceLink().id((d) => {
+      return d.id
+    }))
+    .force('charge', d3.forceManyBody())
+    .force('center', d3.forceCenter(width / 2, height / 2))
+    .force('position', d3.forceX())
+
+  // draw line
+  let lineG = svg.append('g')
+    .attr('class', 'links')
+    .selectAll('line')
+    .data(forceData.link)
+    .enter()
+    .append('line')
+    .attr('stroke', '#333')
+    .attr('stroke-width', 1.2)
+
+  // draw text
+  let textG = svg.append('g')
+    .attr('class', 'texts')
+    .selectAll('text')
+    .data(forceData.instance)
+    .enter()
+    .append('text')
+    .style('font-size', '12px')
+
+  // draw icon/tip
+  let iconG = svg.append('g')
+    .attr('class', 'nodes')
+    .selectAll('use')
+    .data(forceData.instance)
+    .enter()
+    .append('use')
+    .attr('width', 30)
+    .attr('height', 30)
+    .style('cursor', 'pointer')
+    .attr('xlink:href', (d, i) => {
+      return i === 0 ? '#service' : '#instance'
+    })
+    .attr('stroke', color(0))
+    .attr('fill', color(0))
+    .on('mousemove', function (d) {
+      showTips(d, d3.mouse(this))
+    })
+    .on('mouseout', function () {
+      d3.select('.tips-content').style('display', 'none')
+    })
+    .on('click', function (d) {
+      console.log('go router', d.id)
+    })
+    .call(d3.drag()
+      .on('start', dragstarted)
+      .on('drag', dragged)
+      .on('end', dragended))
+
+  simulation.nodes(forceData.instance).on('tick', function () {
+    lineG
+      .attr('x1', (d) => {
+        return d.source.x
+      })
+      .attr('y1', (d) => {
+        return d.source.y
+      })
+      .attr('x2', (d) => {
+        return d.target.x
+      })
+      .attr('y2', (d) => {
+        return d.target.y
+      })
+    iconG
+      .attr('x', (d) => {
+        return d.x - 15
+      })
+      .attr('y', (d) => {
+        return d.y - 15
+      })
+    textG
+      .text((d) => {
+        return d.name
+      })
+      .attr('x', (d) => {
+        return d.x
+      })
+      .attr('y', (d) => {
+        return d.y - 15
+      })
+      .attr('text-anchor', 'middle')
+  })
+  simulation.force('link').links(forceData.link).distance(85)
+
+
+  function dragstarted (d) {
+    if (!d3.event.active)
+      simulation.alphaTarget(0.3).restart()
+    d.fx = d.x
+    d.fy = d.y
+  }
+  function dragged (d) {
+    d.fx = d3.event.x
+    d.fy = d3.event.y
+  }
+  function dragended (d) {
+    if (!d3.event.active)
+      simulation.alphaTarget(0)
+    d.fx = null
+    d.fy = null
+  }
+
+  function showTips (data, moveP) {
+    d3.select('.tips-content').style('display', 'block')
+
+    let tipData = ['name', 'ctime', 'status', 'host', 'version', 'port', 'type', 'pool']
+    let tipD = d3.select('.tips-content')
+    let tipItem = tipD.selectAll('.tip-item').data(tipData)
+    tipItem.text((d) => {
+      return d + ': ' + data[d]
+    })
+
+    let tipEnter = tipItem.enter()
+      .append('div')
+      .attr('class', 'tip-item')
+      .append('span')
+      .text((d) => {
+        return d + ': ' + data[d]
+      })
+    tipItem.exit().remove()
+
+    let svgCenterW = width / 2, svgCenterH = height / 2, tipsL, tipsT
+    if (moveP[0] > svgCenterW) {
+      tipsL = moveP[0] - parseInt(tipD.style('width')) - 40 + 'px'
+    } else {
+      tipsL = moveP[0] + 40 + 'px'
+    }
+    if (moveP[1] > svgCenterH) {
+      tipsT = 40 + 'px'
+    } else {
+      tipsT = height - parseInt(tipD.style('height')) - 40 + 'px'
+    }
+    tipD.style('left', tipsL)
+      .style('top', tipsT)
+  }
+
+
+</script>
+</html>
