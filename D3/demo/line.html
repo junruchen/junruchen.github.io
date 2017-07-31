@@ -18,7 +18,7 @@
     }
 
     .line-box {
-      width: 476px;
+      width: 100%;
       height: 200px;
     }
 
@@ -495,8 +495,11 @@
 
   function drawAxis () {
     // x轴坐标系设置
+
+    let differ = getTimeDiffer(d3.min(lineData.xAxis.data), d3.max(lineData.xAxis.data))
+
     let xAxis = d3.axisBottom(xScale)
-      .ticks(2)
+      .ticks(d3[differ.type].every(differ.value))
       .tickFormat(d3.timeFormat('%Y-%m-%d %H:%M:%S'))
     // 绘制x轴
     xAxisG = svg.select('.xAxis')
@@ -1081,6 +1084,7 @@
         idxL = bisect(lineData.xAxis.data, x0)
         idxR = bisect(lineData.xAxis.data, x1)
         xScale.domain([x0, x1])
+
         if (Math.abs(idxR - idxL) > 2)
           yScale.domain([0, getMax(1, idxL, idxR + 1)])
         drawAxis()
@@ -1270,6 +1274,47 @@
         dragScale.range([0, lineWidth])
         check()
       }
+    }
+  }
+
+  function getTimeDiffer (date1, date2) {
+    let differ = Math.abs(new Date(date1).getTime() - new Date(date2).getTime())
+    let days = Math.floor(differ / (24 * 3600 * 1000))
+    let leave1 = differ % (24 * 3600 * 1000)    //计算天数后剩余的毫秒数
+    let hours = Math.floor(leave1 / (3600 * 1000))
+    //计算相差分钟数
+    let leave2 = leave1 % (3600 * 1000)        //计算小时数后剩余的毫秒数
+    let minutes = Math.floor(leave2 / (60 * 1000))
+    //计算相差秒数
+    let leave3 = leave2 % (60 * 1000)      //计算分钟数后剩余的毫秒数
+    let seconds = Math.round(leave3 / 1000)
+
+    let axis, type, num = parseInt(lineWidth / 200)
+    // 分配
+    if (seconds !== 0) {
+      axis = Math.floor(seconds / num)
+      type = 'timeSecond'
+    }
+    if (minutes !== 0) {
+      axis = Math.floor(minutes / num)
+      type = 'timeMinute'
+    }
+    if (hours !== 0) {
+      axis = Math.floor(hours / num)
+      type = 'timeHour'
+    }
+    if (days !== 0) {
+      axis = Math.floor(days / num)
+      type = 'timeDay'
+    }
+
+    return {
+      day: days,
+      hours: hours,
+      minutes: minutes,
+      seconds: seconds,
+      type: type,
+      value: axis
     }
   }
 </script>

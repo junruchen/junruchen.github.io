@@ -75,55 +75,13 @@
   let paddingB = 20
   let color = d3.scaleOrdinal(d3.schemeCategory20)
 
-  let nodes = [
-    {name: 0, data: {id: 0, value: 0}},
-    {name: 1, data: {id: 1, value: 0}},
-    {name: 2, data: {id: 2, value: 0}},
-    {name: 3, data: {id: 1, value: 0}},
-    {name: 4, data: {id: 2, value: 0}},
-    {name: 5, data: {id: 1, value: 0}},
-    {name: 6, data: {id: 2, value: 0}}
-  ]
-  let links = [
-    {source: 0, target: 1},
-    {source: 0, target: 2},
-    {source: 0, target: 3},
-    {source: 0, target: 4},
-    {source: 0, target: 5},
-    {source: 0, target: 6}
-  ]
-
   let forceData = {
     instance: [{
-      ctime: '2017-06-12 00:11:22',
-      host: '47.92.71.145',
       id: 27,
-      name: '47.92.71.145:9000',
-      pool: 'aliyun',
-      port: 9000,
-      status: 'unavaliable',
-      type: 'Master',
-      version: '0'
     }, {
-      ctime: '2017-06-12 00:11:22',
-      host: '47.92.65.89',
-      id: 28,
-      name: '47.92.65.89:9000',
-      pool: 'aliyun',
-      port: 9000,
-      status: 'unavaliable',
-      type: 'Slave',
-      version: '0'
+      id: 28
     }, {
-      ctime: '2017-06-12 00:11:22',
-      host: '47.92.38.58',
       id: 29,
-      name: '47.92.38.58:9000',
-      pool: 'aliyun',
-      port: 9000,
-      status: 'unavaliable',
-      type: 'Slave',
-      version: '0'
     }],
     link: [
       {source: 27, target: 28},
@@ -134,7 +92,6 @@
   // 全局变量
   let width = parseInt(d3.select('.force-box').style('width'))
   let height = parseInt(d3.select('.force-box').style('height'))
-  let lineHeight = height - paddingT - paddingB
   let svg = d3.select('svg')
     .attr('width', width)
     .attr('height', height)
@@ -149,15 +106,7 @@
     .force('position', d3.forceX())
 
   // draw line
-  let lineG = svg.append('g')
-    .attr('class', 'links')
-    .selectAll('line')
-    .data(forceData.link)
-    .enter()
-    .append('line')
-    .attr('stroke', '#333')
-    .attr('stroke-width', 1.2)
-
+  let lineG = svg.append('g').attr('class', 'links').selectAll('line').data(forceData.link).enter().append('line').attr('stroke', '#333').attr('stroke-width', 1.2)
   // draw text
   let textG = svg.append('g')
     .attr('class', 'texts')
@@ -166,71 +115,47 @@
     .enter()
     .append('text')
     .style('font-size', '12px')
-
   // draw icon/tip
-  let iconG = svg.append('g')
-    .attr('class', 'nodes')
-    .selectAll('use')
-    .data(forceData.instance)
-    .enter()
-    .append('use')
-    .attr('width', 30)
-    .attr('height', 30)
-    .style('cursor', 'pointer')
-    .attr('xlink:href', (d, i) => {
-      return i === 0 ? '#service' : '#instance'
-    })
-    .attr('stroke', color(0))
-    .attr('fill', color(0))
-    .on('mousemove', function (d) {
-      showTips(d, d3.mouse(this))
-    })
-    .on('mouseout', function () {
-      d3.select('.tips-content').style('display', 'none')
-    })
-    .on('click', function (d) {
-      console.log('go router', d.id)
-    })
-    .call(d3.drag()
-      .on('start', dragstarted)
-      .on('drag', dragged)
-      .on('end', dragended))
+  let iconG = svg.append('g').attr('class', 'nodes').selectAll('use').data(forceData.instance).enter().append('use').attr('width', 30).attr('height', 30).style('cursor', 'pointer').attr('xlink:href', (d, i) => {
+    return i === 0 ? '#service' : '#instance'
+  }).attr('stroke', color(0)).attr('fill', color(0)).on('mousemove', function (d) {
+    showTips(d, d3.mouse(this))
+  }).on('mouseout', function () {
+    d3.select('.tips-content').style('display', 'none')
+  }).on('click', function (d) {
+    console.log('go router', d.id)
+  }).call(d3.drag().on('start', dragstarted).on('drag', dragged).on('end', dragended))
 
   simulation.nodes(forceData.instance).on('tick', function () {
-    lineG
-      .attr('x1', (d) => {
-        return d.source.x
-      })
-      .attr('y1', (d) => {
-        return d.source.y
-      })
-      .attr('x2', (d) => {
-        return d.target.x
-      })
-      .attr('y2', (d) => {
-        return d.target.y
-      })
-    iconG
-      .attr('x', (d) => {
-        return d.x - 15
-      })
-      .attr('y', (d) => {
-        return d.y - 15
-      })
-    textG
-      .text((d) => {
-        return d.name
-      })
-      .attr('x', (d) => {
-        return d.x
-      })
-      .attr('y', (d) => {
-        return d.y - 15
-      })
-      .attr('text-anchor', 'middle')
+    lineG.attr('x1', (d) => {
+      return d.source.x
+    }).attr('y1', (d) => {
+      return d.source.y
+    }).attr('x2', (d) => {
+      return d.target.x
+    }).attr('y2', (d) => {
+      return d.target.y
+    })
+    iconG.attr('x', (d) => {
+      if (d.id === 27) {
+        d.fx = width / 2
+      }
+      return d.x - 15
+    }).attr('y', (d) => {
+      if (d.id === 27) {
+        d.fy = 100
+      }
+      return d.y - 15
+    })
+    textG.text((d) => {
+      return d.id
+    }).attr('x', (d) => {
+      return d.x
+    }).attr('y', (d) => {
+      return d.y - 15
+    }).attr('text-anchor', 'middle')
   })
   simulation.force('link').links(forceData.link).distance(85)
-
 
   function dragstarted (d) {
     if (!d3.event.active)
@@ -252,7 +177,7 @@
   function showTips (data, moveP) {
     d3.select('.tips-content').style('display', 'block')
 
-    let tipData = ['name', 'ctime', 'status', 'host', 'version', 'port', 'type', 'pool']
+    let tipData = ['id']
     let tipD = d3.select('.tips-content')
     let tipItem = tipD.selectAll('.tip-item').data(tipData)
     tipItem.text((d) => {

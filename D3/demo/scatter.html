@@ -24,127 +24,326 @@
       transition: all .2s linear;
     }
 
-    svg {
-      border: 1px solid;
-    }
-
     .scatter-box {
-      width: 440px;
-      height: 440px;
+      position: relative;
+      width: 600px;
+      height: 400px;
+      border: 1px solid;
     }
   </style>
 </head>
 <body>
 <div class="d3-container">
-  <button onclick="addData()">增加数据</button>
-  <button onclick="delData()">删除数据</button>
-
   <div class="scatter-box">
-    <div class="scatter-demo"></div>
   </div>
 </div>
 </body>
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script>
   /**
-   * 分析：散点图 （包含：圆形、坐标系、文字）
+   * 标题：1990 与 2015 年各国家人均寿命与 GDP
+   * 分析：散点图 （包含：坐标系、圆点、文字）
+   * 坐标系：线性
    * 圆形：circle
    * 文字：text
-   * 坐标系：线性
    * */
 
-    // 用户指定
-  let paddingT = 10
-  let paddingB = 40
-  let paddingL = 60
-  let paddingR = 40
-  let scatterData = [[0.5, 0.5], [0.8, 0.7], [0.4, 0.9], [0.1, 0.7], [0.2, 0.3]]
+  let scatterData = {
+    title: '男性女性身高体重分布',
+    legend: ['男', '女'],
+    data: [
+      [[174.0, 65.6], [175.3, 71.8], [193.5, 80.7], [186.5, 72.6], [187.2, 78.8],
+        [181.5, 74.8], [184.0, 86.4], [184.5, 78.4], [175.0, 62.0], [184.0, 81.6],
+        [180.0, 76.6], [177.8, 83.6], [192.0, 90.0], [176.0, 74.6], [174.0, 71.0],
+        [184.0, 79.6], [192.7, 93.8], [171.5, 70.0], [173.0, 72.4], [176.0, 85.9],
+        [176.0, 78.8], [180.5, 77.8], [172.7, 66.2], [176.0, 86.4], [173.5, 81.8],
+        [178.0, 89.6], [180.3, 82.8], [180.3, 76.4], [164.5, 63.2], [173.0, 60.9],
+        [183.5, 74.8], [175.5, 70.0], [188.0, 72.4], [189.2, 84.1], [172.8, 69.1],
+        [170.0, 59.5], [182.0, 67.2], [170.0, 61.3], [177.8, 68.6], [184.2, 80.1],
+        [186.7, 87.8], [171.4, 84.7], [172.7, 73.4], [175.3, 72.1], [180.3, 82.6],
+        [182.9, 88.7], [188.0, 84.1], [177.2, 94.1], [172.1, 74.9], [167.0, 59.1],
+        [169.5, 75.6], [174.0, 86.2], [172.7, 75.3], [182.2, 87.1], [164.1, 55.2],
+        [163.0, 57.0], [171.5, 61.4], [184.2, 76.8], [174.0, 86.8], [174.0, 72.2],
+        [177.0, 71.6], [186.0, 84.8], [167.0, 68.2], [171.8, 66.1], [182.0, 72.0],
+        [167.0, 64.6], [177.8, 74.8], [164.5, 70.0], [192.0, 101.6], [175.5, 63.2],
+        [171.2, 79.1], [181.6, 78.9], [167.4, 67.7], [181.1, 66.0], [177.0, 68.2],
+        [174.5, 63.9], [177.5, 72.0], [170.5, 56.8], [182.4, 74.5], [197.1, 90.9],
+        [180.1, 93.0], [175.5, 80.9], [180.6, 72.7], [184.4, 68.0], [175.5, 70.9],
+        [180.6, 72.5], [177.0, 72.5], [177.1, 83.4], [181.6, 75.5], [176.5, 73.0],
+        [175.0, 70.2], [174.0, 73.4], [165.1, 70.5], [177.0, 68.9], [192.0, 102.3],
+        [176.5, 68.4], [169.4, 65.9], [182.1, 75.7], [179.8, 84.5], [175.3, 87.7],
+        [184.9, 86.4], [177.3, 73.2], [167.4, 53.9], [178.1, 72.0], [168.9, 55.5],
+        [157.2, 58.4], [180.3, 83.2], [170.2, 72.7], [177.8, 64.1], [172.7, 72.3],
+        [165.1, 65.0], [186.7, 86.4], [165.1, 65.0], [174.0, 88.6], [175.3, 84.1],
+        [185.4, 66.8], [177.8, 75.5], [180.3, 93.2], [180.3, 82.7], [177.8, 58.0],
+        [177.8, 79.5], [177.8, 78.6], [177.8, 71.8], [177.8, 116.4], [163.8, 72.2],
+        [188.0, 83.6], [198.1, 85.5], [175.3, 90.9], [166.4, 85.9], [190.5, 89.1],
+        [166.4, 75.0], [177.8, 77.7], [179.7, 86.4], [172.7, 90.9], [190.5, 73.6],
+        [185.4, 76.4], [168.9, 69.1], [167.6, 84.5], [175.3, 64.5], [170.2, 69.1],
+        [190.5, 108.6], [177.8, 86.4], [190.5, 80.9], [177.8, 87.7], [184.2, 94.5],
+        [176.5, 80.2], [177.8, 72.0], [180.3, 71.4], [171.4, 72.7], [172.7, 84.1],
+        [172.7, 76.8], [177.8, 63.6], [177.8, 80.9], [182.9, 80.9], [170.2, 85.5],
+        [167.6, 68.6], [175.3, 67.7], [165.1, 66.4], [185.4, 102.3], [181.6, 70.5],
+        [172.7, 95.9], [190.5, 84.1], [179.1, 87.3], [175.3, 71.8], [170.2, 65.9],
+        [193.0, 95.9], [171.4, 91.4], [177.8, 81.8], [177.8, 96.8], [167.6, 69.1],
+        [167.6, 82.7], [180.3, 75.5], [182.9, 79.5], [176.5, 73.6], [186.7, 91.8],
+        [188.0, 84.1], [188.0, 85.9], [177.8, 81.8], [174.0, 82.5], [177.8, 80.5],
+        [171.4, 70.0], [185.4, 81.8], [185.4, 84.1], [188.0, 90.5], [188.0, 91.4],
+        [182.9, 89.1], [176.5, 85.0], [175.3, 69.1], [175.3, 73.6], [188.0, 80.5],
+        [188.0, 82.7], [175.3, 86.4], [170.5, 67.7], [179.1, 92.7], [177.8, 93.6],
+        [175.3, 70.9], [182.9, 75.0], [170.8, 93.2], [188.0, 93.2], [180.3, 77.7],
+        [177.8, 61.4], [185.4, 94.1], [168.9, 75.0], [185.4, 83.6], [180.3, 85.5],
+        [174.0, 73.9], [167.6, 66.8], [182.9, 87.3], [160.0, 72.3], [180.3, 88.6],
+        [167.6, 75.5], [186.7, 101.4], [175.3, 91.1], [175.3, 67.3], [175.9, 77.7],
+        [175.3, 81.8], [179.1, 75.5], [181.6, 84.5], [177.8, 76.6], [182.9, 85.0],
+        [177.8, 102.5], [184.2, 77.3], [179.1, 71.8], [176.5, 87.9], [188.0, 94.3],
+        [174.0, 70.9], [167.6, 64.5], [170.2, 77.3], [167.6, 72.3], [188.0, 87.3],
+        [174.0, 80.0], [176.5, 82.3], [180.3, 73.6], [167.6, 74.1], [188.0, 85.9],
+        [180.3, 73.2], [167.6, 76.3], [183.0, 65.9], [183.0, 90.9], [179.1, 89.1],
+        [170.2, 62.3], [177.8, 82.7], [179.1, 79.1], [190.5, 98.2], [177.8, 84.1],
+        [180.3, 83.2], [180.3, 83.2]],
+      [[161.2, 51.6], [167.5, 59.0], [159.5, 49.2], [157.0, 63.0], [155.8, 53.6],
+        [170.0, 59.0], [159.1, 47.6], [166.0, 69.8], [176.2, 66.8], [160.2, 75.2],
+        [172.5, 55.2], [170.9, 54.2], [172.9, 62.5], [153.4, 42.0], [160.0, 50.0],
+        [147.2, 49.8], [168.2, 49.2], [175.0, 73.2], [157.0, 47.8], [167.6, 68.8],
+        [159.5, 50.6], [175.0, 82.5], [166.8, 57.2], [176.5, 87.8], [170.2, 72.8],
+        [174.0, 54.5], [173.0, 59.8], [179.9, 67.3], [170.5, 67.8], [160.0, 47.0],
+        [154.4, 46.2], [162.0, 55.0], [176.5, 83.0], [160.0, 54.4], [152.0, 45.8],
+        [162.1, 53.6], [170.0, 73.2], [160.2, 52.1], [161.3, 67.9], [166.4, 56.6],
+        [168.9, 62.3], [163.8, 58.5], [167.6, 54.5], [160.0, 50.2], [161.3, 60.3],
+        [167.6, 58.3], [165.1, 56.2], [160.0, 50.2], [170.0, 72.9], [157.5, 59.8],
+        [167.6, 61.0], [160.7, 69.1], [163.2, 55.9], [152.4, 46.5], [157.5, 54.3],
+        [168.3, 54.8], [180.3, 60.7], [165.5, 60.0], [165.0, 62.0], [164.5, 60.3],
+        [156.0, 52.7], [160.0, 74.3], [163.0, 62.0], [165.7, 73.1], [161.0, 80.0],
+        [162.0, 54.7], [166.0, 53.2], [174.0, 75.7], [172.7, 61.1], [167.6, 55.7],
+        [151.1, 48.7], [164.5, 52.3], [163.5, 50.0], [152.0, 59.3], [169.0, 62.5],
+        [164.0, 55.7], [161.2, 54.8], [155.0, 45.9], [170.0, 70.6], [176.2, 67.2],
+        [170.0, 69.4], [162.5, 58.2], [170.3, 64.8], [164.1, 71.6], [169.5, 52.8],
+        [163.2, 59.8], [154.5, 49.0], [159.8, 50.0], [173.2, 69.2], [170.0, 55.9],
+        [161.4, 63.4], [169.0, 58.2], [166.2, 58.6], [159.4, 45.7], [162.5, 52.2],
+        [159.0, 48.6], [162.8, 57.8], [159.0, 55.6], [179.8, 66.8], [162.9, 59.4],
+        [161.0, 53.6], [151.1, 73.2], [168.2, 53.4], [168.9, 69.0], [173.2, 58.4],
+        [171.8, 56.2], [178.0, 70.6], [164.3, 59.8], [163.0, 72.0], [168.5, 65.2],
+        [166.8, 56.6], [172.7, 105.2], [163.5, 51.8], [169.4, 63.4], [167.8, 59.0],
+        [159.5, 47.6], [167.6, 63.0], [161.2, 55.2], [160.0, 45.0], [163.2, 54.0],
+        [162.2, 50.2], [161.3, 60.2], [149.5, 44.8], [157.5, 58.8], [163.2, 56.4],
+        [172.7, 62.0], [155.0, 49.2], [156.5, 67.2], [164.0, 53.8], [160.9, 54.4],
+        [162.8, 58.0], [167.0, 59.8], [160.0, 54.8], [160.0, 43.2], [168.9, 60.5],
+        [158.2, 46.4], [156.0, 64.4], [160.0, 48.8], [167.1, 62.2], [158.0, 55.5],
+        [167.6, 57.8], [156.0, 54.6], [162.1, 59.2], [173.4, 52.7], [159.8, 53.2],
+        [170.5, 64.5], [159.2, 51.8], [157.5, 56.0], [161.3, 63.6], [162.6, 63.2],
+        [160.0, 59.5], [168.9, 56.8], [165.1, 64.1], [162.6, 50.0], [165.1, 72.3],
+        [166.4, 55.0], [160.0, 55.9], [152.4, 60.4], [170.2, 69.1], [162.6, 84.5],
+        [170.2, 55.9], [158.8, 55.5], [172.7, 69.5], [167.6, 76.4], [162.6, 61.4],
+        [167.6, 65.9], [156.2, 58.6], [175.2, 66.8], [172.1, 56.6], [162.6, 58.6],
+        [160.0, 55.9], [165.1, 59.1], [182.9, 81.8], [166.4, 70.7], [165.1, 56.8],
+        [177.8, 60.0], [165.1, 58.2], [175.3, 72.7], [154.9, 54.1], [158.8, 49.1],
+        [172.7, 75.9], [168.9, 55.0], [161.3, 57.3], [167.6, 55.0], [165.1, 65.5],
+        [175.3, 65.5], [157.5, 48.6], [163.8, 58.6], [167.6, 63.6], [165.1, 55.2],
+        [165.1, 62.7], [168.9, 56.6], [162.6, 53.9], [164.5, 63.2], [176.5, 73.6],
+        [168.9, 62.0], [175.3, 63.6], [159.4, 53.2], [160.0, 53.4], [170.2, 55.0],
+        [162.6, 70.5], [167.6, 54.5], [162.6, 54.5], [160.7, 55.9], [160.0, 59.0],
+        [157.5, 63.6], [162.6, 54.5], [152.4, 47.3], [170.2, 67.7], [165.1, 80.9],
+        [172.7, 70.5], [165.1, 60.9], [170.2, 63.6], [170.2, 54.5], [170.2, 59.1],
+        [161.3, 70.5], [167.6, 52.7], [167.6, 62.7], [165.1, 86.3], [162.6, 66.4],
+        [152.4, 67.3], [168.9, 63.0], [170.2, 73.6], [175.2, 62.3], [175.2, 57.7],
+        [160.0, 55.4], [165.1, 104.1], [174.0, 55.5], [170.2, 77.3], [160.0, 80.5],
+        [167.6, 64.5], [167.6, 72.3], [167.6, 61.4], [154.9, 58.2], [162.6, 81.8],
+        [175.3, 63.6], [171.4, 53.4], [157.5, 54.5], [165.1, 53.6], [160.0, 60.0],
+        [174.0, 73.6], [162.6, 61.4], [174.0, 55.5], [162.6, 63.6], [161.3, 60.9],
+        [156.2, 60.0], [149.9, 46.8], [169.5, 57.3], [160.0, 64.1], [175.3, 63.6],
+        [169.5, 67.3], [160.0, 75.5], [172.7, 68.2], [162.6, 61.4], [157.5, 76.8],
+        [176.5, 71.8], [164.4, 55.5], [160.7, 48.6], [174.0, 66.4], [163.8, 67.3]
+      ]
+    ]
+  }
 
-  // 全局变量
-  let width = parseInt(d3.select('.scatter-box').style('width'))
-  let height = parseInt(d3.select('.scatter-box').style('height'))
-  let scatterWidth = width - paddingL - paddingR
-  let scatterHeight = height - paddingT - paddingB
-  let svg = d3.select('.scatter-demo')
-    .append('svg')
-    .attr('width', width)
-    .attr('height', height)
-  let xScale = d3.scaleLinear()
-  let yScale = d3.scaleLinear()
+  let el = d3.select('.scatter-box')
 
-  drawScatter()
+  draw(scatterData, el)
 
-  function drawScatter () {
-    // 绘制坐标系
-    xScale.domain([0, 1.2 * d3.max(scatterData, (d) => {
-      return d[0]
-    })])
-      .range([0, scatterWidth])
+  function draw (dataS, el) {
+    function init () {
+      let theme = {
+        padding: {
+          l: 40,
+          r: 40,
+          t: 40,
+          b: 40
+        },
+        svg: {
+          w: parseFloat(el.style('width')),
+          h: parseFloat(el.style('height'))
+        },
+        chart: {
+          w: 0,
+          h: 0
+        },
+        color: d3.scaleOrdinal(d3.schemeCategory10)
+      }
+      theme.chart.w = theme.svg.w - theme.padding.l - theme.padding.r
+      theme.chart.h = theme.svg.h - theme.padding.t - theme.padding.b
 
-    yScale.domain([0, d3.max(scatterData, (d) => {
-      return d[1]
-    })])
-      .range([scatterHeight, 0])
+      let scatter = {
+        title: dataS.title || '',
+        legend: dataS.legend || fasle,
+        data: dataS.data
+      }
 
-    // 绘制圆点
-    let g = svg.selectAll('.scatter')
-      .data(scatterData)
-    circle(g)
+      let svg = el.selectAll('.scatter-svg-box')
+      if (svg.empty()) {
+        svg = el.append('svg')
+          .attr('class', 'scatter-svg-box')
+          .attr('width', theme.svg.w)
+          .attr('height', theme.svg.h)
+      }
 
-    // 圆点数据增加
-    let enterG = g.enter().append('g').attr('class', 'scatter')
-    if (g.enter().size() > 0) {
-      circle(enterG)
+      let axis = {
+        xScale: d3.scaleLinear()
+          .domain([getArrMinData(scatter.data, 0), getArrMaxData(scatter.data, 0)])
+          .range([0, theme.chart.w]),
+        yScale: d3.scaleLinear()
+          .domain([getArrMinData(scatter.data, 1), getArrMaxData(scatter.data, 1)])
+          .range([theme.chart.h, 0])
+      }
+
+      // 绘图
+      drawScatter(theme, scatter, svg, axis)
     }
-    // 圆点数据减少
-    g.exit()
-      .remove()
-  }
-  function circle (selection) {
-    // 重置
-    selection.selectAll('circle').remove()
-    svg.selectAll('.axis').remove()
 
-    let circle = selection.append('circle')
-    // .attr('cx', paddingL) // 持续前的原始位置
-    // .attr('cy', height - paddingB) // 持续前的原始位置
-    // .transition() // 定义持续
-    // .duration(1000) // 过渡持续时间
-      .attr('r', 5)
-      .attr('cx', (d) => {
-        return paddingL + xScale(d[0])
+    // 执行
+    init()
+  }
+
+  function drawScatter (theme, scatter, svg, axis) {
+    if (scatter.title) {
+      let title = svg.selectAll('.scatter-title')
+      if (title.empty()) {
+        title = svg.append('text')
+          .attr('class', 'scatter-title')
+          .text(() => {
+            return scatter.title
+          })
+          .attr('x', theme.padding.l)
+          .attr('y', '10')
+          .attr('dy', '1rem')
+      }
+    }
+    if (scatter.legend) {
+      let legendG = el.selectAll('.legend-groups')
+      if (legendG.empty()) {
+        legendG = el.append('div')
+          .attr('class', 'legend-groups')
+          .style('position', 'absolute')
+          .style('right', theme.padding.r + 'px')
+          .style('top', '15px')
+          .style('font-size', '12px')
+        let lengend = legendG.selectAll('.legend-items').data(scatter.legend)
+        let legendEnter = lengend.enter()
+        legendEnter = legendEnter.append('div')
+          .attr('class', 'legend-items')
+          .style('display', 'inline-block')
+          .style('padding-left', '10px')
+        legendEnter.append('i')
+          .style('display', 'inline-block')
+          .style('width', '20px')
+          .style('height', '10px')
+          .style('border-radius', '2px')
+          .style('background', (d, i) => {
+            return theme.color(i)
+          })
+        legendEnter.append('span')
+          .text((d) => {
+            return d
+          })
+          .style('padding-left', '2px')
+        lengend.remove().exit()
+      }
+    }
+    drawAxis(theme, svg, axis)
+    drawCircle(theme, scatter, svg, axis)
+  }
+
+  function drawAxis (theme, svg, axis) {
+    let xAxis = d3.axisBottom(axis.xScale).tickFormat((d) => {
+      return d + 'cm'
+    })
+    let xAxisG = svg.select('.xAxis-group').call(xAxis)
+    if (xAxisG.empty()) {
+      xAxisG = svg.append('g')
+        .call(xAxis)
+        .attr('class', 'xAxis-group')
+    }
+    xAxisG
+      .attr('transform', 'translate(' + theme.padding.l + ',' + (theme.svg.h - theme.padding.b) + ')')
+
+    let yAxis = d3.axisLeft(axis.yScale).tickFormat((d) => {
+      return d + 'kg'
+    })
+    let yAxisG = svg.select('.yAxis-group').call(yAxis)
+    if (yAxisG.empty()) {
+      yAxisG = svg.append('g')
+        .call(yAxis)
+        .attr('class', 'yAxis-group')
+    }
+    yAxisG
+      .attr('transform', 'translate(' + theme.padding.l + ',' + theme.padding.t + ')')
+  }
+  function drawCircle (theme, scatter, svg, axis) {
+    let circleG = svg.selectAll('.circle-group').data(scatter.data)
+    let circleGEnter = circleG.enter()
+    circleGEnter = circleGEnter.append('g')
+      .attr('class', (d, i) => {
+        return 'circle-group' + i
       })
-      .attr('cy', (d) => {
-        return paddingT + yScale(d[1])
+      .attr('fill', (d, i) => {
+        return theme.color(i)
       })
-      .attr('fill', '#5588aa')
-      .on('click', function (d, i) {
-        d3.select(this).attr('fill', 'red')
-      })
+      .attr('transform', 'translate(' + theme.padding.l + ',' + theme.padding.t + ')')
+    circleG.remove().exit()
+    scatter.data.forEach((item, idx) => {
+      let parentG = svg.selectAll('.circle-group' + idx)
+      let circle = parentG.selectAll('circle').data(item)
+      circle
+        .attr('cx', (d) => {
+          return axis.xScale(d[0])
+        })
+        .attr('cy', (d) => {
+          return axis.yScale(d[1])
+        })
 
-    let xAxis = d3.axisBottom()
-      .scale(xScale)
-    let gXaxis = svg.append('g')
-      .attr('class', 'axis')
-      .attr('transform', 'translate(' + paddingL + ',' + (height - paddingB) + ')')
-    xAxis(gXaxis)
-
-    let yAxis = d3.axisLeft()
-      .scale(yScale)
-    let gYaxis = svg.append('g')
-      .attr('class', 'axis')
-      .attr('transform', 'translate(' + paddingL + ',' + paddingT + ')')
-    yAxis(gYaxis)
+      let circleEnter = circle.enter()
+      circleEnter.append('circle')
+        .attr('class', 'circle-item')
+        .attr('cx', (d) => {
+          return axis.xScale(d[0])
+        })
+        .attr('cy', (d) => {
+          return axis.yScale(d[1])
+        })
+        .attr('r', 3)
+        .style('cursor', 'pointer')
+      circle.remove().exit()
+    })
   }
-
-  function addData () {
-    scatterData.push([Math.floor(Math.random() * 10) * 0.1, Math.floor(Math.random() * 10) * 0.1])
-    drawScatter()
+  // common
+  function getArrMaxData (data, type) {
+    let newArr = []
+    data.forEach((item, idx) => {
+      newArr.push(d3.max(item, (d) => {
+        return d[type]
+      }))
+    })
+    return d3.max(newArr)
   }
-  function delData () {
-    scatterData.pop()
-    drawScatter()
+  function getArrMinData (data, type) {
+    let newArr = []
+    data.forEach((item, idx) => {
+      newArr.push(d3.min(item, (d) => {
+        return d[type]
+      }))
+    })
+    return d3.min(newArr)
   }
-
 </script>
 </html>

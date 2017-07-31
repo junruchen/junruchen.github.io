@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <link rel="stylesheet" href="styles/xcode.css">
+  <script src="./highlight.pack.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad()
+  </script>
+
+  <style>
+    code {
+      white-space: normal;
+    }
+  </style>
+</head>
+<body>
+<pre>
+  <code>
+SELECT * FROM ( SELECT id,uid,type,STATUS,extinfo,is_delete,is_push,is_read,source_id FROM msg_notify WHERE is_delete = 200 AND is_push = 100 AND is_read = 100 ORDER BY id DESC LIMIT 2000 ) AS AA WHERE AA.type IN (200,210,220,230,241,501,502,401,402,405 ) OR (AA.type = 100 AND (AA.source_id = 8 OR AA.source_id = 23)) OR ( AA.type = 250 AND INSTR(source_id, '_33') < length(source_id) - 2 )
+ </code>
+</pre>
+</body>
+</html>
