@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>图片合成</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+  <style>
+    * {
+      box-sizing: border-box;
+      font-size: 13px;
+    }
+
+    .sprite-container {
+      padding: 30px;
+    }
+
+    label {
+      padding-right: 6px;
+    }
+
+    input {
+      outline: none;
+      border: none;
+      width: 80px;
+      height: 30px;
+      padding-left: 5px;
+    }
+
+    input[type=file] {
+      width: 180px;
+    }
+
+    .sprite-title {
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
+
+    .sprite-group {
+      margin: 30px 0;
+      padding: 0;
+    }
+
+    .sprite-item {
+      list-style-type: none;
+    }
+
+    .btn {
+      width: 100px;
+      height: 30px;
+      text-align: center;
+      vertical-align: top;
+      background: #fff;
+      cursor: pointer;
+      border: none;
+      outline: none;
+    }
+    .btn:hover{
+      color: royalblue;
+    }
+
+    html {
+      background: gainsboro;
+    }
+
+    canvas {
+      background: #fff;
+    }
+  </style>
+</head>
+<body>
+<div class="sprite-container">
+  <div class="sprite-title">
+    <label>画布宽：<input type="number" v-model="canvasWidth"></label>
+    <label>画布高：<input type="number" v-model="canvasHeight"></label>
+    <label>文件名：<input type="text" v-model="saveFileName"></label>
+    <button class="btn" @click="exportImg" style="margin-left: 20px">导出图片</button>
+    <button class="btn" @click="addImg">添加图片</button>
+    <button class="btn" @click="saveImg">缓存本地</button>
+  </div>
+  <ul class="sprite-group">
+    <li class="sprite-item" v-for="(item,index) of imgs">
+      <label>{{index+1}}、<input type="file" @change="getImg(index,$event)"></label>
+      <label>宽度：<input type="number" v-model="item.width"></label>
+      <label>高度：<input type="number" v-model="item.height"></label>
+      <label>X位置：<input type="number" v-model="item.x"></label>
+      <label>Y位置：<input type="number" v-model="item.y"></label>
+      <button class="btn" @click="removeImg(index)">删除</button>
+    </li>
+  </ul>
+</div>
+<script src="https://cdn.bootcss.com/vue/2.1.8/vue.min.js"></script>
+<script src="index.js"></script>
+</body>
+</html>
