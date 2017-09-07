@@ -220,6 +220,7 @@ function addDataS (enterBarItem, theme) {
   // add-axis-text
   // 并不太好的方法，兼容性需测试：
   enterBarItem.append('foreignObject')
+    .attr('class', 'axis-title')
     .attr('x', (d, i) => {
       return i * (theme.barPadding * 2 + 12)
     })
