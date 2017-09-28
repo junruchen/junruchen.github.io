@@ -1,0 +1,317 @@
+//--基本颜色
+$base-color = #333;
+//--基础样式
+$base-font-family = "PingFang SC", "微软雅黑";
+
+//--前缀
+prefix(prop, args) {
+  -ms-{prop} args
+  -webkit-{prop} args
+  -moz-{prop} args
+  {prop} args
+}
+
+//--通用函数
+b-box-shadow() {
+  prefix('box-shadow', arguments);
+}
+
+b-border-radius() {
+  prefix('border-radius', arguments);
+}
+
+b-box-sizing() {
+  prefix('box-sizing', arguments);
+}
+
+b-transform() {
+  prefix('transform', arguments);
+}
+
+b-transform-origin() {
+  prefix('transform-origin', arguments);
+}
+
+b-transition() {
+  prefix('transition', arguments);
+}
+
+b-word-hidden() {
+  overflow hidden;
+  text-overflow ellipsis;
+  white-space nowrap;
+}
+
+@import "common.css";
+
+.container {
+  width 700px;
+  margin 0 auto;
+  text-align center;
+  & h4 {
+    font-weight 200;
+    color $base-color;
+    padding 20px 0 30px;
+  }
+  & > div {
+    &:nth-child(2) {
+      & .minions-box {
+        margin 0 auto;
+        position relative;
+        width 350px;
+        height 550px;
+        background-color #d2d7d3;
+        b-box-sizing(border-box);
+        padding-top 50px;
+        & .minions-body {
+          z-index 1;
+          margin 0 auto;
+          width 220px;
+          height 380px;
+          background-color gold;
+          b-border-radius(108px);
+          border 3px solid #000;
+          b-box-sizing(border-box);
+          position absolute;
+          margin-left -110px;
+          left 50%;
+          & .eyes {
+            width 80px;
+            height 80px;
+            background-color #fff;
+            border 3px solid #000;
+            b-box-sizing(border-box);
+            b-border-radius(50%);
+            position absolute;
+            top 60px;
+            left 50%;
+            margin-left -80px;
+            &:before {
+              content: '';
+              position absolute;
+              width 30px;
+              height 10px;
+              b-box-sizing(border-box);
+              border 3px solid #000;
+              background-color #000;
+              top 50%;
+              margin-top -5px;
+              left 0;
+              margin-left -30px;
+              b-transform(rotate(5deg));
+              b-transform-origin(left, center);
+            }
+            & > div {
+              position absolute;
+              width 30px;
+              height 30px;
+              background-color #000;
+              b-border-radius(50%);
+              top 50%;
+              left 50%;
+              margin-top -15px;
+              margin-left -15px;
+              &:before {
+                position absolute;
+                content '';
+                width 12px;
+                height 12px;
+                background-color #fff;
+                b-border-radius(50%);
+                top 50%;
+                left 50%;
+                margin-top -6px;
+                margin-left -6px;
+              }
+            }
+          }
+          & .right-eye {
+            margin-left 0px;
+            &:before {
+              margin-left 75px;
+              b-transform(rotate(-5deg));
+              b-transform-origin(right, center)
+            }
+          }
+          & .trousers-box {
+            height: 100%;
+            overflow: hidden;
+            width: 100%;
+            position: absolute;
+            & .trousers {
+              position absolute;
+              bottom -1px;
+              background-color #2574A9;
+              width 100%;
+              height 110px;
+              b-border-radius(0 0 105px 105px);
+              border-top 3px solid #000;
+              z-index 1;
+              &:before {
+                content '';
+                position absolute;
+                width 120px;
+                height 50px;
+                background-color #2574A9;
+                border 3px solid #000;
+                border-bottom-color transparent;
+                bottom: 110px;
+                left 50%;
+                margin-left -60px;
+                b-box-sizing(border-box);
+                z-index 2;
+              }
+              &:after {
+                position absolute;
+                content '';
+                z-index 3;
+                width 60px;
+                height 45px;
+                background-color #2574A9;
+                border 3px solid #000;
+                b-border-radius(0 0 20px 20px);
+                top 0px;
+                margin-top -20px;
+                left 50%;
+                margin-left -30px;
+                b-box-sizing(border-box);
+              }
+              & .line {
+                position absolute;
+                &:nth-child(1) {
+                  width 40px;
+                  height 30px;
+                  top 10px;
+                  left 5px;
+                  b-box-sizing(border-box);
+                  border-bottom 4px solid #000;
+                  border-right 4px solid #000;
+                  border-bottom-right-radius 40px;
+                }
+                &:nth-child(2) {
+                  width 40px;
+                  bottom 18px;
+                  left 50%;
+                  height 4px;
+                  background-color #000;
+                  margin-left -20px;
+                  b-transform(rotate(90deg));
+                }
+                &:nth-child(3) {
+                  width 40px;
+                  height 30px;
+                  top 10px;
+                  right 5px;
+                  b-box-sizing(border-box);
+                  border-bottom 4px solid #000;
+                  border-left 4px solid #000;
+                  border-bottom-left-radius 40px;
+                }
+              }
+              & .gallus {
+                width 80px;
+                height 18px;
+                background-color #2574A9;
+                position absolute;
+                border 3px solid #000;
+                b-box-sizing(border-box);
+                b-transform(rotate(30deg));
+                margin-left -13px;
+                bottom 155px;
+                z-index 3;
+                &:after {
+                  position absolute;
+                  content '';
+                  width 5px;
+                  height 5px;
+                  background-color #000;
+                  b-border-radius(50%);
+                  top 50%;
+                  right 3px;
+                  margin-top -2.5px;
+                }
+                &:last-child {
+                  right 0;
+                  margin-right -13px;
+                  b-transform(rotate(-30deg));
+                  &:after {
+                    left 3px;
+                  }
+                }
+              }
+            }
+          }
+          & .mouse {
+            width 50px;
+            height 30px;
+            background-color #fff;
+            position absolute;
+            left 50%;
+            margin-left -25px;
+            top 160px;
+            b-box-sizing(border-box);
+            border 3px solid #000;
+            b-border-radius(0 0 20px 20px);
+          }
+        }
+        & .arms {
+          z-index 0;
+          position absolute;
+          width 80px;
+          height 80px;
+          background-color gold;
+          border 3px solid #000;
+          b-border-radius(10px);
+          b-box-sizing(border-box);
+          b-transform(rotate(45deg));
+          top 246px;
+          left 45px;
+          &:before {
+            position absolute;
+            content '';
+            width 40px;
+            height 40px;
+            background-color gold;
+            border 3px solid #000;
+            top 50%;
+            margin-top -20px;
+            left 50%;
+            margin-left -20px;
+            b-box-sizing(border-box);
+            b-border-radius(10px);
+          }
+        }
+        & .right-arms {
+          margin-left 180px;
+        }
+        & .legs {
+          position absolute;
+          width 35px;
+          background-color #000;
+          height 60px;
+          bottom 66px;
+          left 50%;
+          margin-left -37px;
+          b-border-radius(0, 0, 5px, 5px);
+          &:last-child {
+            margin-left 2px;
+            &:after {
+              left 0;
+              b-border-radius(0, 30px, 20px, 5px);
+            }
+          }
+          &:after {
+            position absolute;
+            content '';
+            width 70px;
+            height 35px;
+            bottom 0;
+            right 0;
+            background-color #000;
+            b-border-radius(30px, 0, 5px, 20px);
+          }
+        }
+      }
+    }
+  }
+}

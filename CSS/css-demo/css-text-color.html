@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>渐变色 拼接 文字</title>
+  <style>
+    .text-box {
+      position: relative;
+      margin: 40px auto;
+      width: 400px;
+      height: 200px;
+      border: 1px solid;
+    }
+
+    .text {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: transparent;
+    }
+
+    .text:after {
+      position: absolute;
+      content: '新建反假币服务';
+      color: grey;
+      height: 100%;
+      left: 0;
+      top: 0;
+    }
+    .blue-text:after {
+      width: 80%;
+      white-space: nowrap;
+      overflow: hidden;
+      background-image: -webkit-gradient(linear, 0 50%, 100% 50%, from(blue), to(red));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+  </style>
+</head>
+<body>
+<div class="text-box">
+  <div class="text gray-text">新建反假币服务</div>
+  <div class="text blue-text">新建反假币服务</div>
+</div>
+
+</body>
+</html>

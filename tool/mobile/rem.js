@@ -18,29 +18,48 @@
     return defaultFontSize;
   }
 
+  function getViewport (doc, docEl) {
+    var meta = doc.querySelector('meta[name="viewport"]')
+    if (meta) return meta
+    meta = doc.createElement('meta')
+    meta.setAttribute('name', 'viewport')
+    meta.setAttribute('content', 'width=device-width,initial-scale=1,maximum-scale=1, minimum-scale=1,user-scalable=no')
+    docEl.firstElementChild.appendChild(meta)
+    return meta
+  }
+
   var timeoutId,
-      doc             = document,
-      docEl           = doc.documentElement,
-      metaEl          = doc.querySelector('meta[name="viewport"]'),
-      baseSize        = options.baseSize || 750,
-      baseFontSize    = options.baseFontSize || 100,
-      defaultFontSize = getDefaultFontSize(),
-      dpr             = window.devicePixelRatio || 1,
-      dpr             = dpr >= 3 ? 3 : dpr >= 2 ? 2 : 1,
-      scale           = 1 / dpr;
-
-  // 设置viewport，进行缩放，达到高清效果
-  metaEl.setAttribute('content', 'width=device-width,initial-scale=' + scale + ',maximum-scale=' + scale + ', minimum-scale=' + scale + ',user-scalable=no');
-  // 设置data-dpr属性，留作的css hack之用
-  docEl.setAttribute('data-dpr', dpr);
-
-  //alert(docEl.clientWidth + '-' + window.innerWidth + '-' + docEl.getBoundingClientRect().width);
+    isAndroid = window.navigator.appVersion.match(/android/gi),
+    isIPhone = window.navigator.appVersion.match(/iphone/gi),
+    doc = document,
+    docEl = doc.documentElement,
+    metaEl = getViewport(doc, docEl),
+    freeze = options.freeze || metaEl.hasAttribute('freeze'),
+    baseSize = options.baseSize || 750,
+    baseFontSize = options.baseFontSize || 100,
+    defaultFontSize = getDefaultFontSize(),
+    dpr = window.devicePixelRatio || 1,
+    dpr = !freeze ? dpr >= 3 ? 3 : dpr >= 2 ? 2 : 1 : 1,
+    scale = 1 / dpr;
+  if (!freeze && (isAndroid || isIPhone)) {
+    // 设置viewport，进行缩放，达到高清效果
+    metaEl.setAttribute('content', 'width=device-width,initial-scale=' + scale + ',maximum-scale=' + scale + ', minimum-scale=' + scale + ',user-scalable=no');
+    // 设置data-dpr属性，留作的css hack之用
+    docEl.setAttribute('data-dpr', dpr);
+  }
 
   var reset = function () {
     //方案一px
     //docEl.style.fontSize = docEl.getBoundingClientRect().width / baseSize * baseFontSize + 'px';
     //方案二%
-    var _rem = docEl.getBoundingClientRect().width / baseSize * baseFontSize;
+    var width = docEl.getBoundingClientRect().width  //375
+    if (isAndroid || isIPhone) {
+      width = width > 540 * dpr ? 540 * dpr : width
+    } else {
+      width = 375
+    }
+
+    var _rem = width / baseSize * baseFontSize;
     docEl.style.fontSize = _rem / defaultFontSize * 100 + '%';
     window.rem = _rem;
   }
@@ -55,7 +74,18 @@
     e.persisted && (clearTimeout(timeoutId), timeoutId = setTimeout(reset, 300))
   }, false);
 
+  //为了重置页面中的字体默认值，不然没有设置font-size的元素会继承html上的font-size，变得很大。
+  if (doc.readyState === 'complete') {
+    doc.body.style.fontSize = 12 * dpr + 'px';
+  } else {
+    doc.addEventListener('DOMContentLoaded', function (e) {
+      doc.body.style.fontSize = 12 * dpr + 'px';
+    }, false);
+  }
+
   reset();
+
+  window.dpr = dpr;
 
   window.rem2px = function (x) {
     var y = parseFloat(x) * this.rem;
@@ -70,16 +100,18 @@
 }(function () {
 
   //从页面获取参数
-  var scripts      = document.getElementsByTagName('script'),
+  var scripts = document.getElementsByTagName('script'),
 
-      jscript      = scripts[scripts.length - 1],
+    jscript = scripts[scripts.length - 1],
 
-      params       = /\?(\d+)\&(\d+)$/.exec(jscript.src),
+    params = /flexible\.js\?(\d+)\&(\d+)(?:\&([01]))?/.exec(jscript.src),
 
-      baseSize     = params && Number(params[0]),
+    baseSize = params && Number(params[1]),
 
-      baseFontSize = params && Number(params[1]);
+    baseFontSize = params && Number(params[2]),
 
-  return {baseSize: baseSize, baseFontSize: baseFontSize}
+    freeze = params && Number(params[3]);
+
+  return { baseSize: baseSize, baseFontSize: baseFontSize, freeze: !!freeze }
 
 }());

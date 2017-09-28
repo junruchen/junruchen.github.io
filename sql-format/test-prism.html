@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <link rel="stylesheet" href="./prism/prism.css">
+  <script src="./prism/prism.js"></script>
+  <script src="./vkbeautify.js"></script>
+</head>
+<body>
+<pre><code class="language-sql" id="sql_text"></code></pre>
+</body>
+<script>
+  let test = "select sum(cnt) from (select count(1) as cnt from t_lq_user_msg where send_uid = 704833 and receive_uid= 1868508 and create_time > '2016-08-26' union all select count(1) as cnt from t_lq_user_msg where send_uid = 1868508 and receive_uid= 704833 and create_time > '2016-08-26')t"
+  test = JSON.stringify(vkbeautify.sql(test))
+  test = test.replace(/\\t/g, ' ')
+  document.getElementById('sql_text').innerHTML = JSON.parse(test)
+</script>
+</html>

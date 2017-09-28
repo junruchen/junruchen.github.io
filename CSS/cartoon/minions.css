@@ -1,0 +1,534 @@
+@font-face {
+  font-family: 'raphaelicons';
+  src: url("../font/raphaelicons-webfont.ttf") format('truetype'), url("../font/raphaelicons-webfont.woff") format('woff'), url("../font/raphaelicons-webfont.eot") format('eot'), url("../font/raphaelicons-webfont.svg") format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+html,
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+hr,
+p,
+blockquote,
+dl,
+dt,
+dd,
+ul,
+li,
+pre,
+fieldset,
+legend,
+button,
+input,
+textarea,
+form,
+th,
+td {
+  margin: 0;
+  padding: 0;
+  font-family: "PingFang SC", "微软雅黑";
+  color: #333;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+
+ul,
+ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  cursor: pointer;
+  text-decoration: none;
+  color: #000;
+}
+
+input[placeholder] {
+  padding-left: 12px;
+  padding-right: 12px;
+  font-size: 14px;
+  font-weight: 100;
+}
+
+input::-moz-placeholder {
+  font-weight: 100;
+}
+
+input:-ms-input-placeholder {
+  font-weight: 100;
+}
+
+input::-webkit-input-placeholder {
+  font-weight: 100;
+}
+
+textarea[placeholder] {
+  padding-left: 16px;
+  padding-top: 16px;
+  padding-right: 16px;
+  padding-bottom: 5px;
+  font-size: 14px;
+  font-weight: 100;
+}
+
+textarea::-moz-placeholder {
+  font-weight: 100;
+}
+
+textarea:-ms-input-placeholder {
+  font-weight: 100;
+}
+
+textarea::-webkit-input-placeholder {
+  font-weight: 100;
+}
+
+canvas {
+  display: block;
+  margin-bottom: 20px;
+  margin-right: 14px;
+}
+
+.clr {
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  clear: both;
+  padding: 0;
+  margin: 0;
+}
+
+.container {
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+}
+
+.back {
+  cursor: pointer;
+  width: 70px;
+  height: 70px;
+  -ms-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.6);
+  text-align: center;
+  line-height: 70px;
+  position: fixed;
+  bottom: 60px;
+  right: 60px;
+  font-size: 15px;
+}
+
+.back a {
+  color: #fff;
+}
+
+.container {
+  width: 700px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.container h4 {
+  font-weight: 200;
+  color: #333;
+  padding: 20px 0 30px;
+}
+
+.container > div .minions-box {
+  margin: 0 auto;
+  position: relative;
+  width: 350px;
+  height: 550px;
+  background-color: #d2d7d3;
+  -ms-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding-top: 50px;
+}
+
+.container > div .minions-box .minions-body {
+  z-index: 1;
+  margin: 0 auto;
+  width: 220px;
+  height: 380px;
+  background-color: #ffd700;
+  -ms-border-radius: 108px;
+  -webkit-border-radius: 108px;
+  -moz-border-radius: 108px;
+  border-radius: 108px;
+  border: 3px solid #000;
+  -ms-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  position: absolute;
+  margin-left: -110px;
+  left: 50%;
+}
+
+.container > div .minions-box .minions-body .eyes {
+  width: 80px;
+  height: 80px;
+  background-color: #fff;
+  border: 3px solid #000;
+  -ms-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -ms-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  position: absolute;
+  top: 60px;
+  left: 50%;
+  margin-left: -80px;
+}
+
+.container > div .minions-box .minions-body .eyes:before {
+  content: '';
+  position: absolute;
+  width: 30px;
+  height: 10px;
+  -ms-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  border: 3px solid #000;
+  background-color: #000;
+  top: 50%;
+  margin-top: -5px;
+  left: 0;
+  margin-left: -30px;
+  -ms-transform: rotate(5deg);
+  -webkit-transform: rotate(5deg);
+  -moz-transform: rotate(5deg);
+  transform: rotate(5deg);
+  -ms-transform-origin: left center;
+  -webkit-transform-origin: left center;
+  -moz-transform-origin: left center;
+  transform-origin: left center;
+}
+
+.container > div .minions-box .minions-body .eyes > div {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  background-color: #000;
+  -ms-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  margin-top: -15px;
+  margin-left: -15px;
+}
+
+.container > div .minions-box .minions-body .eyes > div:before {
+  position: absolute;
+  content: '';
+  width: 12px;
+  height: 12px;
+  background-color: #fff;
+  -ms-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  margin-top: -6px;
+  margin-left: -6px;
+}
+
+.container > div .minions-box .minions-body .right-eye {
+  margin-left: 0px;
+}
+
+.container > div .minions-box .minions-body .right-eye:before {
+  margin-left: 75px;
+  -ms-transform: rotate(-5deg);
+  -webkit-transform: rotate(-5deg);
+  -moz-transform: rotate(-5deg);
+  transform: rotate(-5deg);
+  -ms-transform-origin: right center;
+  -webkit-transform-origin: right center;
+  -moz-transform-origin: right center;
+  transform-origin: right center;
+}
+
+.container > div .minions-box .minions-body .trousers-box {
+  height: 100%;
+  overflow: hidden;
+  width: 100%;
+  position: absolute;
+}
+
+.container > div .minions-box .minions-body .trousers-box .trousers {
+  position: absolute;
+  bottom: -1px;
+  background-color: #2574a9;
+  width: 100%;
+  height: 110px;
+  -ms-border-radius: 0 0 105px 105px;
+  -webkit-border-radius: 0 0 105px 105px;
+  -moz-border-radius: 0 0 105px 105px;
+  border-radius: 0 0 105px 105px;
+  border-top: 3px solid #000;
+  z-index: 1;
+}
+
+.container > div .minions-box .minions-body .trousers-box .trousers:before {
+  content: '';
+  position: absolute;
+  width: 120px;
+  height: 50px;
+  background-color: #2574a9;
+  border: 3px solid #000;
+  border-bottom-color: transparent;
+  bottom: 110px;
+  left: 50%;
+  margin-left: -60px;
+  -ms-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  z-index: 2;
+}
+
+.container > div .minions-box .minions-body .trousers-box .trousers:after {
+  position: absolute;
+  content: '';
+  z-index: 3;
+  width: 60px;
+  height: 45px;
+  background-color: #2574a9;
+  border: 3px solid #000;
+  -ms-border-radius: 0 0 20px 20px;
+  -webkit-border-radius: 0 0 20px 20px;
+  -moz-border-radius: 0 0 20px 20px;
+  border-radius: 0 0 20px 20px;
+  top: 0px;
+  margin-top: -20px;
+  left: 50%;
+  margin-left: -30px;
+  -ms-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.container > div .minions-box .minions-body .trousers-box .trousers .line {
+  position: absolute;
+}
+
+.container > div .minions-box .minions-body .trousers-box .trousers .line:nth-child(1) {
+  width: 40px;
+  height: 30px;
+  top: 10px;
+  left: 5px;
+  -ms-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  border-bottom: 4px solid #000;
+  border-right: 4px solid #000;
+  border-bottom-right-radius: 40px;
+}
+
+.container > div .minions-box .minions-body .trousers-box .trousers .line:nth-child(2) {
+  width: 40px;
+  bottom: 18px;
+  left: 50%;
+  height: 4px;
+  background-color: #000;
+  margin-left: -20px;
+  -ms-transform: rotate(90deg);
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  transform: rotate(90deg);
+}
+
+.container > div .minions-box .minions-body .trousers-box .trousers .line:nth-child(3) {
+  width: 40px;
+  height: 30px;
+  top: 10px;
+  right: 5px;
+  -ms-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  border-bottom: 4px solid #000;
+  border-left: 4px solid #000;
+  border-bottom-left-radius: 40px;
+}
+
+.container > div .minions-box .minions-body .trousers-box .trousers .gallus {
+  width: 80px;
+  height: 18px;
+  background-color: #2574a9;
+  position: absolute;
+  border: 3px solid #000;
+  -ms-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -ms-transform: rotate(30deg);
+  -webkit-transform: rotate(30deg);
+  -moz-transform: rotate(30deg);
+  transform: rotate(30deg);
+  margin-left: -13px;
+  bottom: 155px;
+  z-index: 3;
+}
+
+.container > div .minions-box .minions-body .trousers-box .trousers .gallus:after {
+  position: absolute;
+  content: '';
+  width: 5px;
+  height: 5px;
+  background-color: #000;
+  -ms-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  top: 50%;
+  right: 3px;
+  margin-top: -2.5px;
+}
+
+.container > div .minions-box .minions-body .trousers-box .trousers .gallus:last-child {
+  right: 0;
+  margin-right: -13px;
+  -ms-transform: rotate(-30deg);
+  -webkit-transform: rotate(-30deg);
+  -moz-transform: rotate(-30deg);
+  transform: rotate(-30deg);
+}
+
+.container > div .minions-box .minions-body .trousers-box .trousers .gallus:last-child:after {
+  left: 3px;
+}
+
+.container > div .minions-box .minions-body .mouse {
+  width: 50px;
+  height: 30px;
+  background-color: #fff;
+  position: absolute;
+  left: 50%;
+  margin-left: -25px;
+  top: 160px;
+  -ms-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  border: 3px solid #000;
+  -ms-border-radius: 0 0 20px 20px;
+  -webkit-border-radius: 0 0 20px 20px;
+  -moz-border-radius: 0 0 20px 20px;
+  border-radius: 0 0 20px 20px;
+}
+
+.container > div .minions-box .arms {
+  z-index: 0;
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  background-color: #ffd700;
+  border: 3px solid #000;
+  -ms-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+  -ms-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -ms-transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  transform: rotate(45deg);
+  top: 246px;
+  left: 45px;
+}
+
+.container > div .minions-box .arms:before {
+  position: absolute;
+  content: '';
+  width: 40px;
+  height: 40px;
+  background-color: #ffd700;
+  border: 3px solid #000;
+  top: 50%;
+  margin-top: -20px;
+  left: 50%;
+  margin-left: -20px;
+  -ms-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -ms-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+}
+
+.container > div .minions-box .right-arms {
+  margin-left: 180px;
+}
+
+.container > div .minions-box .legs {
+  position: absolute;
+  width: 35px;
+  background-color: #000;
+  height: 60px;
+  bottom: 66px;
+  left: 50%;
+  margin-left: -37px;
+  -ms-border-radius: 0 0 5px 5px;
+  -webkit-border-radius: 0 0 5px 5px;
+  -moz-border-radius: 0 0 5px 5px;
+  border-radius: 0 0 5px 5px;
+}
+
+.container > div .minions-box .legs:last-child {
+  margin-left: 2px;
+}
+
+.container > div .minions-box .legs:last-child:after {
+  left: 0;
+  -ms-border-radius: 0 30px 20px 5px;
+  -webkit-border-radius: 0 30px 20px 5px;
+  -moz-border-radius: 0 30px 20px 5px;
+  border-radius: 0 30px 20px 5px;
+}
+
+.container > div .minions-box .legs:after {
+  position: absolute;
+  content: '';
+  width: 70px;
+  height: 35px;
+  bottom: 0;
+  right: 0;
+  background-color: #000;
+  -ms-border-radius: 30px 0 5px 20px;
+  -webkit-border-radius: 30px 0 5px 20px;
+  -moz-border-radius: 30px 0 5px 20px;
+  border-radius: 30px 0 5px 20px;
+}
