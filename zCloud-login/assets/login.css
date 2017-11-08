@@ -13,18 +13,6 @@
 .icon-show-pass:before {
   content: "\e64e";
 }
-.icon-login-4:before {
-  content: "\e655";
-}
-.icon-login-3:before {
-  content: "\e656";
-}
-.icon-login-2:before {
-  content: "\e657";
-}
-.icon-login-1:before {
-  content: "\e658";
-}
 /* 颜色变量 */
 /* 常用函数 */
 * {
@@ -70,6 +58,7 @@ body {
   font-size: 12px;
   background: #dedede;
   color: #5c6983;
+  overflow: hidden;
 }
 ul,
 ol {
@@ -148,7 +137,19 @@ h6 {
 }
 .login-content .abort-box,
 .login-content .login-box {
+  position: relative;
   flex: 1;
+}
+.login-content .abort-box:before,
+.login-content .login-box:before,
+.login-content .abort-box:after,
+.login-content .login-box:after {
+  position: absolute;
+  content: '';
+  -ms-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
 }
 .login-content .abort-box {
   background-color: #3a465a;
@@ -156,6 +157,91 @@ h6 {
   -webkit-border-radius: 4px 0 0 4px;
   -moz-border-radius: 4px 0 0 4px;
   border-radius: 4px 0 0 4px;
+}
+.login-content .abort-box:before {
+  width: 286px;
+  height: 286px;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  margin-top: -87px;
+  margin-left: -153px;
+  background: linear-gradient(135deg, #f58d8d 20%, #a13636 70%);
+}
+.login-content .abort-box:after {
+  width: 94px;
+  height: 94px;
+  z-index: -2;
+  top: 0;
+  left: 74px;
+  margin-top: -60px;
+  background: linear-gradient(140deg, #e4b481 5%, #805d38 70%);
+}
+.login-content .abort-box .project-title {
+  color: #f5f5f5;
+  text-align: center;
+  padding: 50px 0 24px;
+}
+.login-content .abort-box .scroll {
+  position: relative;
+  width: 100%;
+  height: 140px;
+  overflow: hidden;
+}
+.login-content .abort-box .scroll-box {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: calc(380px * 5);
+}
+.login-content .abort-box .scroll-box .scroll-item {
+  float: left;
+  width: 380px;
+  text-align: center;
+  color: #f5f5f5;
+}
+.login-content .abort-box .scroll-box .scroll-item .iconfont {
+  display: block;
+  height: 50px;
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: contain;
+}
+.login-content .abort-box .scroll-box .scroll-item .iconfont.icon-login-1 {
+  background-image: url("./img/i-p1.png");
+}
+.login-content .abort-box .scroll-box .scroll-item .iconfont.icon-login-2 {
+  background-image: url("./img/i-p2.png");
+}
+.login-content .abort-box .scroll-box .scroll-item .iconfont.icon-login-3 {
+  background-image: url("./img/i-p3.png");
+}
+.login-content .abort-box .scroll-box .scroll-item .iconfont.icon-login-4 {
+  background-image: url("./img/i-p4.png");
+}
+.login-content .abort-box .scroll-box .scroll-item .scroll-text {
+  padding-top: 20px;
+  line-height: 20px;
+}
+.login-content .abort-box .scroll-ul {
+  text-align: center;
+}
+.login-content .abort-box .scroll-ul .scroll-li {
+  cursor: pointer;
+  display: inline-block;
+  vertical-align: middle;
+  width: 8px;
+  height: 8px;
+  margin: 0 5px;
+  background: #a8afbc;
+  -ms-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+}
+.login-content .abort-box .scroll-ul .scroll-li:hover,
+.login-content .abort-box .scroll-ul .scroll-li.active {
+  background: #4b77be;
 }
 .login-content .login-box {
   position: relative;
@@ -165,6 +251,24 @@ h6 {
   -webkit-border-radius: 0 4px 4px 0;
   -moz-border-radius: 0 4px 4px 0;
   border-radius: 0 4px 4px 0;
+}
+.login-content .login-box:before {
+  width: 314px;
+  height: 314px;
+  z-index: -1;
+  bottom: 0;
+  left: 0;
+  margin-bottom: -82px;
+  margin-left: -157px;
+  background: linear-gradient(135deg, #d9dc31 40%, #68b587 90%);
+}
+.login-content .login-box:after {
+  width: 755px;
+  height: 755px;
+  z-index: -2;
+  top: -15px;
+  left: 67px;
+  background: linear-gradient(140deg, #5471db, #34a8cb 65%);
 }
 .login-content .login-box .form-item {
   padding: 20px 20px 0;
