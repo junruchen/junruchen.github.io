@@ -62,8 +62,6 @@
   </div>
   <div class="login-box">
     <form action="">
-      <input type="hidden" name='redirect_to' value='{{ redirect_to }}'>
-      <input type="hidden" name='app_id' value='{{ app_id }}'>
       <div class="form-item">
         <h6 class="item-title">用户名</h6>
         <div class="input-box item-content">
@@ -192,6 +190,8 @@
       success: function (res) {
         if (res === 200) {
           // 重定向 res.message
+          console.log(res.message)
+          window.location.href = res.message
         } else {
           $('.all-item-des').html('用户名或密码错误')
           $('.all-item-des').show()

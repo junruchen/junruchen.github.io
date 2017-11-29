@@ -1,0 +1,25 @@
+//= 摘抄weui，固定长度的文本省略...
+$ellipsis(width = null) {
+//text-overflow用来设置是否使用一个省略标记（...）标示对象内文本的溢出。
+//但是text-overflow只是用来说明文字溢出时用什么方式显示,
+//要实现溢出时产生省略号的效果，
+//还须定义强制文本在一行内显示（white-space:nowrap）及溢出内容为隐藏（overflow:hidden），
+//只有这样才能实现溢出文本显示省略号的效果
+//ellipsis 省略,clip 剪切
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-wrap: normal;
+  if width {
+    width: width;
+  }
+}
+
+//= 多行文本省略
+$ellipsisLn(line) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: line;
+}

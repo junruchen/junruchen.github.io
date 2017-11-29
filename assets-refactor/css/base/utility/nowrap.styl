@@ -1,0 +1,26 @@
+//= 文字不换行
+.nowrap, .ellipsis {
+  $ellipsis()
+}
+
+//= 多行文本省略
+.ellipsis-ln-2 {
+  $ellipsisLn(2)
+}
+
+.ellipsis-ln-3 {
+  $ellipsisLn(3)
+}
+
+//= 换行
+.text_wrap {
+  word-wrap: break-word;
+  word-break: break-all;
+}
+
+//= 连字符
+.hyphens {
+  word-wrap: break-word;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}

@@ -1,0 +1,92 @@
+//=== 定义在父容器上的属性 =========
+$uf() {
+  display: -webkit-flex;
+  display: flex;
+}
+
+$uf-dir(dir = column) {
+  //row（默认值）：主轴为水平方向，起点在左端。
+  //row-reverse：主轴为水平方向，起点在右端。
+  //column：主轴为垂直方向，起点在上沿。
+  //column-reverse：主轴为垂直方向，起点在下沿
+  $prefix(flex-direction, dir);
+}
+
+$uf-wrap(w = wrap) {
+  //默认情况下，项目都排在一条线（又称"轴线"）上。flex-wrap属性定义，如果一条轴线排不下，如何换行。
+  //nowrap(默认,不换行)
+  //wrap(换行)
+  //wrap-reverse(反转换行)
+  $prefix(flex-wrap, w);
+}
+
+$uf-jc(jc = center) {
+  //justify-content属性定义了项目在主轴上(X)的对齐方式。
+  //flex-start 默认值
+  //flex-end
+  //center
+  //space-between 两端对齐，项目之间的间隔都相等
+  //space-around 每个项目两侧的间隔相等。所以，项目之间的间隔比项目与边框的间隔大一倍。
+  $prefix(justify-content, jc);
+}
+
+$uf-ai(ai = center) {
+  //align-items属性定义项目在交叉轴上如何对齐
+  //flex-start
+  //flex-end
+  //center
+  //baseline 项目的第一行文字的基线对齐
+  //stretch (默认值）：如果项目未设置高度或设为auto，将占满整个容器的高度
+  $prefix(align-items, ai);
+}
+
+$uf-ac(ac = stretch) {
+  // 属性定义了多根轴线的对齐方式。如果项目只有一根轴线，该属性不起作用。
+  // 即设置flex-wrap: wrap;或flex-wrap: wrap-reverse;且换行
+  // align-content: flex-start | flex-end | center | space-between | space-around | stretch;
+  $prefix(align-content, ac);
+}
+
+//=== 定义在项目上的属性 =========
+
+$uf-grow-shrink(type, n, dir, bb) {
+  //属性定义项目的放大比例，默认为0，即如果存在剩余空间，也不放大
+  $prefix(type, n);
+  if bb {
+    $prefix(box-sizing, border-box);
+  }
+  if dir == w {
+    width unit(n, '%')
+  } else if dir == h {
+    height unit(n, '%')
+  }
+}
+
+$uf-grow(n = 1, dir = 0, bb = true) {
+  //属性定义项目的放大比例，默认为0，即如果存在剩余空间，也不放大
+  $uf-grow-shrink(flex-grow, n, dir, bb);
+}
+
+$uf-shrink(n = 1, dir = 0, bb = true) {
+  //属性定义了项目的缩小比例，默认为1，即如果空间不足，该项目将缩小
+  //如果一个项目的flex-shrink属性为0，其他项目都为1，则空间不足时，前者不缩小。
+  $uf-grow-shrink(flex-shrink, n, dir, bb);
+}
+
+$uf-basis(b) {
+  //在分配空间之前,会优先分配固定的大小,当多余空间大于flex-basis的值时,保持不变,小于时,自动缩小,
+  //当同时设置width或height时 width或height无效
+  $prefix(flex-basis, b);
+}
+
+$uf-flex(n = 1, dir = 0, bb = true) {
+  //flex属性是flex-grow, flex-shrink 和 flex-basis的简写，默认值为0 1 auto。后两个属性可选.
+  $uf-grow-shrink(flex, n, dir, bb);
+}
+
+$uf-align-self(s) {
+  //align-self属性允许单个项目有与其他项目不一样的对齐方式，可覆盖align-items属性。
+  //默认值为auto，表示继承父元素的align-items属性，如果没有父元素，则等同于stretch。
+  //用法同align-items
+  $prefix(align-self, s);
+}
