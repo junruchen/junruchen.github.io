@@ -3,10 +3,11 @@
 - HTML部分
   - HTML基础
   - HTML语义化
+  - HTML Mate标签
   - HTML5
-    - HTML Canvas
-    - HTML存储
-    - HTML Mate标签
+    - HTML5基础
+    - Canvas
+    - 存储
 - CSS基础
 - JavaScript基础
 - JavaScript进阶
