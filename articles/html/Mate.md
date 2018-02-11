@@ -1,4 +1,4 @@
-## 前端相关知识汇总-HTML基础
+## HTML语义化
 
 - [基础](#html)
 - [语义化](#html-semantic)
@@ -16,7 +16,7 @@
 
 >兼容模式下页面以宽松的向后兼容的方式显示，模拟老式浏览器的行为以防止站点无法工作
 
-3、HTML5 为什么只需要写 <!DOCTYPE HTML>
+3、HTML5 为什么只需要写`<!DOCTYPE HTML>`
 >HTML5不基于SGML，因此不需要对DTD进行引用，但是需要使用doctype来规范浏览器的行为。
 
 >SGML(Standard Generalized Markup Language) 标准通用标记语言
@@ -92,6 +92,7 @@
 ### <a name="html-semantic"></a>语义化
 ### <a name="html5"></a>HTML5
 1、HTML5的新特性
+
 >
 
 ### <a name="html-storage"></a>存储

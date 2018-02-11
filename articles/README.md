@@ -1,6 +1,12 @@
 ## 前端相关知识汇总
 
-- HTML基础
+- HTML部分
+  - HTML基础
+  - HTML语义化
+  - HTML5
+    - HTML Canvas
+    - HTML存储
+    - HTML Mate标签
 - CSS基础
 - JavaScript基础
 - JavaScript进阶
@@ -46,9 +52,3 @@
 - SEO搜索引擎优化
 - 小程序
 - 其他
-
-### HTML基础
-### CSS基础
-### JavaScript基础
-### JavaScript进阶
-#### ECMAScript6
