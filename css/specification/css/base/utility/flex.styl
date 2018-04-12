@@ -1,0 +1,81 @@
+.uf {
+  $uf()
+}
+
+/**
+  align-items 属性定义项目在交叉轴上如何对齐
+  flex-start
+  flex-end
+  center
+  baseline 项目的第一行文字的基线对齐
+  stretch (默认值）：如果项目未设置高度或设为auto，将占满整个容器的高度
+*/
+.uf-ac {
+  $uf-ai(center)
+}
+
+.uf-ae {
+  $uf-ai(flex-end)
+}
+.uf-as {
+  $uf-ai(flex-start)
+}
+
+/**
+  justify-content属性定义了项目在主轴上的对齐方式。
+  flex-start 默认值
+  flex-end
+  center
+  space-between 两端对齐，项目之间的间隔都相等
+  space-around 每个项目两侧的间隔相等。所以，项目之间的间隔比项目与边框的间隔大一倍。
+*/
+.uf-jc {
+  $uf-jc(center)
+}
+
+.uf-je {
+  $uf-jc(flex-end)
+}
+
+
+/**
+  row（默认值）：主轴为水平方向，起点在左端。
+  row-reverse：主轴为水平方向，起点在右端。
+  column：主轴为垂直方向，起点在上沿。
+  column-reverse：主轴为垂直方向，起点在下沿
+*/
+
+.uf-col {
+  $uf-dir(column)
+}
+
+/**
+  默认情况下，项目都排在一条线（又称"轴线"）上。flex-wrap属性定义，如果一条轴线排不下，如何换行。
+  nowrap(默认,不换行)
+  wrap(换行)
+  wrap-reverse(反转换行)
+*/
+.uf-wrap {
+  $uf-wrap(wrap)
+}
+
+/*flex属性是flex-grow, flex-shrink 和 flex-basis的简写，默认值为0 1 auto。后两个属性可选。*/
+.uf-f0 {
+  $uf-flex(none)
+}
+
+.uf-f1 {
+  $uf-flex(1)
+}
+
+.uf-f2 {
+  $uf-flex(2)
+}
+
+.uf-f3 {
+  $uf-flex(3)
+}
+
+.uf-f4 {
+  $uf-flex(4)
+}

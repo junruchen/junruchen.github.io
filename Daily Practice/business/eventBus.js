@@ -1,7 +1,10 @@
 /**
  * 实现一个event bus
  *
+ * ctx ------ 不懂
+ *
  * apis(name参数是字符串，可以同时处理多个事件名，空格隔开):
+ *
  * - on(name, cb, ctx)
  * 事件名、回调函数、执行上下文
  * - once(name, cb, ctx)
@@ -29,55 +32,69 @@ class Event {
   }
 
   on (name, cb, ctx) {
-    console.log(this._events)
+    if (!name && typeof name !== 'string') {
+      console.log('msg-----不合法')
+      return false
+    }
+    if (!cb) {
+      console.log('msg-----未指定回调函数')
+      return false
+    }
+    if (!cb.name) {
+      console.log('msg-----传入的回调函数为匿名函数，无法删除')
+    }
+    let names = name.split(' ')
+    names.forEach((n) => {
+      if (!this._events[n]) {
+        this._events[n] = []
+      }
+      this._events[n].push(cb)
+    })
+  }
+
+  once () {
+  }
+
+  off (name, cb, ctx) {
+    let cbs = this._events[name]
+    if (!cbs) {
+      return false
+    }
+    if (!cb) {
+      this._events[name] = null
+    } else {
+      cbs.forEach((item, idx) => {
+        if (cb === item) {
+          cbs.splice(idx, 1)
+        }
+      })
+    }
+  }
+
+  emit (name, ...args) {
+    if (!this._events[name]) {
+      console.log('msg-----未注册')
+      return false
+    }
+    if (args.length === 0) {
+      console.log('msg-----函数不存在或者已经被删除')
+      return false
+    }
+    this._events[name].forEach((cb) => cb(...args))
   }
 }
 
 const bus = new Event()
-bus.on()
 
-/*
+let testFun = (val) => {
+  console.log('test-----', val)
+}
 
- function Girl () {
- this._events = {}
- }
- Girl.prototype.on = function (eventName, callback) {
-
- //这里判断他是不是第一次添加(订阅)
- if (this._events[eventName]) {
- this._events[eventName].push(callback)
- } else {
- this._events[eventName] = [callback]
- }
- }
- Girl.prototype.emit = function (eventName, ...args) {
- if (this._events[eventName]) {
- this._events[eventName].forEach(cb => cb(...args))
- }
- }
-
- let cry = (who) => {
- console.log(who + '哭')
- }
- let shopping = (who) => {
- console.log(who + '购物')
- }
- let eat = (who) => {
- console.log(who + '吃')
- }
- let smile = (who) => {
- console.log(who + '笑')
- }
-
- let girl1 = new Girl()
- girl1.on('失恋', cry)
- girl1.on('失恋', eat)
- girl1.on('失恋', shopping)
- girl1.emit('失恋', '小明')
-
- let girl2 = new Girl()
- girl2.on('恋爱', shopping)
- girl2.on('恋爱', smile)
- girl2.emit('恋爱', '小华')
- */
-
+bus.on('test test2', testFun)
+bus.on('test', ()=>{
+  console.log('这是一个测试,匿名函数')
+})
+bus.emit('test', '这是一个测试')
+bus.emit('test2', '这是一个测试2')
+bus.off('test', testFun)
+bus.emit('test', '这是一个测试')

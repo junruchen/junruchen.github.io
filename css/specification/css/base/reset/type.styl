@@ -7,15 +7,22 @@
     box-sizing: border-box
   }
 }
+
 // Body reset
 html {
+  width 100%
+  height 100%
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
 body {
-  font $font-family-web
-  color $color-5C
-  background-color $color-DE
+  position relative
+  width 100%
+  height 100%
+  font-family $font-family-base
+  color $--color-text-regular
+  background-color $--background-color-base
+  font-size 12px
 }
 
 // 重设form表单元素
@@ -23,9 +30,29 @@ input,
 button,
 select,
 textarea {
+  padding: 0;
+  outline: none;
   font-family: inherit;
   font-size: inherit;
   line-height: inherit;
+}
+input[placeholder], textarea[placeholder] {
+  color $--color-text-placeholder
+}
+
+input::-moz-placeholder, textarea::-moz-placeholder {
+  color $--color-text-placeholder
+}
+
+input:-ms-input-placeholder, textarea:-ms-input-placeholder {
+  color $--color-text-placeholder
+}
+
+input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
+  color $--color-text-placeholder
+}
+.el-input input, .el-textarea textarea {
+  color $--color-text-regular
 }
 
 // Horizontal rules
@@ -37,60 +64,58 @@ hr {
 // Headings，不直接对h标签设置
 // -------------------------
 
-.h1, .h2, .h3, .h4, .h5, .h6 {
+h1, h2, h3, h4, h5, h6 {
   font-family: inherit;
   font-weight: 400;
-  line-height: 1.1;
   color: inherit;
-
+  margin: 0;
   small,
   .small {
     font-weight: normal;
-    line-height: 1;
     color: inherit;
   }
 }
 
-.h1,
-.h2,
-.h3 {
+h1,
+h2,
+h3 {
   small,
   .small {
     font-size: 65%;
   }
 }
 
-.h4,
-.h5,
-.h6 {
+h4,
+h5,
+h6 {
   small,
   .small {
     font-size: 75%;
   }
 }
 
-.h1 {
-  font-size: $font-size-h1;
+h1 {
+  font-size: 22px;
 }
 
-.h2 {
-  font-size: $font-size-h2;
+h2 {
+  font-size: 20px;
 }
 
-.h3 {
-  font-size: $font-size-h3;
+h3 {
+  font-size: 18px;
 }
 
-.h4 {
-  font-size: $font-size-h4;
+h4 {
+  font-size: 16px;
 }
 
-.h5 {
-  font-size: $font-size-h5;
+h5 {
+  font-size: 14px;
 }
 
-.h6 {
-  font-size: $font-size-h6;
+h6 {
+  font-size: 12px;
 }
 
 // Lists
@@ -99,8 +124,13 @@ hr {
 // Unordered and Ordered lists
 ul,
 ol {
+  padding 0
   margin-top: 0;
   margin-bottom: 0;
+}
+
+li {
+  list-style none
 }
 
 // List options
@@ -121,15 +151,16 @@ ol {
 
 // Links
 a {
+  color $--color-primary
   &,
   &:link,
   &:visited {
-    color: $theme;
+    cursor: pointer;
     text-decoration: none;
   }
   &:hover,
   &:active {
-    color: $theme-hover;
+    color $--color-primary-hover
     text-decoration: none;
   }
 }

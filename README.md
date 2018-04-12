@@ -2,15 +2,21 @@
 
 * [全部笔记](https://github.com/junruchen/junruchen.github.io/wiki)
 * [问题汇总](https://github.com/junruchen/junruchen.github.io/wiki/%E9%97%AE%E9%A2%98%E6%B1%87%E6%80%BB)
+* [每日一练]()
+* [工具插件]()
+* [CSS 练习]()
+* [可视化 Demo]()
+* [插件使用 Demo]()
 
-### 基础
+### 笔记
+#### 基础
 * [HTTP基础](https://github.com/junruchen/junruchen.github.io/wiki/HTTP-%E5%9F%BA%E7%A1%80%E6%95%B4%E7%90%86)
 
-### HTML部分
+#### HTML部分
 * [易忘知识整理](https://github.com/junruchen/junruchen.github.io/wiki/HTML-%E6%98%93%E5%BF%98%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86)
 * [HTML5新增标签属性详细说明](https://github.com/junruchen/junruchen.github.io/wiki/HTML-HTML5%E6%96%B0%E5%A2%9E%E6%A0%87%E7%AD%BE%E5%B1%9E%E6%80%A7%E6%95%B4%E7%90%86)
 
-### CSS相关
+#### CSS相关
 * [易忘知识整理](https://github.com/junruchen/junruchen.github.io/wiki/CSS-%E6%98%93%E5%BF%98%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86)
 * [CSS3新增内容整理](https://github.com/junruchen/junruchen.github.io/wiki/CSS-CSS3%E6%96%B0%E5%A2%9E%E5%86%85%E5%AE%B9%E6%95%B4%E7%90%86)
 * [Background属性详解](https://github.com/junruchen/junruchen.github.io/wiki/CSS-Background%E5%B1%9E%E6%80%A7%E8%AF%A6%E8%A7%A3)
@@ -23,12 +29,12 @@
 * [Transform属性及应用](https://github.com/junruchen/junruchen.github.io/wiki/CSS-Transform%E5%B1%9E%E6%80%A7%E5%8F%8A%E5%BA%94%E7%94%A8)
 * [变换过渡动画使用案例](https://github.com/junruchen/junruchen.github.io/wiki/CSS-%E5%8F%98%E6%8D%A2%E8%BF%87%E6%B8%A1%E5%8A%A8%E7%94%BB%E4%BD%BF%E7%94%A8%E6%A1%88%E4%BE%8B)
 
-### JavaScript相关
+#### JavaScript相关
 * [创建新对象](https://github.com/junruchen/junruchen.github.io/wiki/JS-%E5%88%9B%E5%BB%BA%E6%96%B0%E5%AF%B9%E8%B1%A1)
 * [继承](https://github.com/junruchen/junruchen.github.io/wiki/JS-%E7%BB%A7%E6%89%BF)
 * [ES6学习笔记]()
 
-### 可视化部分
+#### 可视化部分
 * [ECharts与D3js整理](https://github.com/junruchen/junruchen.github.io/wiki/ECharts%E4%B8%8ED3js)
 * [SVG基础](https://github.com/junruchen/junruchen.github.io/wiki/SVG%E5%9F%BA%E7%A1%80)
 * [SVG基础之内部元素详解](https://github.com/junruchen/junruchen.github.io/wiki/SVG%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%86%85%E9%83%A8%E5%85%83%E7%B4%A0)
