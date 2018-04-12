@@ -12,7 +12,7 @@
 * 文本处理汇总 `css-text-processing.html`
 * 渐变色拼接文字 `css-gradient-text.html`
 
-### 卡通 `cartoon`
+### 卡通 `cartoons`
 * 小黄人 `minions.html`
 * 无脸男 `noFaceMan.html`
 
