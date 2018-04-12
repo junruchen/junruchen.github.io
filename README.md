@@ -2,9 +2,9 @@
 
 * [全部笔记](https://github.com/junruchen/junruchen.github.io/wiki)
 * [问题汇总](https://github.com/junruchen/junruchen.github.io/wiki/%E9%97%AE%E9%A2%98%E6%B1%87%E6%80%BB)
-* [每日一练]()
+* [每日一练](https://github.com/junruchen/junruchen.github.io/tree/master/Daily%20Practice)
 * [工具插件]()
-* [CSS 练习]()
+* [CSS 练习](https://github.com/junruchen/junruchen.github.io/tree/master/css)
 * [可视化 Demo]()
 * [插件使用 Demo]()
 
