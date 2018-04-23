@@ -17,6 +17,7 @@
 ### 业务部分`business`
 * 发布订阅模式示例 `eventBus.js`
 * 使用发布订阅模式对websocket进行封装 `websocket.js`
+* vue watch的实现 `watch.js`
 
 ### 基础部分
 * 时间复杂度！！！

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>播放器 开关</title>
+  <style>
+    .box {
+      margin: 200px auto;
+      width: 600px;
+      height: 600px;
+      border: 1px solid;
+    }
+  </style>
+</head>
+<body>
+<div class="box">
+  <svg width="600" height="600"></svg>
+</div>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script>
+  let svg = d3.select('svg')
+
+  var arc = d3.arc()
+
+  let dataset = {
+    innerRadius: 50,
+    outerRadius: 100,
+    startAngle: 0,
+    endAngle: Math.PI * 0.5
+  }
+
+  console.log(arc(dataset))
+
+  svg.append('path')
+    .attr('d', arc(dataset))
+    .attr('transform', 'translate(250,250)')
+    .attr('stroke', 'black')
+    .attr('stroke-width', '3px')
+    .attr('fill', 'yellow')
+
+</script>
+</body>
+</html>
