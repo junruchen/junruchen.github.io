@@ -11,6 +11,7 @@
 * FLEX布局案例 `css-flex-usage1.html`
 * 文本处理汇总 `css-text-processing.html`
 * 渐变色拼接文字 `css-gradient-text.html`
+* 渐变色半圆效果 `css-radial-gradient.html.html`
 
 ### 卡通 `cartoons`
 * 小黄人 `minions.html`
