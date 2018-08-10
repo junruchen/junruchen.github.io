@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>three.js css3d - periodic table</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+  <style>
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      background: url("datav-bg.png") center / cover no-repeat;
+      margin: 0;
+      font-family: Helvetica, sans-serif;;
+      overflow: hidden;
+    }
+
+    a {
+      color: #ffffff;
+    }
+
+    h6 {
+      margin: 0;
+      padding: 0;
+    }
+
+    .element {
+      width: 120px;
+      height: 160px;
+      box-shadow: 0px 0px 6px rgba(255, 255, 255, 0.5);
+      border: 1px solid transparent;
+      text-align: center;
+      cursor: pointer;
+      box-sizing: border-box;
+      padding: 24px 1px 29px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .element:hover {
+      box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .element i {
+      display: inline-block;
+      width: 36px;
+      height: 36px;
+      background: rgba(255, 255, 255, .4);
+      margin: 0 auto;
+      font-size: 36px;
+      color: #fff;
+    }
+    .element .node-type {
+      color: rgba(255, 255, 255, .8);
+
+      transform: scale(.6);
+      transform-origin: center top;
+
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .element .title {
+      color: #fff;
+      font-weight: 500;
+
+      transform: scale(.75);
+      transform-origin: center top;
+
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .element .details {
+      font-size: 12px;
+      color: rgba(255, 255, 255, .8);
+      transform: scale(.7);
+      transform-origin: center top;
+    }
+  </style>
+</head>
+<body>
+<script src="three.js"></script>
+<script src="tween.min.js"></script>
+<script src="TrackballControls.js"></script>
+<script src="CSS3DRenderer.js"></script>
+
+<div id="container"></div>
+
+<script>
+
+  function getRandomData (count) {
+    let testData = []
+    for (let j = 1; j < count + 1; j++) {
+      testData.push({
+        instance: 'qZGXQIUbr.oracle.bst.com.cn' + j,
+        service: '测试服务' + j,
+        status: j % 9 === 0 ? 'alert' : j % 7 === 0 ? 'stop' : 'running',
+        dbType: j % 3 === 0 ? 'oracle' : j % 4 === 0 ? 'redis' : 'mysql',
+        nodeType: 'node 11g ' + j,
+        pool: '47.92.38.5' + j,
+        runningTime: '39天 14小时 8分 44秒'
+      })
+    }
+    return testData
+  }
+
+  var table = getRandomData(190)
+
+  var camera, scene, renderer
+  var controls
+
+  var objects = []
+  var targets = {grid: [], helix: [], sphere: []}
+
+  var colors = {
+    running: '143, 232, 245, ',
+    alert: '255, 128, 101, ',
+    stop: '162, 162, 162, '
+  }
+
+  var icons = {
+    oracle: 'icon-db-Oracle',
+    mysql: 'icon-db-MySQL',
+    redis: 'icon-db-Redis'
+  }
+
+  init()
+  animate()
+
+  function init () {
+    camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 1, 10000)
+    camera.position.z = 3000
+    scene = new THREE.Scene()
+    // table
+
+    for (var i = 0; i < table.length; i++) {
+      var element = document.createElement('div')
+      element.className = 'element'
+      element.style.backgroundColor = 'rgba(' + colors[table[i].status] + ( Math.random() * 0.5 + 0.25 ) + ')'
+      element.style.borderColor = 'rgba(' + colors[table[i].status] + ' .3)'
+
+      var icon = document.createElement('i')
+      icon.className = icons[table[i].dbType]
+      element.appendChild(icon)
+
+      var nodeType = document.createElement('h6')
+      nodeType.className = 'node-type'
+      nodeType.innerHTML = table[i].nodeType
+      element.appendChild(nodeType)
+
+      var nodeType = document.createElement('h6')
+      nodeType.className = 'title'
+      nodeType.innerHTML = table[i].instance
+      element.appendChild(nodeType)
+
+       var details = document.createElement('div')
+       details.className = 'details'
+       details.innerHTML = table[i].service + '<br>' + table[i].pool
+       element.appendChild(details)
+
+      var object = new THREE.CSS3DObject(element)
+      object.position.x = Math.random() * 4000 - 2000
+      object.position.y = Math.random() * 4000 - 2000
+      object.position.z = Math.random() * 4000 - 2000
+      scene.add(object)
+      objects.push(object)
+    }
+    // sphere
+    var vector = new THREE.Vector3();
+    var spherical = new THREE.Spherical();
+    for ( var i = 0, l = objects.length; i < l; i ++ ) {
+      var phi = Math.acos( -1 + ( 2 * i ) / l );
+      var theta = Math.sqrt( l * Math.PI ) * phi;
+      var object = new THREE.Object3D();
+      spherical.set( 800, phi, theta );
+      object.position.setFromSpherical( spherical );
+      vector.copy( object.position ).multiplyScalar( 2 );
+      object.lookAt( vector );
+      targets.sphere.push( object );
+    }
+    // helix
+    var vector = new THREE.Vector3();
+    var cylindrical = new THREE.Cylindrical();
+    for ( var i = 0, l = objects.length; i < l; i ++ ) {
+      var theta = i * 0.175 + Math.PI;
+      var y = - ( i * 8 ) + 450;
+      var object = new THREE.Object3D();
+      cylindrical.set( 900, theta, y );
+      object.position.setFromCylindrical( cylindrical );
+      vector.x = object.position.x * 2;
+      vector.y = object.position.y;
+      vector.z = object.position.z * 2;
+      object.lookAt( vector );
+      targets.helix.push( object );
+    }
+    // grid
+    for (var i = 0; i < objects.length; i++) {
+      var object = new THREE.Object3D()
+      object.position.x = ( ( i % 5 ) * 400 ) - 800
+      object.position.y = ( -( Math.floor(i / 5) % 5 ) * 400 ) + 800
+      object.position.z = ( Math.floor(i / 25) ) * 1000 - 2000
+      targets.grid.push(object)
+    }
+
+    renderer = new THREE.CSS3DRenderer()
+    renderer.setSize(window.innerWidth, window.innerHeight)
+    document.getElementById('container').appendChild(renderer.domElement)
+
+    controls = new THREE.TrackballControls(camera, renderer.domElement)
+    controls.rotateSpeed = .5
+    controls.minDistance = 500
+    controls.maxDistance = 6000
+    controls.addEventListener('change', render)
+
+    transform(targets.sphere, 1000)
+
+    window.addEventListener('resize', onWindowResize, false)
+
+  }
+
+  function transform (targets, duration) {
+
+    TWEEN.removeAll()
+
+    for (var i = 0; i < objects.length; i++) {
+
+      var object = objects[i]
+      var target = targets[i]
+
+      new TWEEN.Tween(object.position)
+        .to({x: target.position.x, y: target.position.y, z: target.position.z}, Math.random() * duration + duration)
+        .easing(TWEEN.Easing.Exponential.InOut)
+        .start()
+
+      new TWEEN.Tween(object.rotation)
+        .to({x: target.rotation.x, y: target.rotation.y, z: target.rotation.z}, Math.random() * duration + duration)
+        .easing(TWEEN.Easing.Exponential.InOut)
+        .start()
+
+    }
+
+    new TWEEN.Tween(this)
+      .to({}, duration * 2)
+      .onUpdate(render)
+      .start()
+  }
+
+  function onWindowResize () {
+    camera.aspect = window.innerWidth / window.innerHeight
+    camera.updateProjectionMatrix()
+    renderer.setSize(window.innerWidth, window.innerHeight)
+    render()
+  }
+
+  function animate () {
+    requestAnimationFrame(animate)
+    TWEEN.update()
+    controls.update()
+  }
+
+  function render () {
+    renderer.render(scene, camera)
+  }
+</script>
+</body>
+</html>
