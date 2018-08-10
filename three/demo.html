@@ -105,7 +105,6 @@
 </div>
 
 <script>
-
   function getRandomData (count) {
     let testData = []
     for (let j = 1; j < count + 1; j++) {
@@ -125,6 +124,7 @@
   var table = getRandomData(190)
 
   var camera, scene, renderer
+  var targetType = 'sphere'
   var controls
 
   var objects = []
@@ -146,7 +146,7 @@
   animate()
 
   function init () {
-    camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000)
+    camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 10000)
     camera.position.z = 3000
     scene = new THREE.Scene()
     // table
@@ -181,6 +181,7 @@
       object.position.y = Math.random() * 4000 - 2000
       object.position.z = Math.random() * 4000 - 2000
       scene.add(object)
+
       objects.push(object)
     }
     // sphere
@@ -196,6 +197,7 @@
       object.lookAt(vector)
       targets.sphere.push(object)
     }
+
     // helix
     var vector = new THREE.Vector3()
     var cylindrical = new THREE.Cylindrical()
@@ -211,6 +213,7 @@
       object.lookAt(vector)
       targets.helix.push(object)
     }
+
     // grid
     for (var i = 0; i < objects.length; i++) {
       var object = new THREE.Object3D()
@@ -232,26 +235,31 @@
 
     var button = document.getElementById('sphere')
     button.addEventListener('click', function (event) {
-      transform(targets.sphere, 2000)
+      transform(targets.sphere, 1000)
+      targetType = 'sphere'
     }, false)
 
     var button = document.getElementById('helix')
     button.addEventListener('click', function (event) {
-      transform(targets.helix, 2000)
+      transform(targets.helix, 1000)
+      targetType = 'helix'
     }, false)
 
     var button = document.getElementById('grid')
     button.addEventListener('click', function (event) {
-      transform(targets.grid, 2000)
+      transform(targets.grid, 1000)
+      targetType = 'grid'
     }, false)
 
-    transform(targets.sphere, 1000)
+    transform(targets.helix, 1000)
 
     window.addEventListener('resize', onWindowResize, false)
 
   }
 
   function transform (targets, duration) {
+    camera.position.z = 3000
+    camera.position.x = 0
 
     TWEEN.removeAll()
 
@@ -292,6 +300,13 @@
   }
 
   function render () {
+    requestAnimationFrame(render)
+    if( targetType !== 'grid') {
+      var timer = Date.now() * 0.00005;
+      camera.position.x = Math.cos( timer ) * 2600;
+      camera.position.z = Math.sin( timer ) * 2600;
+      camera.lookAt( scene.position );
+    }
     renderer.render(scene, camera)
   }
 </script>
