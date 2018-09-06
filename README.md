@@ -5,5 +5,4 @@
 * [每日一练 (算法、业务实现等)](https://github.com/junruchen/junruchen.github.io/tree/master/dailyPractice)
 * [工具插件 (客户端检测、移动端自适应等)](https://github.com/junruchen/junruchen.github.io/tree/master/tool)
 * [CSS 练习 (动画实现、Flex布局应用等)](https://github.com/junruchen/junruchen.github.io/tree/master/css)
-* [可视化 Demo (针对D3、EChart的图表实现)](https://github.com/junruchen/junruchen.github.io/tree/master/data)
-* [插件使用 Demo](https://github.com/junruchen/junruchen.github.io/tree/master/demo)
+* [可视化 Demo (针对D3、EChart的图表实现)](https://github.com/junruchen/junruchen.github.io/tree/master/chart)

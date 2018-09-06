@@ -5,3 +5,4 @@
 * 图片合成 `image_tool`
 * 移动端自适应 `mobile`
 * sql格式化 `sql-format`
+* vuex使用Demo `store-demo`

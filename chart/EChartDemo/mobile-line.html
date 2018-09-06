@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+  <meta name="apple-itunes-app" content="app-id=791086961"/>
+  <script src="../utils/resetFontSize.js?375&20"></script>
+  <title>mobile-line</title>
+  <script src="./echartSource/echarts.min.js"></script>
+  <style>
+    html, body {
+      width: 100%;
+    }
+
+    .container {
+      box-sizing: border-box;
+      padding: 30px;
+    }
+
+    p {
+      text-align: center;
+      font-size: 1rem;
+    }
+
+    #chart-main {
+      width: 100%;
+      height: 400px;
+      margin-top: 100px;
+    }
+
+    .echart-tooltip-box {
+      position: relative;
+    }
+
+    .echart-tooltip-box:before, .echart-tooltip-box:after {
+      content: '';
+      position: absolute;
+      left: 0%;
+      top: 0;
+    }
+
+    .echart-tooltip-box:before {
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      background: red;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <p>测试图表</p>
+  <div id="chart-main"></div>
+</div>
+
+<script type="text/javascript">
+  let echartItem = echarts.init(document.getElementById('chart-main'))
+
+  window.dpr = 1
+
+  let option = {
+    grid: {
+      left: 0,
+      right: 0,
+      bottom: 0
+    },
+    xAxis: {
+      show: false,
+      type: 'category',
+      boundaryGap: false,
+      data: [
+        '2017/02',
+        '2017/03',
+        '2017/04',
+        '2017/05',
+        '2017/06',
+        '2017/07',
+        '2017/08'
+      ]
+    },
+    yAxis: {
+      type: 'value',
+      axisLabel: {
+        fontSize: 10 * window.dpr,
+        color: '#666666',
+        verticalAlign: 'bottom',
+        inside: true,
+        padding: [0, 0, 6 * window.dpr, 0],
+        formatter: function (value, index) {
+          return value === 0 ? 0 : value + '万'
+        }
+      },
+      splitLine: {
+        lineStyle: {
+          color: ['#f2f2f2']
+        }
+      },
+      // 坐标轴设置
+      axisLine: {
+        show: false
+      },
+      // 刻度线设置
+      axisTick: {
+        show: false
+      }
+    },
+    series: {
+      data: [820, 932, 901, 934, 1290, 1030, 1220],
+      type: 'line',
+      symbol: 'emptyCircle',
+      symbolSize: 7.5 * window.dpr,
+      sampling: 'average',
+      showSymbol: false,
+      itemStyle: {
+        normal: {
+          color: '#5C96FA'
+        },
+        emphasis: {
+          color: 'rgba(141,153,176,1)',
+          borderColor: 'rgba(255,255,255,1)',
+          borderWidth: 2.5 * window.dpr,
+          shadowColor: 'rgba(54,79,135,0.6)',
+          shadowBlur: 2 * window.dpr,
+          shadowOffsetY: 1 * window.dpr
+        }
+      },
+      lineStyle: {
+        color: '#5C96FA',
+        width: 2 * window.dpr
+      },
+      areaStyle: {
+        color: {
+          type: 'linear',
+          x: 0,
+          y: 0,
+          x2: 0,
+          y2: 1,
+          colorStops: [
+            {
+              offset: 0,
+              color: 'rgba(73,171,255,0.3)' // 0% 处的颜色
+            },
+            {
+              offset: 1,
+              color: 'rgba(115,216,242, 0)' // 100% 处的颜色
+            }
+          ]
+        }
+      }
+    },
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: {
+        lineStyle: {
+          color: 'rgba(88,135,251,0.2)'
+        }
+      },
+      position: function (pos, params, dom, rect, size) {
+        console.log(pos, params, dom, rect, size)
+        var obj = {top: 0}
+        obj[['left', 'right'][+(pos[0] < size.viewSize[0] / 2)]] = 5
+        console.log(obj)
+        return obj
+      },
+      textStyle: {
+        color: 'rgba(102,102,102,1)'
+      },
+      backgroundColor: '#fff',
+      extraCssText: 'box-shadow: 0 0 12px rgba(141,141,141,0.12);',
+      formatter: function (params) {
+        let data = params[0]
+        return `<div class="amount-tooltip-box">
+                      <div class="amount-tooltip-title">${data.axisValue}</div>
+                      <div class="amount-tooltip-des"><span>交易额：</span><strong>${data.data}</strong></div>
+                    </div>`
+      }
+    }
+  }
+
+  echartItem.setOption(option)
+
+</script>
+</body>
+</html>

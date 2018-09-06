@@ -150,39 +150,6 @@ function updateDataS (barItem, theme) {
     .text(function (d) {
       return d.name
     })
-  /*let axisText = barItem.select('.axis-title')
-   axisText.select('foreignObject')
-   .attr('x', (d, i) => {
-   return i * (theme.barPadding * 2 + 12)
-   })
-   .attr('width', theme.barPadding * 2 + 10)
-   .text(function (d) {
-   return d.name
-   })
-   axisText.select('text')
-   .attr('x', (d, i) => {
-   return theme.barPadding + 5 + i * (theme.barPadding * 2 + 12)
-   })
-   .attr('dy', '1rem')
-   .attr('textLength', theme.barPadding * 2 + 10)
-   .text(function (d) {
-   return d.name
-   })*/
-  // 废弃文字换行一
-  /*let axisText = barItem.select('.axis-title')
-   .attr('x', (d, i) => {
-   return theme.barPadding + 5 + i * (theme.barPadding * 2 + 12)
-   })
-   .text(function (d) {
-   return d.name.substring(0, 5)
-   })
-   axisText.append('tspan')
-   .attr('x', (d, i) => {
-   return theme.barPadding + 5 + i * (theme.barPadding * 2 + 12)
-   })
-   .text((d) => {
-   return d.name.length > 5 ? d.name.substring(5, d.name.length) : ''
-   })*/
   // update-bar-title
   barItem.select('.bar-title')
     .attr('x', (d, i) => {
@@ -232,57 +199,6 @@ function addDataS (enterBarItem, theme) {
     .text(function (d) {
       return d.name
     })
-  /*let axisEnterText = enterBarItem.append('switch')
-   .attr('class', 'axis-title')
-   axisEnterText.append('foreignObject')
-   .attr('x', (d, i) => {
-   return i * (theme.barPadding * 2 + 12)
-   })
-   .attr('y', 100 + 20 + 12)
-   .attr('width', theme.barPadding * 2 + 10)
-   .attr('height', 40)
-   .style('text-align', 'center')
-   .style('font-size', '12px')
-   .style('color', '#656565')
-   .text(function (d) {
-   return d.name
-   })
-   axisEnterText.append('text')
-   .attr('x', (d, i) => {
-   return theme.barPadding + 5 + i * (theme.barPadding * 2 + 12)
-   })
-   .attr('y', 100 + 20 + 12)
-   .attr('dy', '1rem')
-   .attr('textLength', theme.barPadding * 2 + 10)
-   .attr('text-anchor', 'middle')
-   .attr('font-size', '12px')
-   .attr('fill', '#656565')
-   .text(function (d) {
-   return d.name
-   })*/
-
-  // 废弃文字换行一
-  /*let axisEnterText = enterBarItem.append('text')
-   .attr('class', 'axis-title')
-   .attr('x', (d, i) => {
-   return theme.barPadding + 5 + i * (theme.barPadding * 2 + 12)
-   })
-   .attr('y', 100 + 20 + 12)
-   .attr('dy', '1rem')
-   .attr('text-anchor', 'middle')
-   .attr('font-size', '12px')
-   .attr('fill', '#656565')
-   .text(function (d) {
-   return d.name.substring(0, 5)
-   })
-   axisEnterText.append('tspan')
-   .attr('x', (d, i) => {
-   return theme.barPadding + 5 + i * (theme.barPadding * 2 + 12)
-   })
-   .attr('dy', '1rem')
-   .text((d) => {
-   return d.name.length > 5 ? d.name.substring(5, d.name.length) : ''
-   })*/
   // add-bar-title
   enterBarItem.append('text')
     .attr('class', 'bar-title')

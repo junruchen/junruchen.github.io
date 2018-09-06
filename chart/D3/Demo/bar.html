@@ -40,7 +40,7 @@
     }
 
     .bar-box {
-      width: 440px;
+      width: 100%;
       height: 440px;
     }
   </style>
@@ -72,14 +72,6 @@
   let paddingL = 60
   let paddingR = 40
   let barData = [180, 145, 70, 239, 127]
-  let theme = {
-    title: {}, // 标题
-    label: {}, // label提示
-    chart: { // 图表相关 颜色 位置等
-      axis: {},
-      bar: {}
-    }
-  }
 
   // 全局变量 盒子宽高，图表宽高，svg 坐标轴比例尺, 间隔比
   let width = parseInt(d3.select('.bar-box').style('width'))
@@ -156,9 +148,9 @@
       })
       .attr('fill', '#5588aa')
       .style('transform', 'scale(1, 0)')
-      .style('transform-origin', 'center bottom')
+      .style('transform-origin', 'center ' + (height - paddingB) + "px")
       .transition()
-      .duration(800)
+      .duration(1800)
       .style('transform', 'scale(1, 1)')
 
     // del rect
@@ -209,6 +201,28 @@
     // del text
     textBar.exit().remove()
   }
+
+  // 自适应
+  function media (line, theme, axis, svg) {
+    window.addEventListener('resize', () => {
+      let width = Math.abs(width - parseFloat(el.style('width')))
+      if (width >= 10) {
+        width = parseFloat(el.style('width'))
+        theme.line.w = theme.svg.w - theme.padding.l - theme.padding.r
+        svg.attr('width', theme.svg.w)
+        axis.nxScale.range([0, theme.line.w])
+        if (line.xAxis.data.length > 4) {
+          let differ = getTimeDiffer(d3.min(line.xAxis.data), d3.max(line.xAxis.data), theme.line.w)
+          let xAxisArr = d3[differ.type].range(new Date(d3.min(line.xAxis.data)), new Date(d3.max(line.xAxis.data)), differ.value)
+          xAxisArr.shift()
+          axis.xAxis.tickValues(xAxisArr)
+        }
+        axis.onxScale.range([0, theme.line.w])
+        drawLineChart(line, theme, axis, svg)
+      }
+    })
+  }
+
 
   function sortData () {
     barData.sort(d3.ascending)

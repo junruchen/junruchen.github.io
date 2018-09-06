@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="zh-CN" xml:lang="zh-CN" xmlns="http://www.w3.org/1999/xhtml">
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<head>
+  <title>折线图的制作</title>
+</head>
+
+<style>
+  .axis path,
+  .axis line {
+    fill: none;
+    stroke: black;
+    shape-rendering: crispEdges;
+  }
+</style>
+
+
+<body>
+<!-- // <script src="d3/d3.js" charset="utf-8"></script> -->
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script>
+
+  var width = 500
+  var height = 500
+
+  var dataset = [[[2000, 47310], [2001, 41590], [2002, 39800],
+    [2003, 43020], [2004, 46550], [2005, 45710],
+    [2006, 43560], [2007, 43560], [2008, 48490],
+    [2009, 50350], [2010, 54950], [2011, 59050],
+    [2012, 59370], [2013, 48980]]]
+
+  var padding = {top: 70, right: 70, bottom: 70, left: 70}
+  var gdpmax = 0
+  var currGdp = d3.max(dataset[0], function (d) {
+    return d[1]
+  })
+  if (currGdp > gdpmax)
+    gdpmax = currGdp
+  console.log(gdpmax)
+
+  var xScale = d3.scale.linear()
+    .domain([2000, 2013])
+    .range([0, width - padding.left - padding.right])
+
+  var yScale = d3.scale.linear()
+    .domain([0, gdpmax * 1.1])
+    .range([height - padding.bottom - padding.top, 0])
+
+  var linePath = d3.svg.line()//创建一个直线生成器
+    .x(function (d) {
+      return xScale(d[0])
+    })
+    .y(function (d) {
+      return yScale(d[1])
+    })
+    .interpolate('basis')//插值模式
+
+
+  //定义两个颜色
+  var colors = [d3.rgb(0, 0, 255), d3.rgb(0, 255, 0)]
+
+  var svg = d3.select('body')
+    .append('svg')
+    .attr('width', width)
+    .attr('height', height)
+
+  svg.selectAll('path')
+    .data(dataset)
+    .enter()
+    .append('path')
+    .attr('transform', 'translate(' + padding.left + ',' + padding.top + ')')
+    .attr('d', function (d) {
+      return linePath(d)
+      //返回线段生成器得到的路径
+    })
+    .attr('fill', 'none')
+    .attr('stroke-width', 3)
+    .attr('stroke', function (d, i) {
+      return colors[i]
+    })
+
+  var xAxis = d3.svg.axis()
+    .scale(xScale)
+    .ticks(5)
+    .tickFormat(d3.format('d'))
+    .orient('bottom')
+
+  var yAxis = d3.svg.axis()
+    .scale(yScale)
+    .orient('left')
+
+  //添加一个g用于放x轴
+  svg.append('g')
+    .attr('class', 'axis')
+    .attr('transform', 'translate(' + padding.left + ',' + (height - padding.top) + ')')
+    .call(xAxis)
+
+  svg.append('g')
+    .attr('class', 'axis')
+    .attr('transform', 'translate(' + padding.left + ',' + padding.top + ')')
+    .call(yAxis)
+
+</script>
+
+</body>
+</html>
