@@ -1,6 +1,3 @@
-iframe {
-  height: auto;
-}
 body {
   margin: 0;
 }
@@ -12,8 +9,7 @@ body {
 }
 
 .impowerBox .title {
-  color: #909399;
-  font-size: 12px;
+  display: none;
 }
 
 .impowerBox .info {
