@@ -3,9 +3,9 @@ body {
 }
 
 .impowerBox .qrcode {
-  width: 200px;
+  width: 128px;
   border: none;
-  margin-top: 16px;
+  margin-top: 6px;
 }
 
 .impowerBox .title {
