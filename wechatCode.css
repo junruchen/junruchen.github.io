@@ -4,12 +4,13 @@ body {
 
 .impowerBox .qrcode {
   width: 200px;
+  border: none;
+  margin-top: 16px;
 }
 
 .impowerBox .title {
   color: #909399;
   font-size: 12px;
-  border: none;
 }
 
 .impowerBox .info {
