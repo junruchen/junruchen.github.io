@@ -14,6 +14,9 @@
 * 查找目标值在给定数组的索引或者按顺序插入的位置 `searchInsert.js`
 * sort排序实现 `sort.js`
 * 数组区间合并实现 `intervalMerging.js`
+* 整数数字反转 `numberReverse.js`
+* 回文数判断 `isPalindrome.js`
+* 罗马数字转整数 `romanToInt.js`
 
 ### 业务部分 `business`
 * 发布订阅模式示例 `eventBus.js`

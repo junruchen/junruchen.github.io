@@ -2,8 +2,12 @@
 function isPlainObject (val) {
   return val != null && typeof val === 'object' && !Array.isArray(val)
 }
-console.log(isPlainObject(Object.create(null)))
 // 字符串
 function isString (val) {
   return typeof val === 'string'
+}
+
+// 数字
+function isNumber (val) {
+  return typeof val === 'number'
 }

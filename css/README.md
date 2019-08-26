@@ -1,7 +1,10 @@
 > CSS
 
-### 常见案例 `demo`
-* 动画--线段移动 `css-animation-line-move.html.js`
+### 必备的技能 `skills`
+* 移动端web开发与适配
+
+### 常见动画案例 `demo`
+* 动画--线段移动 `css-animation-line-move.html`
 * 渐变色圆环loading `css-animation-loading.html`
 * 动态饼图 `css-animation-pie-1.html`
 * 自定义大小饼图 `css-animation-pie-2.html`
@@ -11,7 +14,7 @@
 * FLEX布局案例 `css-flex-usage1.html`
 * 文本处理汇总 `css-text-processing.html`
 * 渐变色拼接文字 `css-gradient-text.html`
-* 渐变色半圆效果 `css-radial-gradient.html.html`
+* 渐变色半圆效果 `css-radial-gradient.html`
 
 ### 卡通 `cartoons`
 * 小黄人 `minions.html`

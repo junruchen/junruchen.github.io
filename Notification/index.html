@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <button onclick="notifyMe()">Notify me!</button>
+</body>
+<script>
+    function notifyMe() {
+        console.log(Notification.permission)
+        // 检查浏览器是否支持 Notification
+        if (!("Notification" in window)) {
+            alert("你的不支持 Notification!  TAT");
+        }
+
+        // 检查用户是否已经允许使用通知
+        else if (Notification.permission === "granted") {
+            // 创建 Notification
+            var notification = new Notification("Hey guy!");
+            notification.iconurl = 'http://img.hacpai.com/avatar/1450241301546-260.jpg?1451971807339';
+            autoClose(notification);
+
+        }
+
+        // 重新发起请求，让用户同意使用通知
+        else if (Notification.permission !== 'denied') {
+            Notification.requestPermission(function (permission) {
+
+                // 用户同意使用通知
+                if (!('permission' in Notification)) {
+                    Notification.permission = permission;
+                }
+
+                if (permission === "granted") {
+                    // 创建 Notification
+                    var notification = new Notification("Hey guy!");
+                }
+            });
+        }
+
+        // 注意：如果浏览器禁止弹出任何通知，将无法使用
+    }
+
+    function autoClose(notification) {
+        if (typeof notification.time === 'undefined' || notification.time <= 0) {
+            notification.close();
+        } else {
+            setTimeout(function () {
+                notification.close();
+            }, notification.time);
+        }
+
+        notification.addEventListener('click', function () {
+            notification.close();
+        }, false)
+    }
+
+</script>
+
+</html>
